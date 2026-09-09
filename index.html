@@ -384,7 +384,7 @@
                                 </div>
                                 
                                 <div class="col-span-2 md:ml-auto bg-red-50 border border-red-100 p-2.5 md:p-0 md:bg-transparent md:border-0 rounded-lg w-full md:w-auto flex flex-row md:flex-col justify-between md:justify-start items-center md:items-end mt-1 md:mt-0 md:pl-4 md:border-l md:border-gray-200 overflow-hidden">
-                                    <div class="text-[10px] font-bold text-red-800 uppercase md:mb-1 flex-shrink-0">Total Piutang</div>
+                                    <div class="text-[10px] font-bold text-red-800 uppercase md:mb-1 flex-shrink-0">Total Tagihan</div>
                                     <div id="dashTotalPiutangFilter" class="text-sm md:text-xl font-bold text-red-600 truncate w-full text-right" title="Total Piutang Customer">Rp 0</div>
                                 </div>
                             </div>
@@ -393,16 +393,16 @@
                         <!-- Tabel Piutang -->
                         <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg">
                             <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
-                                <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                                <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm hidden md:table-header-group">
                                     <tr class="text-gray-500 uppercase text-[10px] tracking-wider border-b border-gray-200">
                                         <th class="py-2.5 px-3 font-semibold w-8 text-center">#</th>
                                         <th class="py-2.5 px-3 md:px-4 font-semibold">Toko & Sales</th>
-                                        <th class="py-2.5 px-3 md:px-4 font-semibold hidden md:table-cell">Region / Kota</th>
-                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-right hidden md:table-cell">Total Tagihan</th>
-                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-right hidden md:table-cell">Uang Masuk</th>
-                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-right text-orange-500 hidden md:table-cell">Retur/Fee</th>
+                                        <th class="py-2.5 px-3 md:px-4 font-semibold">Region / Kota</th>
+                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-right">Total Tagihan</th>
+                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-right">Uang Masuk</th>
+                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-right text-orange-500">Retur/Fee</th>
                                         <th class="py-2.5 px-3 md:px-4 font-semibold text-right text-red-600">Sisa Piutang</th>
-                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-center hidden md:table-cell">Aksi</th>
+                                        <th class="py-2.5 px-3 md:px-4 font-semibold text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dashKlasemenBody" class="divide-y divide-gray-100"></tbody>
@@ -426,9 +426,9 @@
 
                 <!-- TAB: DATA BARANG -->
                 <section id="tab-databarang" class="tab-content hidden-tab h-full">
-                    <div class="flex flex-col h-full w-full">
+                    <div class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         <!-- HEADER BARANG (Padding dikecilin di HP) -->
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul -->
                             <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -463,7 +463,7 @@
 
                         <!-- AREA TABEL (Padding dihapus di HP biar maksimal lebarnya) -->
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
@@ -562,10 +562,10 @@
 
                 <!-- TAB: DATA CUSTOMER -->
                 <section id="tab-customer" class="tab-content hidden-tab h-full">
-                    <div class="flex flex-col h-full w-full">
+                    <div class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER CUSTOMER -->
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul -->
                             <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -601,7 +601,7 @@
 
                         <!-- AREA TABEL -->
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 md:rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
@@ -723,10 +723,10 @@
                 <section id="tab-production" class="tab-content hidden-tab h-full">
                     
                     <!-- VIEW 1: LIST PO (Pakai Blueprint Utama) -->
-                    <div id="view-po-list" class="flex flex-col h-full w-full">
+                    <div id="view-po-list" class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER PO -->
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul & Icon Presisi -->
                             <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -762,22 +762,26 @@
 
                         <!-- AREA TABEL -->
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 md:rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">No. PO & Tanggal</th>
-                                            <th class="py-3 px-2 md:px-4">Makloon & Harga</th>
+                                            <!-- Tampil di PC saja -->
+                                            <th class="py-3 px-4 text-left hidden md:table-cell">No. PO & Tanggal</th>
                                             
-                                            <!-- Sembunyi di Mobile -->
-                                            <th class="py-3 px-4 hidden md:table-cell">Merk</th>
-                                            <th class="py-3 px-4 hidden lg:table-cell">Artikel Utama</th>
+                                            <!-- Di HP jadi judul tunggal, di PC jadi Makloon & Harga -->
+                                            <th class="py-2.5 px-3 md:px-4 text-left">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar PO & Detail</span>
+                                                <span class="hidden md:inline">Makloon & Harga</span>
+                                            </th>
+                                            
+                                            <!-- Kolom khusus PC -->
+                                            <th class="py-3 px-4 text-left hidden md:table-cell">Merk</th>
+                                            <th class="py-3 px-4 text-left hidden md:table-cell">Artikel Utama</th>
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Total Qty</th>
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Status SPK</th>
-                                            <th class="py-3 px-4 text-center hidden lg:table-cell">Status Barcode</th>
-                                            
-                                            <!-- ID Sensor Kacamata Kuda -->
-                                            <th id="th-aksi-po" class="py-3 px-2 md:px-4 text-center">Aksi</th>
+                                            <th class="py-3 px-4 text-center hidden md:table-cell">Status Barcode</th>
+                                            <th id="th-aksi-po" class="py-3 px-4 text-center hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="poTableBody" class="divide-y divide-gray-100">
@@ -985,12 +989,12 @@
 
                 <!-- TAB: SALES ORDER (SO) -->
                 <section id="tab-order" class="tab-content hidden-tab h-full">
-                    
+            
                     <!-- VIEW 1: DAFTAR SALES ORDER (Pakai Blueprint Utama) -->
-                    <div id="view-so-list" class="flex flex-col h-full w-full">
+                    <div id="view-so-list" class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER SO -->
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul & Icon Presisi -->
                             <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -1030,7 +1034,7 @@
 
                         <!-- AREA TABEL -->
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 md:rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
@@ -1186,10 +1190,10 @@
                 <section id="tab-invoice" class="tab-content hidden-tab h-full">
                     
                     <!-- VIEW 1: LIST INVOICE (Pakai Blueprint Utama) -->
-                    <div id="view-inv-list" class="flex flex-col h-full w-full">
+                    <div id="view-inv-list" class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER INVOICE -->
-                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul & Icon Presisi -->
                             <div class="w-full lg:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -1241,7 +1245,7 @@
 
                         <!-- AREA TABEL -->
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 md:rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
@@ -1429,10 +1433,10 @@
 
                 <!-- TAB: BUKU KAS (PAYMENT) -->
                 <section id="tab-payment" class="tab-content hidden-tab h-full">
-                    <div class="flex flex-col h-full w-full">
+                    <div class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER BUKU KAS -->
-                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             
                             <!-- Kiri: Judul & Icon Presisi -->
                             <div class="w-full lg:w-auto flex items-center space-x-3 md:space-x-4">
@@ -1502,7 +1506,7 @@
                             </div>
 
                             <!-- TABEL BUKU KAS -->
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 md:rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
@@ -1541,10 +1545,10 @@
 
                 <!-- TAB: KOMISI SALES -->
                 <section id="tab-komisi" class="tab-content hidden-tab h-full">
-                    <div class="flex flex-col h-full w-full">
+                    <div class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER KOMISI -->
-                        <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 bg-white p-3 md:p-4 rounded-t-xl border-b border-gray-200 shrink-0 w-full overflow-hidden">
+                        <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 bg-white pb-2 md:p-4 md:pb-0 rounded-t-xl border-gray-200 shrink-0 w-full overflow-hidden">
                             <!-- Kiri: Judul & Icon -->
                             <div class="flex items-center space-x-3 w-full xl:w-auto">
                                 <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -1592,7 +1596,7 @@
                         </div>
 
                         <!-- AREA KONTEN (Dashboard Ringkas & Tabel Lega) -->
-                        <div class="flex-1 bg-white p-3 md:p-5 overflow-hidden flex flex-col">
+                        <div class="flex-1 bg-white md:p-4 overflow-hidden flex flex-col">
                             
                             <!-- KARTU RINGKASAN KOMISI (Dibuat Kecil / Compact Horizontal) -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3 shrink-0">
@@ -1660,10 +1664,10 @@
                 <section id="tab-kontrabon" class="tab-content hidden-tab h-full">
                     
                     <!-- 1. VIEW DAFTAR KONTRA BON (HISTORY) -->
-                    <div id="kb-list-view" class="flex flex-col h-full w-full">
+                    <div id="kb-list-view" class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER KONTRA BON -->
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul & Icon Presisi -->
                             <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -1697,7 +1701,7 @@
 
                         <!-- AREA TABEL -->
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 md:rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
@@ -1794,10 +1798,10 @@
 
                 <!-- TAB: SALES LEDGER & KASBON -->
                 <section id="tab-salesledger" class="tab-content hidden-tab h-full">
-                    <div class="flex flex-col h-full w-full">
+                    <div class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER SALES LEDGER -->
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul & Icon Presisi -->
                             <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -1811,7 +1815,7 @@
                         </div>
 
                         <!-- KONTEN UTAMA -->
-                        <div class="flex-1 bg-white p-3 md:p-6 overflow-y-auto flex flex-col gap-6">
+                        <div class="flex-1 bg-white md:p-6 overflow-y-auto flex flex-col gap-6">
                             
                             <!-- 1. KLASEMEN LEDGER -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col shrink-0">
@@ -1918,10 +1922,10 @@
                 <!-- TAB: USER MANAGEMENT (SISTEM) -->
                 <!-- ========================================== -->
                 <section id="tab-usersetting" class="tab-content hidden-tab h-full">
-                    <div class="flex flex-col h-full w-full">
+                    <div class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER USER MANAGEMENT -->
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-3 md:p-6 rounded-t-xl border-b border-gray-200 shrink-0">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
                             <!-- Kiri: Judul & Icon Presisi -->
                             <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
                                 <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
@@ -1943,7 +1947,7 @@
 
                         <!-- AREA TABEL -->
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
-                            <div class="flex-1 overflow-y-auto border-x border-b md:border border-gray-200 md:rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
@@ -2995,7 +2999,6 @@
             const tbody = document.getElementById('dashKlasemenBody') || document.getElementById('piutangTableBody');
             if(!tbody) return;
 
-            // 1. AMBIL FILTER DENGAN AMAN
             let elTipe = document.getElementById('dashFilterType');
             let fTipe = elTipe ? elTipe.value.toUpperCase().trim() : "ALL";
 
@@ -3011,31 +3014,24 @@
             let dataPiutang = [];
             let grandTotalSisa = 0;
 
-            // Pastikan database terbaca
             let arrCustomer = (typeof db_customer !== 'undefined') ? db_customer : [];
             let arrInvoice = (typeof db_invoice !== 'undefined') ? db_invoice : [];
             let arrPayment = (typeof db_payment !== 'undefined') ? db_payment : [];
 
-            // BACA ROLE MULTI-USER
             const role = localStorage.getItem('davclar_role') || "ADMIN";
             const loggedInUser = (localStorage.getItem('davclar_user') || "").toUpperCase().trim();
 
-            // 2. MULAI PERHITUNGAN (MAHA PEMAAF)
             arrCustomer.forEach(c => {
                 let namaToko = (c.nama || "").toUpperCase().trim(); 
                 let salesToko = (c.sales || "").toUpperCase().trim();
                 let tipeToko = (c.type || "").toUpperCase().trim();
                 let regionToko = (c.region || "").toUpperCase().trim();
                 
-                // A. SENSOR SALES (Multi-Akun)
                 if(role === 'SALES' && salesToko !== loggedInUser) return;
-
-                // B. SENSOR DROPDOWN
                 if(!fTipe.includes("ALL") && !fTipe.includes("SEMUA") && tipeToko !== fTipe) return;
                 if(!fSales.includes("ALL") && !fSales.includes("SEMUA") && salesToko !== fSales) return;
                 if(!fRegion.includes("ALL") && !fRegion.includes("SEMUA") && regionToko !== fRegion) return;
 
-                // C. SENSOR KOTAK PENCARIAN
                 if (searchKeyword) {
                     let strCari = `${namaToko} ${c.kota || ''} ${regionToko} ${salesToko}`.toLowerCase();
                     if (!strCari.includes(searchKeyword)) return;
@@ -3043,7 +3039,6 @@
 
                 let tagihan = 0, uangMasuk = 0, retur = 0, fee = 0;
 
-                // HITUNG TAGIHAN
                 arrInvoice.forEach(inv => {
                     let invToko = (inv.toko || "").toUpperCase().trim();
                     if (invToko === namaToko) {
@@ -3051,7 +3046,6 @@
                     }
                 });
 
-                // HITUNG UANG MASUK
                 arrPayment.forEach(p => {
                     let payToko = (p.toko || "").toUpperCase().trim();
                     if (payToko === namaToko) {
@@ -3061,12 +3055,9 @@
                     }
                 });
 
-                // Abaikan toko yang seumur hidup belum pernah transaksi
                 if (tagihan === 0 && uangMasuk === 0) return; 
 
                 let sisa = tagihan - (uangMasuk + retur + fee);
-                
-                // TOLERANSI RECEHAN (< Rp 100 anggap lunas 0)
                 if (Math.abs(sisa) <= 100) sisa = 0;
 
                 grandTotalSisa += sisa;
@@ -3077,14 +3068,11 @@
                 });
             });
 
-            // Urutkan dari hutang terbesar
             dataPiutang.sort((a,b) => b.sisa - a.sisa);
 
-            // Update Label Total
             let sisaLabel = document.getElementById('dashTotalPiutangFilter') || document.getElementById('totalSisaPiutangLabel') || document.getElementById('totalPiutangDashboard'); 
             if(sisaLabel) sisaLabel.innerText = `Rp ${Math.round(grandTotalSisa).toLocaleString('id-ID')}`;
 
-            // 3. SISTEM HALAMAN (PAGINATION)
             const itemsPerPage = 15;
             const totalItems = dataPiutang.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
@@ -3108,79 +3096,97 @@
                 let nRetur = Math.round(d.retur + d.fee);
                 let nSisa = Math.round(d.sisa);
 
-                let statusBadge = '';
-                if(nSisa === 0) statusBadge = `<span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded font-bold inline-block"><i class="fa-solid fa-check-double mr-1"></i> LUNAS</span>`;
-                else if(nSisa < 0) statusBadge = `<span class="bg-purple-100 text-purple-700 text-[10px] px-2 py-0.5 rounded font-bold inline-block">DEPOSIT: Rp ${Math.abs(nSisa).toLocaleString('id-ID')}</span>`;
-                else statusBadge = `<span class="text-red-600 font-bold text-xs md:text-sm">Rp ${nSisa.toLocaleString('id-ID')}</span>`;
+                let statusBadgePC = '';
+                let statusBadgeMobile = '';
+
+                if(nSisa === 0) {
+                    statusBadgePC = `<span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded font-bold inline-block"><i class="fa-solid fa-check-double mr-1"></i> LUNAS</span>`;
+                    statusBadgeMobile = `<span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded font-bold inline-block"><i class="fa-solid fa-check-double mr-1"></i> LUNAS</span>`;
+                }
+                else if(nSisa < 0) {
+                    statusBadgePC = `<span class="bg-purple-100 text-purple-700 text-[10px] px-2 py-0.5 rounded font-bold inline-block">DEPOSIT: Rp ${Math.abs(nSisa).toLocaleString('id-ID')}</span>`;
+                    statusBadgeMobile = `<span class="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded font-bold inline-block">DEPOSIT: Rp ${Math.abs(nSisa).toLocaleString('id-ID')}</span>`;
+                }
+                else {
+                    statusBadgePC = `<span class="text-red-600 font-bold text-sm">Rp ${nSisa.toLocaleString('id-ID')}</span>`;
+                    // Teks super gede khusus mobile biar highlight
+                    statusBadgeMobile = `<span class="text-red-600 font-extrabold text-[15px]">Rp ${nSisa.toLocaleString('id-ID')}</span>`; 
+                }
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-blue-50/60 transition border-b border-gray-100 text-xs">
-                        <!-- KOLOM 1: NOMOR URUT -->
-                        <td class="!py-1.5 px-2 md:px-4 text-center font-bold text-gray-400 align-top md:align-middle w-8">
-                            ${startIdx + i + 1}
-                        </td>
+                <tr class="hover:bg-blue-50/60 transition border-b border-gray-100 text-xs w-full">
+                    
+                    <!-- KOLOM 1: NOMOR URUT (PC ONLY) -->
+                    <td class="!py-2 px-4 text-center font-bold text-gray-400 align-middle w-8 hidden md:table-cell">
+                        ${startIdx + i + 1}
+                    </td>
+                    
+                    <!-- KOLOM 2: KONTEN UTAMA (ALL-IN-ONE CARD DI MOBILE) -->
+                    <td class="!py-2.5 px-3 md:px-4 align-top md:align-middle w-full md:w-auto whitespace-normal md:whitespace-nowrap">
                         
-                        <!-- KOLOM 2: TOKO & RINGKASAN MOBILE -->
-                        <td class="!py-1.5 px-2 md:px-4 align-top">
-                            <div class="font-bold text-gray-800 text-xs md:text-sm leading-tight flex items-center justify-between">
-                                <span>${d.nama}</span>
-                                <!-- Tombol Rincian Mini Khusus Mobile -->
-                                <button onclick="openPiutangModal('${d.nama}')" class="md:hidden text-amber-500 hover:text-amber-600 px-1.5 py-0.5 rounded bg-amber-50 border border-amber-200 text-[10px]">
-                                    <i class="fa-solid fa-search"></i>
-                                </button>
+                        <!-- BARIS ATAS MOBILE: Nama Toko & Tombol Detail (Diubah jadi Icon agar gak makan tempat) -->
+                        <div class="flex justify-between items-center gap-2 w-full min-w-0">
+                            <div class="font-bold text-gray-800 text-sm leading-tight flex-1 min-w-0">
+                                <div class="truncate w-full"><span class="md:hidden text-gray-500 mr-1">${startIdx + i + 1}.</span>${d.nama}</div>
+                                <div class="text-[10px] text-blue-600 font-bold mt-0.5 truncate w-full"><i class="fa-solid fa-user-tie mr-1"></i> ${d.sales}</div>
                             </div>
-                            <div class="text-[10px] text-blue-600 font-semibold mt-0.5">
-                                <i class="fa-solid fa-user-tie mr-1"></i> ${d.sales}
-                            </div>
-                            
-                            <!-- MOBILE ONLY: Ringkasan Lokasi & Mutasi Padat -->
-                            <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-[10px] text-gray-500 space-y-0.5">
-                                <div class="text-gray-400 font-medium">${d.region} - ${d.kota}</div>
-                                <div class="flex justify-between">
-                                    <span>Tagihan: <strong>Rp ${nTagihan.toLocaleString('id-ID')}</strong></span>
-                                    <span class="text-emerald-600">Masuk: <strong>Rp ${nMasuk.toLocaleString('id-ID')}</strong></span>
-                                </div>
-                                ${nRetur > 0 ? `<div class="text-orange-500">Retur/Fee: <strong>Rp ${nRetur.toLocaleString('id-ID')}</strong></div>` : ''}
-                            </div>
-                        </td>
-                        
-                        <!-- KOLOM 3: REGION / KOTA (PC ONLY) -->
-                        <td class="!py-1.5 px-4 hidden md:table-cell align-middle">
-                            <div class="font-bold text-gray-700">${d.region}</div>
-                            <div class="text-[10px] text-gray-400">${d.kota}</div>
-                        </td>
-                        
-                        <!-- KOLOM 4: TOTAL TAGIHAN (PC ONLY) -->
-                        <td class="!py-1.5 px-4 text-right text-gray-600 font-semibold hidden md:table-cell align-middle">
-                            Rp ${nTagihan.toLocaleString('id-ID')}
-                        </td>
-                        
-                        <!-- KOLOM 5: UANG MASUK (PC ONLY) -->
-                        <td class="!py-1.5 px-4 text-right text-emerald-600 font-bold hidden md:table-cell align-middle">
-                            Rp ${nMasuk.toLocaleString('id-ID')}
-                        </td>
-                        
-                        <!-- KOLOM 6: RETUR / FEE (PC ONLY) -->
-                        <td class="!py-1.5 px-4 text-right text-orange-500 font-bold hidden md:table-cell align-middle">
-                            Rp ${nRetur.toLocaleString('id-ID')}
-                        </td>
-                        
-                        <!-- KOLOM 7: SISA PIUTANG -->
-                        <td class="!py-1.5 px-2 md:px-4 text-right align-top md:align-middle">
-                            ${statusBadge}
-                        </td>
-                        
-                        <!-- KOLOM 8: AKSI (PC ONLY) -->
-                        <td class="!py-1.5 px-4 text-center hidden md:table-cell align-middle">
-                            <button onclick="openPiutangModal('${d.nama}')" class="text-amber-500 hover:bg-amber-100 p-1.5 rounded transition border border-amber-200" title="Lihat Rincian Piutang">
+                            <button onclick="openPiutangModal('${d.nama}')" class="md:hidden text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 p-2 rounded-lg transition border border-amber-200 shrink-0 font-bold" title="Detail">
                                 <i class="fa-solid fa-search text-xs"></i>
                             </button>
-                        </td>
-                    </tr>
-                `;
+                        </div>
+                        
+                        <!-- BARIS BAWAH MOBILE (SUSUNAN PAS & PRESISI) -->
+                        <div class="md:hidden mt-2 pt-2 border-t border-gray-100 flex flex-col gap-2 w-full">
+                            
+                            <!-- Lantai 1: Kiri (Region & Tagihan) | Kanan (Masuk & Retur) -->
+                            <div class="grid grid-cols-2 gap-2 text-[10px] w-full">
+                                <!-- Sisi Kiri -->
+                                <div class="space-y-1 min-w-0">
+                                    <div class="text-gray-400 truncate"><span class="font-bold text-gray-700">${d.kota}</span></div>
+                                    <div class="text-gray-500">Tagihan: <span class="font-bold text-gray-800">Rp ${nTagihan.toLocaleString('id-ID')}</span></div>
+                                </div>
+                                
+                                <!-- Sisi Kanan (Masuk di atas, Retur di bawah) -->
+                                <div class="space-y-1 text-right min-w-0">
+                                    <div class="text-emerald-600 truncate">Masuk: <span class="font-bold">Rp ${nMasuk.toLocaleString('id-ID')}</span></div>
+                                    <div class="text-orange-500 truncate">Retur: <span class="font-bold">Rp ${nRetur.toLocaleString('id-ID')}</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Lantai 2: Sisa Piutang Full Lebar Di Bawah -->
+                            <div class="bg-red-50 border border-red-100 p-2 rounded-lg flex justify-between items-center w-full mt-1">
+                                <span class="text-[10px] font-extrabold text-red-800 uppercase tracking-wider">Sisa Tagihan:</span>
+                                <span class="text-red-600 font-extrabold text-sm">${nSisa === 0 ? 'LUNAS' : 'Rp ' + nSisa.toLocaleString('id-ID')}</span>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    <!-- KOLOM 3 s.d 8 (PC ONLY - TETAP AMAN TIDAK BERUBAH) -->
+                    <td class="!py-2 px-4 hidden md:table-cell align-middle">
+                        <div class="font-bold text-gray-700">${d.region}</div>
+                        <div class="text-[10px] text-gray-400">${d.kota}</div>
+                    </td>
+                    <td class="!py-2 px-4 text-right text-gray-600 font-semibold hidden md:table-cell align-middle">
+                        Rp ${nTagihan.toLocaleString('id-ID')}
+                    </td>
+                    <td class="!py-2 px-4 text-right text-emerald-600 font-bold hidden md:table-cell align-middle">
+                        Rp ${nMasuk.toLocaleString('id-ID')}
+                    </td>
+                    <td class="!py-2 px-4 text-right text-orange-500 font-bold hidden md:table-cell align-middle">
+                        Rp ${nRetur.toLocaleString('id-ID')}
+                    </td>
+                    <td class="!py-2 px-4 text-right hidden md:table-cell align-middle">
+                        ${statusBadgePC}
+                    </td>
+                    <td class="!py-2 px-4 text-center hidden md:table-cell align-middle">
+                        <button onclick="openPiutangModal('${d.nama}')" class="text-amber-500 hover:bg-amber-100 p-2 rounded transition border border-amber-200" title="Lihat Rincian Piutang">
+                            <i class="fa-solid fa-search"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
             });
 
-            // Update Info Navigasi Halaman
             let startDisp = totalItems === 0 ? 0 : startIdx + 1;
             let endDisp = Math.min(startIdx + itemsPerPage, totalItems);
             
@@ -3191,18 +3197,14 @@
             const controls = document.getElementById('piutangPaginationControls');
             if (controls) {
                 let htmlPage = '';
-                
-                // Tombol Prev
                 if (currentPiutangPage <= 1) {
                     htmlPage += `<button disabled class="px-3 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-400 cursor-not-allowed">Prev</button>`;
                 } else {
                     htmlPage += `<button onclick="prevPiutangPage()" class="px-3 py-1 rounded text-xs font-semibold bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition shadow-sm">Prev</button>`;
                 }
                 
-                // Angka Halaman
                 htmlPage += `<span class="px-3 py-1 text-xs font-bold text-gray-700 bg-gray-100 rounded flex items-center">${currentPiutangPage} / ${totalPages}</span>`;
                 
-                // Tombol Next
                 if (currentPiutangPage >= totalPages) {
                     htmlPage += `<button disabled class="px-3 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-400 cursor-not-allowed">Next</button>`;
                 } else {
@@ -3257,7 +3259,7 @@
         }
 
         // ==========================================
-        // FUNGSI MODAL RINCIAN PIUTANG (ANTI-CRASH & ANTI-KOMA)
+        // FUNGSI MODAL RINCIAN PIUTANG (COMPACT & TRANSPARAN)
         // ==========================================
         function openPiutangModal(namaToko) {
             try {
@@ -3271,7 +3273,7 @@
                 let custInvoices = db_invoice.filter(i => i.toko === namaToko);
                 let custPayments = db_payment.filter(p => p.toko === namaToko);
                 
-                // BULATKAN SEMUA ANGKA AGAR TIDAK ADA KOMA-KOMA ANEH KAYA DI EXCEL
+                // BULATKAN SEMUA ANGKA AGAR TIDAK ADA KOMA-KOMA ANEH
                 let tagihanToko = Math.round(custInvoices.reduce((sum, i) => sum + (parseFloat(i.totalAkhir) || 0), 0));
                 let bayarToko = Math.round(custPayments.reduce((sum, p) => sum + (parseFloat(p.nominal) || 0), 0)); 
                 let returToko = Math.round(custPayments.reduce((sum, p) => sum + (parseFloat(p.retur) || 0) + (parseFloat(p.fee) || 0), 0));
@@ -3280,22 +3282,22 @@
 
                 let sisaPiutang = tagihanToko - (bayarToko + returToko); 
 
-                // INJEKSI KE HTML
+                // INJEKSI KE HTML KOTAK ATAS
                 document.getElementById('piuTotalBelanja').innerText = `Rp ${tagihanToko.toLocaleString('id-ID')}`;
                 document.getElementById('piuTotalBayar').innerText = `Rp ${bayarToko.toLocaleString('id-ID')}`;
                 document.getElementById('piuTotalRetur').innerText = `Rp ${returToko.toLocaleString('id-ID')}`;
                 document.getElementById('piuTotalTitipan').innerText = `Rp ${uangTitipan.toLocaleString('id-ID')}`;
 
                 let elSisa = document.getElementById('piuGrandSisa');
-                if (sisaPiutang > 100) { // Toleransi 100 perak
+                if (sisaPiutang > 100) { 
                     elSisa.innerText = `Rp ${sisaPiutang.toLocaleString('id-ID')}`;
-                    elSisa.className = "text-xl md:text-2xl font-bold text-white truncate max-w-[60%] text-right";
+                    elSisa.className = "text-[13px] sm:text-sm md:text-xl font-bold truncate text-right w-full text-white";
                 } else if (sisaPiutang < -100) {
                     elSisa.innerText = `DEPOSIT: Rp ${Math.abs(sisaPiutang).toLocaleString('id-ID')}`;
-                    elSisa.className = "text-lg font-bold text-white bg-purple-700 px-3 py-1 rounded shadow-inner truncate max-w-[60%] text-right";
+                    elSisa.className = "text-[12px] sm:text-sm md:text-lg font-bold text-white bg-purple-700/80 px-2 py-1 rounded shadow-inner truncate text-right w-full";
                 } else {
                     elSisa.innerText = `LUNAS`;
-                    elSisa.className = "text-xl md:text-2xl font-bold text-emerald-200 drop-shadow-sm truncate max-w-[60%] text-right";
+                    elSisa.className = "text-[13px] sm:text-sm md:text-xl font-bold text-emerald-200 drop-shadow-sm truncate text-right w-full";
                 }
 
                 if (uangTitipan > 0 && sisaPiutang > 0) {
@@ -3313,25 +3315,53 @@
                 custInvoices.forEach(inv => {
                     let totalTagihanInv = Math.round(parseFloat(inv.totalAkhir) || 0);
                     let histInv = db_payment.filter(p => p.invId === inv.id);
-                    let bayarKhususInvIni = Math.round(histInv.reduce((sum, p) => sum + (parseFloat(p.nominal) || 0) + (parseFloat(p.retur) || 0) + (parseFloat(p.fee) || 0), 0));
                     
+                    let invMasuk = Math.round(histInv.reduce((sum, p) => sum + (parseFloat(p.nominal) || 0), 0));
+                    let invRetur = Math.round(histInv.reduce((sum, p) => sum + (parseFloat(p.retur) || 0) + (parseFloat(p.fee) || 0), 0));
+                    
+                    let bayarKhususInvIni = invMasuk + invRetur;
                     let sisaInvIni = totalTagihanInv - bayarKhususInvIni;
 
                     if (sisaInvIni > 100) { 
                         adaBelumLunas = true;
+                        
+                        // [SELIPAN EMAS]: Retur akan selalu tampil, kalau 0 warnanya abu-abu, kalau isi warnanya oranye!
+                        let returColorClass = invRetur > 0 ? "text-orange-500 font-bold" : "text-gray-400";
+                        
                         tbody.innerHTML += `
-                            <tr class="border-b border-gray-100 hover:bg-orange-50 transition">
-                                <td class="py-2 px-3 font-semibold text-blue-700">${inv.id} <br><span class="text-[10px] text-gray-500 font-normal">${inv.tanggal}</span></td>
-                                <td class="py-2 px-3 text-right">Rp ${totalTagihanInv.toLocaleString('id-ID')}</td>
-                                <td class="py-2 px-3 text-right text-emerald-600">Rp ${bayarKhususInvIni.toLocaleString('id-ID')}</td>
-                                <td class="py-2 px-3 text-right font-bold text-red-500">Rp ${sisaInvIni.toLocaleString('id-ID')}</td>
+                            <tr class="border-b border-gray-100 hover:bg-orange-50 transition text-[10px] md:text-xs">
+                                <td class="!py-1.5 px-2 md:px-3 font-semibold text-blue-700 align-top">
+                                    ${inv.id} <br><span class="text-[9px] md:text-[10px] text-gray-400 font-normal">${inv.tanggal}</span>
+                                </td>
+                                
+                                <!-- KOLOM NILAI FAKTUR & SELIPAN (MOBILE) -->
+                                <td class="!py-1.5 px-2 md:px-3 text-right align-top">
+                                    <div class="font-medium text-gray-800">Rp ${totalTagihanInv.toLocaleString('id-ID')}</div>
+                                    
+                                    <!-- Selipan khusus HP: Selalu muncul! -->
+                                    <div class="sm:hidden mt-1 text-[9px] flex flex-col gap-0.5">
+                                        <div class="text-emerald-600">Masuk: Rp ${invMasuk.toLocaleString('id-ID')}</div>
+                                        <div class="${returColorClass}">Retur: Rp ${invRetur.toLocaleString('id-ID')}</div>
+                                    </div>
+                                </td>
+                                
+                                <!-- KOLOM SUDAH DICICIL (PC ONLY) -->
+                                <td class="!py-1.5 px-2 md:px-3 text-right align-top hidden sm:table-cell">
+                                    <div class="text-emerald-600 font-medium">Rp ${invMasuk.toLocaleString('id-ID')}</div>
+                                    <div class="text-[9px] ${returColorClass} mt-0.5">Retur: Rp ${invRetur.toLocaleString('id-ID')}</div>
+                                </td>
+                                
+                                <!-- KOLOM KURANG -->
+                                <td class="!py-1.5 px-2 md:px-3 text-right font-bold text-red-500 align-top">
+                                    Rp ${sisaInvIni.toLocaleString('id-ID')}
+                                </td>
                             </tr>
                         `;
                     }
                 });
 
                 if (!adaBelumLunas) {
-                    tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-emerald-600 font-bold bg-emerald-50 italic"><i class="fa-solid fa-check mr-2"></i> Mantap, tidak ada invoice yang nunggak.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center !py-4 text-emerald-600 font-bold bg-emerald-50 italic text-[11px] md:text-xs"><i class="fa-solid fa-check mr-2"></i> Mantap, tidak ada invoice yang nunggak.</td></tr>`;
                 }
 
                 const modal = document.getElementById('modal-detail-piutang');
@@ -3421,7 +3451,7 @@
                     
                     aksiHTML = `
                         <td class="py-3 px-4 text-center align-top md:align-middle w-24">
-                            <div class="flex gap-1.5 justify-center">
+                            <div class="flex flex-col md:flex-row gap-1.5 justify-center">
                                 <button onclick="editItem('${item.prodId}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded transition">
                                     <i class="fa-solid fa-pen text-xs"></i>
                                 </button>
@@ -3878,7 +3908,7 @@
                 let aksiHTML = '';
                 if (isAdmin) {
                     aksiHTML = `
-                        <td class="!py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row!py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewPODetail('${po.id}')" title="Lihat/Cetak" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-eye text-xs"></i></button>
                             <button onclick="editPO('${po.id}')" title="Edit PO" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="printAction('${po.id}', 'SPK')" title="Print SPK" class="text-purple-600 hover:text-white hover:bg-purple-600 bg-purple-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-file-contract text-xs"></i></button>
@@ -3889,7 +3919,7 @@
                 } else {
                     // Khusus Sales: Hanya bisa melihat detail / cetak
                     aksiHTML = `
-                        <td class="!py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewPODetail('${po.id}')" title="Lihat/Cetak" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-eye text-xs"></i></button>
                         </td>
                     `;
@@ -3899,43 +3929,83 @@
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
 
                 tr.innerHTML = `
-                    <!-- KOLOM 1: NO PO & TANGGAL -->
-                    <td class="!py-1.5 px-2 md:px-4 font-bold text-blue-700 align-top">
-                        <div class="text-xs md:text-sm leading-tight">${po.id}</div>
+                    <!-- KOLOM 1: NO PO & TANGGAL (PC ONLY) -->
+                    <td class="!py-2 px-4 font-bold text-blue-700 align-top hidden md:table-cell">
+                        <div class="text-sm leading-tight">${po.id}</div>
                         <div class="text-[10px] text-gray-500 font-normal">${po.tanggal}</div>
                     </td>
                     
-                    <!-- KOLOM 2: MAKLOON & RINGKASAN MOBILE -->
-                    <td class="!py-1.5 px-2 md:px-4 font-semibold text-gray-700 align-top">
-                        <div class="text-xs md:text-sm">${po.makloon}</div>
-                        <div class="text-[11px] text-gray-400 font-normal">Rp ${parseInt(po.harga || 0).toLocaleString('id-ID')}</div>
+                    <!-- KOLOM UTAMA: 1 KOLOM CARD DI HP / MAKLOON DI PC -->
+                    <td class="!py-2.5 px-3 md:px-4 align-top w-full md:w-auto whitespace-normal md:whitespace-nowrap">
                         
-                        <!-- MOBILE ONLY: Ringkasan super padat ke bawah -->
-                        <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-[11px] flex flex-col gap-0.5">
-                            <div><strong>Merk/Artikel:</strong> ${merkUtama} - ${artikelUtama}</div>
-                            <div><strong>Qty:</strong> <span class="text-indigo-600 font-bold">${totalQty} Pasang</span></div>
-                            <div class="flex items-center gap-1"><strong>SPK:</strong> ${badgeSPK}</div>
-                            <div class="mt-0.5"><strong>Barcode:</strong><br>${badgeBC}</div>
+                        <!-- ================= MOBILE ONLY: CARD 1 KOLOM ================= -->
+                        <div class="md:hidden flex flex-col gap-1.5 w-full min-w-0">
+                            <!-- Lantai Atas: No PO, Tanggal, & Aksi Bawaan -->
+                            <div class="flex justify-between items-start gap-2 border-b border-gray-100 pb-1.5">
+                                <div>
+                                    <div class="font-bold text-blue-700 text-xs">${po.id}</div>
+                                    <div class="text-[10px] text-gray-400">${po.tanggal}</div>
+                                </div>
+                                <!-- Tombol aksi bawaan diselipin di sini -->
+                                <div class="flex items-center gap-1 shrink-0 [&>button]:!p-1.5 [&>button]:!text-xs">
+                                    ${aksiHTML.replace(/<\/?td[^>]*>/g, '')}
+                                </div>
+                            </div>
+
+                            <!-- Lantai Tengah: Makloon & Harga -->
+                            <div class="flex justify-between items-baseline text-xs">
+                                <span class="font-bold text-gray-800 truncate">${po.makloon}</span>
+                                <span class="text-gray-500 font-semibold shrink-0">Rp ${parseInt(po.harga || 0).toLocaleString('id-ID')}</span>
+                            </div>
+
+                            <!-- Lantai Bawah: Rincian Produk & Status -->
+                            <div class="bg-gray-50 p-2 rounded-lg text-[11px] space-y-1 border border-gray-100">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Art:</span>
+                                    <span class="font-semibold text-gray-800 text-right truncate max-w-[65%]">${merkUtama} - ${artikelUtama}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Qty:</span>
+                                    <span class="text-indigo-600 font-bold">${totalQty} Pasang</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-0.5 border-t border-gray-200/60">
+                                    <span class="text-gray-500">SPK:</span>
+                                    <div>${badgeSPK}</div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">BC:</span>
+                                    <div>${badgeBC}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= PC ONLY: MAKLOON ================= -->
+                        <div class="hidden md:block font-semibold text-gray-700">
+                            <div class="text-sm">${po.makloon}</div>
+                            <div class="text-[11px] text-gray-400 font-normal">Rp ${parseInt(po.harga || 0).toLocaleString('id-ID')}</div>
                         </div>
                     </td>
                     
                     <!-- KOLOM 3: MERK (PC ONLY) -->
-                    <td class="!py-1.5 px-4 hidden md:table-cell align-middle">${merkUtama}</td>
+                    <td class="!py-2 px-4 hidden md:table-cell align-middle">${merkUtama}</td>
                     
                     <!-- KOLOM 4: ARTIKEL (PC ONLY) -->
-                    <td class="!py-1.5 px-4 hidden md:table-cell align-middle">${artikelUtama}</td>
+                    <td class="!py-2 px-4 hidden md:table-cell align-middle">${artikelUtama}</td>
                     
                     <!-- KOLOM 5: QTY (PC ONLY) -->
-                    <td class="!py-1.5 px-4 text-center font-bold text-lg text-indigo-600 hidden md:table-cell align-middle">${totalQty}</td>
+                    <td class="!py-2 px-4 text-center font-bold text-base text-indigo-600 hidden md:table-cell align-middle">${totalQty}</td>
                     
                     <!-- KOLOM 6: STATUS SPK (PC ONLY) -->
-                    <td class="!py-1.5 px-4 text-center hidden md:table-cell align-middle">${badgeSPK}</td>
+                    <td class="!py-2 px-4 text-center hidden md:table-cell align-middle">${badgeSPK}</td>
                     
                     <!-- KOLOM 7: STATUS BARCODE (PC ONLY) -->
-                    <td class="!py-1.5 px-4 text-center hidden md:table-cell align-middle">${badgeBC}</td>
+                    <td class="!py-2 px-4 text-center hidden md:table-cell align-middle">${badgeBC}</td>
                     
-                    <!-- KOLOM 8: AKSI -->
-                    ${aksiHTML}
+                    <!-- KOLOM 8: AKSI BAWAAN (PC ONLY) -->
+                    <!-- Jika aksiHTML bawaan sudah include <td>, pastikan ada class hidden md:table-cell -->
+                    ${aksiHTML.includes('<td') 
+                        ? aksiHTML.replace('<td', '<td class="hidden md:table-cell"') 
+                        : `<td class="!py-2 px-4 text-center hidden md:table-cell align-middle">${aksiHTML}</td>`}
                 `;
                 tbody.appendChild(tr);
             });
@@ -4463,7 +4533,7 @@
                 let aksiHTML = '';
                 if (isAdmin) {
                     aksiHTML = `
-                        <td class="!py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewSODetail('${so.id}')" title="Preview / Kirim" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-eye"></i></button>
                             <button onclick="editSO('${so.id}')" title="Edit SO" class="text-amber-500 hover:bg-amber-100 px-2 py-1.5 rounded transition"><i class="fa-solid fa-pen"></i></button>
                             <button onclick="deleteSO('${so.id}')" title="Hapus SO" class="text-red-500 hover:bg-red-100 px-2 py-1.5 rounded transition"><i class="fa-solid fa-trash"></i></button>
@@ -4472,7 +4542,7 @@
                 } else {
                     // Khusus Sales: Tombol edit & hapus disembunyikan, hanya bisa Preview/Kirim
                     aksiHTML = `
-                        <td class="!py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewSODetail('${so.id}')" title="Preview / Kirim" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-eye"></i></button>
                         </td>
                     `;
@@ -5070,7 +5140,7 @@
                 let aksiHTML = '';
                 if (isAdmin) {
                     aksiHTML = `
-                        <td class="py-3 px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row py-3 px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="openPaymentModal('${inv.id}')" title="Input Pembayaran" class="text-white bg-green-600 hover:bg-green-700 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-money-bill-wave"></i></button>
                             <button onclick="viewInvoiceDetail('${inv.id}')" title="Cetak SJ" class="text-white bg-gray-800 hover:bg-black px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-print"></i></button>
                             <button onclick="editInvoice('${inv.id}')" title="Edit Invoice" class="text-amber-500 hover:bg-amber-100 px-2 py-1.5 rounded transition"><i class="fa-solid fa-pen"></i></button>
@@ -5080,7 +5150,7 @@
                 } else {
                     // Khusus Sales: Hanya bisa Input Pembayaran & Cetak SJ (Tombol Edit & Hapus disembunyikan)
                     aksiHTML = `
-                        <td class="py-3 px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row py-3 px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="openPaymentModal('${inv.id}')" title="Input Pembayaran" class="text-white bg-green-600 hover:bg-green-700 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-money-bill-wave"></i></button>
                             <button onclick="viewInvoiceDetail('${inv.id}')" title="Cetak SJ" class="text-white bg-gray-800 hover:bg-black px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-print"></i></button>
                         </td>
@@ -5137,7 +5207,7 @@
                         </td>
                         
                         <!-- KOLOM 6: AKSI -->
-                        <td class="!py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle">
                             ${aksiHTML.includes('td') ? aksiHTML.replace(/<td[^>]*>|<\/td>/g, '') : aksiHTML}
                         </td>
                     `;
@@ -5784,7 +5854,7 @@
                 let aksiHTML = '';
                 if (isAdmin) {
                     aksiHTML = `
-                        <td class="!py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="editCustomer('${c.id || c.nama}')" title="Edit" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2.5 py-1.5 rounded transition"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="deleteCustomer('${c.id || c.nama}')" title="Hapus" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 px-2.5 py-1.5 rounded transition"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
@@ -5804,16 +5874,22 @@
                         <div class="text-[10px] text-blue-600 font-semibold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${c.sales || '-'}</div>
                         
                         <!-- MOBILE ONLY: Ringkasan 1 kolom ke bawah yang rapi & rapat -->
-                        <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-[11px] space-y-0.5">
-                            <div><strong>Alamat:</strong> ${alamatTampil}</div>
-                            <div><strong>Telp:</strong> ${telpTampil}</div>
-                            <div><strong>Bank:</strong> ${bankTampil}</div>
-                            <div class="flex items-center gap-2 pt-0.5">
+                        <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-[11px] space-y-0.5 w-full min-w-0">
+                            <div class="whitespace-normal break-words leading-tight">
+                                <strong class="text-gray-700">Alamat:</strong> <span class="text-gray-600">${alamatTampil}</span>
+                            </div>
+                            <div class="whitespace-normal break-words">
+                                <strong class="text-gray-700">Telp:</strong> <span class="text-gray-600">${telpTampil}</span>
+                            </div>
+                            <div class="whitespace-normal break-words">
+                                <strong class="text-gray-700">Bank:</strong> <span class="text-gray-600">${bankTampil}</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 pt-0.5">
                                 <span>${badgeTipe}</span>
                                 <span class="text-emerald-600 font-bold">Disc: ${diskonToko}</span>
                                 <span class="text-rose-500 font-bold">Rate: ${rateSales}</span>
                             </div>
-                            ${c.ket ? `<div class="text-gray-400 ide/italic text-[10px]">Ket: ${c.ket}</div>` : ''}
+                            ${c.ket ? `<div class="text-gray-400 italic text-[10px] whitespace-normal break-words leading-tight">Ket: ${c.ket}</div>` : ''}
                         </div>
                     </td>
                     
@@ -6372,7 +6448,7 @@
                 let aksiHTML = '';
                 if (isAdmin) {
                     aksiHTML = `
-                        <td class="py-3 px-4 text-center whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row py-3 px-4 text-center whitespace-nowrap align-middle">
                             <button onclick="openPaymentModal('${pay.invId}', '${pay.id}')" class="text-amber-500 hover:bg-amber-100 p-1.5 rounded transition"><i class="fa-solid fa-pen"></i></button>
                             <button onclick="deletePayment('${pay.id}')" class="text-red-500 hover:bg-red-100 p-1.5 rounded transition ml-1"><i class="fa-solid fa-trash"></i></button>
                         </td>
@@ -7278,7 +7354,7 @@
                 let aksiHTML = '';
                 if (isAdmin) {
                     aksiHTML = `
-                        <td class="!py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle">
                             <button onclick="editUser('${user.username}')" title="Edit User" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2.5 py-1.5 rounded transition shadow-sm"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="deleteUser('${user.username}')" title="Hapus User" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 px-2.5 py-1.5 rounded transition shadow-sm"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
@@ -9127,7 +9203,7 @@
                 let aksiHTML = '';
                 if (isAdmin) {
                     aksiHTML = `
-                        <td class="py-3 px-2 md:px-4 text-center align-middle whitespace-nowrap">
+                        <td class="flex flex-col md:flex-row py-3 px-2 md:px-4 text-center align-middle whitespace-nowrap">
                             <div class="flex justify-center space-x-1.5">
                                 <button onclick="cetakUlangKB('${kb.id}')" title="Cetak Ulang" class="bg-blue-100 hover:bg-blue-600 text-blue-700 hover:text-white px-2.5 py-1.5 rounded transition text-xs font-bold"><i class="fa-solid fa-print"></i></button>
                                 <button onclick="hapusKB('${kb.id}')" title="Hapus" class="bg-red-100 hover:bg-red-600 text-red-700 hover:text-white px-2.5 py-1.5 rounded transition text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
