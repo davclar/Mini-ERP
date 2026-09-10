@@ -1038,15 +1038,19 @@
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">No. Order & Tgl</th>
-                                            <th class="py-3 px-2 md:px-4">Customer (Toko)</th>
+                                            <!-- Sembunyikan Header Kolom 1 di Mobile -->
+                                            <th class="py-3 px-4 hidden md:table-cell">No. Order & Tgl</th>
                                             
-                                            <!-- Sembunyi di Mobile -->
+                                            <!-- Kolom 2 ini yang jadi Judul Tunggal di Mobile -->
+                                            <th class="py-2.5 px-3 md:px-4">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar Order (SO)</span>
+                                                <span class="hidden md:inline">Customer (Toko)</span>
+                                            </th>
+                                            
+                                            <!-- Sisanya disembunyikan di Mobile -->
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Rincian Barang</th>
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Status</th>
-                                            
-                                            <!-- ID Sensor Kacamata Kuda -->
-                                            <th id="th-aksi-so" class="py-3 px-2 md:px-4 text-center">Aksi</th>
+                                            <th id="th-aksi-so" class="py-3 px-4 text-center hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="soTableBody" class="divide-y divide-gray-100">
@@ -1249,16 +1253,20 @@
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">No Invoice & Tgl</th>
-                                            <th class="py-3 px-2 md:px-4">Toko / Customer</th>
+                                            <!-- Sembunyikan Header Kolom 1 di Mobile -->
+                                            <th class="py-3 px-4 hidden md:table-cell">No Invoice & Tgl</th>
                                             
-                                            <!-- Sembunyi di Mobile -->
+                                            <!-- Kolom 2 ini yang jadi Judul Tunggal di Mobile -->
+                                            <th class="py-2.5 px-3 md:px-4">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar Invoice</span>
+                                                <span class="hidden md:inline">Toko / Customer</span>
+                                            </th>
+                                            
+                                            <!-- Sisanya disembunyikan di Mobile -->
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Item</th>
                                             <th class="py-3 px-4 text-right hidden md:table-cell">Total Tagihan</th>
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Status & Sisa</th>
-                                            
-                                            <!-- ID Sensor Kacamata Kuda -->
-                                            <th id="th-aksi-inv" class="py-3 px-2 md:px-4 text-center">Aksi</th>
+                                            <th id="th-aksi-inv" class="py-3 px-4 text-center hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="invoiceTableBody" class="divide-y divide-gray-100">
@@ -1497,7 +1505,7 @@
                         <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
                             
                             <!-- REKAP UANG MASUK (KOTAK HIJAU) -->
-                            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-4 md:p-6 rounded-none md:rounded-xl shadow-sm md:shadow-md text-white mb-0 md:mb-6 flex justify-between items-center shrink-0 border-b md:border-b-0 border-green-700">
+                            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-4 md:p-6 rounded-xl shadow-sm md:shadow-md text-white mb-0 md:mb-6 flex justify-between items-center shrink-0 border-b md:border-b-0 border-green-700">
                                 <div>
                                     <p class="text-green-100 text-xs md:text-sm font-semibold mb-1">Total Uang Masuk</p>
                                     <h3 id="totalUangMasuk" class="text-xl md:text-3xl font-bold">Rp 0</h3>
@@ -1506,20 +1514,24 @@
                             </div>
 
                             <!-- TABEL BUKU KAS -->
-                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
+                            <div class="flex-1 overflow-y-auto mt-2 md:mt-0 border border-gray-200 rounded-lg h-[600px]">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">No. TRX & Tgl</th>
-                                            <th class="py-3 px-2 md:px-4">Toko & Invoice</th>
+                                            <!-- Sembunyikan Header Kolom 1 di Mobile -->
+                                            <th class="py-3 px-4 hidden md:table-cell">No. TRX & Tgl</th>
                                             
-                                            <!-- Sembunyi di Mobile -->
+                                            <!-- Kolom 2 ini yang jadi Judul Tunggal di Mobile -->
+                                            <th class="py-2.5 px-3 md:px-4">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar Pembayaran</span>
+                                                <span class="hidden md:inline">Toko & Invoice</span>
+                                            </th>
+                                            
+                                            <!-- Sisanya disembunyikan di Mobile -->
                                             <th class="py-3 px-4 text-right hidden md:table-cell">Uang Masuk</th>
                                             <th class="py-3 px-4 text-right hidden md:table-cell">Retur / Fee</th>
                                             <th class="py-3 px-4 hidden md:table-cell">Komisi Sales</th>
-                                            
-                                            <!-- ID Sensor Kacamata Kuda -->
-                                            <th id="th-aksi-pay" class="py-3 px-2 md:px-4 text-center">Aksi</th>
+                                            <th id="th-aksi-pay" class="py-3 px-4 text-center hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="paymentTableBody" class="divide-y divide-gray-100">
@@ -1627,15 +1639,25 @@
                             <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg">
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="bg-gray-50 border-b border-gray-200 text-[10px] md:text-xs uppercase text-gray-600 sticky top-0 z-10 shadow-sm tracking-wider">
-                                        <tr>
-                                            <th id="th-ceklis-komisi" class="admin-only py-2.5 px-2 md:px-3 text-center w-8 md:w-10">
-                                                <input type="checkbox" id="checkAllKomisi" onclick="toggleAllKomisi(this)" class="w-4 h-4 cursor-pointer rounded text-purple-600 border-gray-300 focus:ring-purple-500">
-                                            </th>  
-                                            <th class="py-2.5 px-2 md:px-4">Tgl Bayar & No. TRX</th>
-                                            <th class="py-2.5 px-2 md:px-4">Toko / Customer</th>
-                                            <th class="py-2.5 px-4 text-right hidden md:table-cell">Nominal Masuk</th>
-                                            <th class="py-2.5 px-4 text-right text-indigo-700 hidden md:table-cell">Nilai Komisi</th>
-                                            <th class="py-2.5 px-4 text-center hidden md:table-cell">Status Pencairan</th>
+                                        <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
+                                            <!-- Kolom Ceklis (Sembunyi di Mobile) -->
+                                            <th id="th-ceklis-komisi" class="py-3 px-3 hidden md:table-cell w-10 text-center">
+                                                <input type="checkbox" id="checkAllKomisi" class="w-4 h-4 cursor-pointer rounded accent-purple-600" onchange="toggleAllKomisi()">
+                                            </th>
+                                            
+                                            <!-- Tgl & No Trx (Sembunyi di Mobile) -->
+                                            <th class="py-3 px-4 hidden md:table-cell">Tgl Bayar & No. TRX</th>
+                                            
+                                            <!-- Kolom 2 ini yang jadi Judul Tunggal di Mobile -->
+                                            <th class="py-2.5 px-3 md:px-4">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar Komisi</span>
+                                                <span class="hidden md:inline">Toko / Customer</span>
+                                            </th>
+                                            
+                                            <!-- Sisanya disembunyikan di Mobile -->
+                                            <th class="py-3 px-4 text-right hidden md:table-cell">Nominal Masuk</th>
+                                            <th class="py-3 px-4 text-right hidden md:table-cell">Komisi Sales</th>
+                                            <th class="py-3 px-4 text-center hidden md:table-cell">Status Pencairan</th>
                                         </tr>
                                     </thead>
                                     <tbody id="komisiTableBody" class="divide-y divide-gray-100">
@@ -1680,7 +1702,7 @@
                             </div>
 
                             <!-- Kanan: Search & Tombol Aksi -->
-                            <div class="w-full md:w-auto flex flex-col sm:flex-row gap-2 md:gap-3">
+                            <div class="w-full md:w-auto flex flex-col sm:flex-row">
                                 
                                 <!-- Kotak Pencarian (Rumah disiapkan untuk konsistensi) -->
                                 <div class="relative w-full sm:w-auto">
@@ -1705,14 +1727,18 @@
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">No. Kontra Bon & Tgl</th>
-                                            <th class="py-3 px-2 md:px-4">Toko / Customer</th>
+                                            <!-- Sembunyikan Header Kolom 1 di Mobile -->
+                                            <th class="py-3 px-4 hidden md:table-cell">No. Kontra Bon & Tgl</th>
                                             
-                                            <!-- Sembunyi di Mobile -->
+                                            <!-- Kolom 2 ini yang jadi Judul Tunggal di Mobile -->
+                                            <th class="py-2.5 px-3 md:px-4">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar Kontra Bon</span>
+                                                <span class="hidden md:inline">Toko / Customer</span>
+                                            </th>
+                                            
+                                            <!-- Sisanya disembunyikan di Mobile -->
                                             <th class="py-3 px-4 text-right hidden md:table-cell">Total Tagihan</th>
-                                            
-                                            <!-- ID Sensor Kacamata Kuda -->
-                                            <th id="th-aksi-kb" class="py-3 px-2 md:px-4 text-center">Aksi</th>
+                                            <th id="th-aksi-kb" class="py-3 px-4 text-center hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="kbHistoryTable" class="divide-y divide-gray-100">
@@ -1824,7 +1850,7 @@
                                 </div>
                                 <div class="overflow-x-auto max-h-[260px] overflow-y-auto relative">
                                     <table class="w-full text-xs md:text-sm text-left whitespace-nowrap">
-                                        <thead class="bg-gray-50 border-b border-gray-200 text-[10px] md:text-xs uppercase text-gray-600 sticky top-0 z-10 shadow-sm">
+                                        <thead class="hidden md:table-header-group bg-gray-50 border-b border-gray-200 text-[10px] md:text-xs uppercase text-gray-600 sticky top-0 z-10 shadow-sm">
                                             <tr>
                                                 <th class="p-3 font-bold">Nama Sales</th>
                                                 <th class="p-3 text-right font-bold">Total Komisi (Hak)</th>
@@ -1832,7 +1858,7 @@
                                                 <th class="p-3 text-right font-bold text-indigo-700">Sisa Komisi (Blm Cair)</th>
                                                 <th class="p-3 text-right font-bold text-red-600">Total Kasbon (Utang)</th>
                                                 <th class="p-3 text-right font-bold text-emerald-600">Saldo Bersih (Sisa - Utang)</th>
-                                                <th class="p-3 text-center font-bold">Aksi Cepat</th>
+                                                <th id="th-aksi-klasemen" class="p-3 text-center font-bold">Aksi Cepat</th>
                                             </tr>
                                         </thead>
                                         <tbody id="slLedgerBody" class="divide-y divide-gray-100">
@@ -1852,13 +1878,13 @@
                                     </div>
                                     <div class="overflow-x-auto max-h-[260px] overflow-y-auto relative">
                                         <table class="w-full text-xs text-left whitespace-nowrap">
-                                            <thead class="bg-indigo-50 sticky top-0 z-10 shadow-sm text-indigo-800">
+                                            <thead class="hidden md:table-header-group bg-indigo-50 sticky top-0 z-10 shadow-sm text-indigo-800">
                                                 <tr>
                                                     <th class="p-2.5 font-bold">No. CP / Tgl</th>
                                                     <th class="p-2.5 font-bold">Sales</th>
                                                     <th class="p-2.5 font-bold">Note</th>
                                                     <th class="p-2.5 text-right font-bold">Nominal</th>
-                                                    <th class="p-2.5 text-center font-bold w-10">Aksi</th>
+                                                    <th id="th-aksi-cp" class="p-2.5 text-center font-bold w-10">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="slCpBody" class="divide-y divide-gray-100">
@@ -1886,13 +1912,13 @@
                                     
                                     <div class="overflow-x-auto overflow-y-auto flex-1 max-h-[200px]">
                                         <table class="w-full text-xs text-left whitespace-nowrap">
-                                            <thead class="bg-orange-50 sticky top-0 z-10 shadow-sm text-orange-800">
+                                            <thead class="hidden md:table-header-group bg-orange-50 sticky top-0 z-10 shadow-sm text-orange-800">
                                                 <tr>
                                                     <th class="p-2.5 font-bold">Tgl</th>
                                                     <th class="p-2.5 font-bold">Sales</th>
                                                     <th class="p-2.5 font-bold">Tipe</th>
                                                     <th class="p-2.5 text-right font-bold">Nominal</th>
-                                                    <th class="p-2.5 text-center font-bold w-10">Aksi</th>
+                                                    <th id="th-aksi-ksb" class="p-2.5 text-center font-bold w-10">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="slKasbonBody" class="divide-y divide-gray-100">
@@ -2522,6 +2548,7 @@
                         if(key === 'davclar_payment' && activeTab === 'tab-payment' && typeof renderPaymentList === 'function') renderPaymentList();
                         if(key === 'davclar_komisi' && activeTab === 'tab-komisi' && typeof renderKomisi === 'function') renderKomisi();
                         if(key === 'davclar_users' && activeTab === 'tab-usersetting' && typeof renderUserTable === 'function') renderUserTable();
+                        if(key === 'davclar_users' && activeTab === 'tab-salesledger' && typeof renderSalesLedger === 'function') renderSalesLedger();
                     }
                 });
             });
@@ -2832,8 +2859,10 @@
             let fRegion = document.getElementById('dashFilterRegion') ? document.getElementById('dashFilterRegion').value.toUpperCase().trim() : "ALL";
             let searchKeyword = document.getElementById('searchPiutang') ? document.getElementById('searchPiutang').value.toLowerCase().trim() : "";
 
-            const role = localStorage.getItem('davclar_role') || "ADMIN";
+            // --- CEK IDENTITAS SALES (KUNCI ANTI-BOCOR) ---
+            const role = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
             const loggedInUser = (localStorage.getItem('davclar_user') || "").toUpperCase().trim();
+            const isSales = (role === 'SALES'); // Murni ngecek jabatan
 
             // Fungsi validasi apakah suatu toko lolos saringan filter dashboard
             function isCustomerPassed(tokoName) {
@@ -2845,8 +2874,8 @@
                 let cRegion = cust ? (cust.region || "").toUpperCase().trim() : "";
                 let cKota = cust ? (cust.kota || "").toUpperCase().trim() : "";
 
-                // 1. Sensor Akun Sales
-                if (role === 'SALES' && cSales !== loggedInUser) return false;
+                // 1. Sensor Akun Sales: Wajib sama dengan nama usernya
+                if (isSales && cSales !== loggedInUser) return false;
 
                 // 2. Sensor Filter Dropdown
                 let isKonsi = cType.includes('KONSI');
@@ -2924,77 +2953,9 @@
             if(typeof renderKlasemenPiutang === 'function') renderKlasemenPiutang(); 
         }
 
-        function renderOmsetChart(endDateObj = new Date(), filterCheckFunc = null) {
-            const ctx = document.getElementById('omsetChart');
-            if (!ctx) return;
-
-            const monthNames = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGS", "SEP", "OKT", "NOV", "DES"];
-            const labels = [];
-            const dataMonthly = [];
-
-            for (let i = 11; i >= 0; i--) {
-                const d = new Date(endDateObj.getFullYear(), endDateObj.getMonth() - i, 1);
-                const year = d.getFullYear();
-                const month = d.getMonth();
-                labels.push(`${monthNames[month]} ${year}`);
-
-                let totalBulan = 0;
-                (db_invoice || []).forEach(inv => {
-                    if (!inv.tanggal) return;
-                    // Saring dengan filter aktif jika ada
-                    if (filterCheckFunc && !filterCheckFunc(inv.toko)) return;
-
-                    const invDate = new Date(inv.tanggal);
-                    if (invDate.getFullYear() === year && invDate.getMonth() === month) {
-                        totalBulan += Math.round(inv.totalAkhir || 0);
-                    }
-                });
-                dataMonthly.push(totalBulan);
-            }
-
-            const maxOmzet = Math.max(...dataMonthly, 0);
-            const peakEl = document.getElementById('dashPeakOmzet');
-            if(peakEl) peakEl.innerText = `Puncak: Rp ${maxOmzet.toLocaleString('id-ID')}`;
-
-            let existingChart = Chart.getChart(ctx);
-            if (existingChart) existingChart.destroy();
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Omset Bersih', data: dataMonthly, borderColor: '#2563eb', 
-                        backgroundColor: 'rgba(37, 99, 235, 0.1)', borderWidth: 3,
-                        pointBackgroundColor: '#2563eb', pointBorderColor: '#ffffff', pointBorderWidth: 2,
-                        pointRadius: 5, pointHoverRadius: 7, tension: 0.35, fill: true
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: {
-                            beginAtZero: true, grid: { color: '#f3f4f6' },
-                            ticks: {
-                                callback: function(value) {
-                                    if(value >= 1000000000) return 'Rp ' + (value / 1000000000).toFixed(1) + ' M';
-                                    if(value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(0) + ' Jt';
-                                    return 'Rp ' + value.toLocaleString('id-ID');
-                                }, font: { size: 10 }
-                            }
-                        },
-                        x: { grid: { display: false }, ticks: { font: { size: 10, weight: 'bold' } } }
-                    }
-                }
-            });
-        }
-
         // ==========================================
-        // RENDER PIUTANG (ULTIMATE: ANTI-GAIB & MAHA PEMAAF)
+        // RENDER PIUTANG KLASEMEN
         // ==========================================
-        let currentPiutangPage = 1;
-
         function renderKlasemenPiutang() { 
             const tbody = document.getElementById('dashKlasemenBody') || document.getElementById('piutangTableBody');
             if(!tbody) return;
@@ -3018,8 +2979,10 @@
             let arrInvoice = (typeof db_invoice !== 'undefined') ? db_invoice : [];
             let arrPayment = (typeof db_payment !== 'undefined') ? db_payment : [];
 
-            const role = localStorage.getItem('davclar_role') || "ADMIN";
+            // --- CEK IDENTITAS SALES (KUNCI ANTI-BOCOR) ---
+            const role = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
             const loggedInUser = (localStorage.getItem('davclar_user') || "").toUpperCase().trim();
+            const isSales = (role === 'SALES');
 
             arrCustomer.forEach(c => {
                 let namaToko = (c.nama || "").toUpperCase().trim(); 
@@ -3027,7 +2990,9 @@
                 let tipeToko = (c.type || "").toUpperCase().trim();
                 let regionToko = (c.region || "").toUpperCase().trim();
                 
-                if(role === 'SALES' && salesToko !== loggedInUser) return;
+                // Sensor Sales Aktif: Wajib sama dengan nama usernya
+                if(isSales && salesToko !== loggedInUser) return;
+                
                 if(!fTipe.includes("ALL") && !fTipe.includes("SEMUA") && tipeToko !== fTipe) return;
                 if(!fSales.includes("ALL") && !fSales.includes("SEMUA") && salesToko !== fSales) return;
                 if(!fRegion.includes("ALL") && !fRegion.includes("SEMUA") && regionToko !== fRegion) return;
@@ -3214,6 +3179,8 @@
             }
         }
 
+        let currentPiutangPage = 1;
+
         // FUNGSI PENGGERAK TOMBOL PREV & NEXT
         function prevPiutangPage() {
             if(currentPiutangPage > 1) { 
@@ -3224,6 +3191,72 @@
         function nextPiutangPage() {
             currentPiutangPage++; 
             renderKlasemenPiutang();
+        }
+
+        function renderOmsetChart(endDateObj = new Date(), filterCheckFunc = null) {
+            const ctx = document.getElementById('omsetChart');
+            if (!ctx) return;
+
+            const monthNames = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGS", "SEP", "OKT", "NOV", "DES"];
+            const labels = [];
+            const dataMonthly = [];
+
+            for (let i = 11; i >= 0; i--) {
+                const d = new Date(endDateObj.getFullYear(), endDateObj.getMonth() - i, 1);
+                const year = d.getFullYear();
+                const month = d.getMonth();
+                labels.push(`${monthNames[month]} ${year}`);
+
+                let totalBulan = 0;
+                (db_invoice || []).forEach(inv => {
+                    if (!inv.tanggal) return;
+                    // Saring dengan filter aktif jika ada
+                    if (filterCheckFunc && !filterCheckFunc(inv.toko)) return;
+
+                    const invDate = new Date(inv.tanggal);
+                    if (invDate.getFullYear() === year && invDate.getMonth() === month) {
+                        totalBulan += Math.round(inv.totalAkhir || 0);
+                    }
+                });
+                dataMonthly.push(totalBulan);
+            }
+
+            const maxOmzet = Math.max(...dataMonthly, 0);
+            const peakEl = document.getElementById('dashPeakOmzet');
+            if(peakEl) peakEl.innerText = `Puncak: Rp ${maxOmzet.toLocaleString('id-ID')}`;
+
+            let existingChart = Chart.getChart(ctx);
+            if (existingChart) existingChart.destroy();
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Omset Bersih', data: dataMonthly, borderColor: '#2563eb', 
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)', borderWidth: 3,
+                        pointBackgroundColor: '#2563eb', pointBorderColor: '#ffffff', pointBorderWidth: 2,
+                        pointRadius: 5, pointHoverRadius: 7, tension: 0.35, fill: true
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true, grid: { color: '#f3f4f6' },
+                            ticks: {
+                                callback: function(value) {
+                                    if(value >= 1000000000) return 'Rp ' + (value / 1000000000).toFixed(1) + ' M';
+                                    if(value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(0) + ' Jt';
+                                    return 'Rp ' + value.toLocaleString('id-ID');
+                                }, font: { size: 10 }
+                            }
+                        },
+                        x: { grid: { display: false }, ticks: { font: { size: 10, weight: 'bold' } } }
+                    }
+                }
+            });
         }
 
         // ==========================================
@@ -3392,20 +3425,21 @@
         // 3. LOGIKA DATA BARANG
         function renderItemTable() {
             const tbody = document.getElementById('itemTableBody');
+            if(!tbody) return;
             
-            // --- 1. CEK HAK AKSES ---
-            const uRole = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
-            const isAdmin = (uRole === 'ADMIN');
+            // --- 1. CEK HAK AKSES MODUL DATA BARANG ---
+            const accessBarang = (window.currentUserAccess && window.currentUserAccess['tab-databarang']) ? window.currentUserAccess['tab-databarang'] : 'READ';
+            const canEdit = (accessBarang === 'FULL');
 
-            // --- 2. SEMBUNYIKAN HEADER JIKA BUKAN ADMIN ---
+            // --- 2. SEMBUNYIKAN HEADER & TOMBOL AKSI JIKA BUKAN FULL ---
             const thAksi = document.getElementById('th-aksi-barang');
-            if (thAksi) thAksi.style.display = isAdmin ? '' : 'none';
+            if (thAksi) thAksi.style.display = canEdit ? '' : 'none';
             
             const thHpp = document.getElementById('th-hpp-barang');
-            if (thHpp) thHpp.style.display = isAdmin ? '' : 'none';
+            if (thHpp) thHpp.style.display = canEdit ? '' : 'none';
 
             const btnActionBarang = document.getElementById('btn-action-barang');
-            if (btnActionBarang) btnActionBarang.style.display = isAdmin ? 'flex' : 'none';
+            if (btnActionBarang) btnActionBarang.style.display = canEdit ? 'flex' : 'none';
 
             const search = document.getElementById('searchItem') ? document.getElementById('searchItem').value.toLowerCase() : '';
             const filtered = db_databarang.filter(item => {
@@ -3426,7 +3460,8 @@
 
             tbody.innerHTML = '';
             if(paginatedData.length === 0) {
-                const colSpan = isAdmin ? 6 : 4; 
+                // colSpan dinamis menyesuaikan apakah kolom aksi tampil atau tidak
+                const colSpan = canEdit ? 6 : 4; 
                 tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400">Tidak ada data</td></tr>`;
                 if (typeof updatePaginationUI === 'function') updatePaginationUI('item', 0, 0, 0, 1, 1);
                 return;
@@ -3436,12 +3471,12 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
                 
-                // Siapkan Kolom Gaib (HPP & Aksi)
+                // Siapkan Kolom Khusus (HPP & Aksi) Berdasarkan Hak Akses
                 let hppPcHTML = '';
                 let hppMobileHTML = '';
                 let aksiHTML = '';
 
-                if (isAdmin) {
+                if (canEdit) {
                     hppPcHTML = `
                         <td class="py-3 px-4 text-right text-rose-500 font-semibold hidden md:table-cell align-middle text-sm">
                             Rp ${item.hpp.toLocaleString('id-ID')}
@@ -3479,7 +3514,7 @@
                                 <span class="text-xs text-gray-500 ml-1">${item.merk}</span>
                             </div>
                             ${hppMobileHTML}
-                            <div class="text-xs text-emerald-600 font-semibold ${!isAdmin ? 'mt-1.5 border-t border-gray-100 pt-1' : ''}">Jual: Rp ${item.hargaJual.toLocaleString('id-ID')}</div>
+                            <div class="text-xs text-emerald-600 font-semibold ${!canEdit ? 'mt-1.5 border-t border-gray-100 pt-1' : ''}">Jual: Rp ${item.hargaJual.toLocaleString('id-ID')}</div>
                         </div>
                     </td>
                     
@@ -3496,7 +3531,7 @@
                         Rp ${item.hargaJual.toLocaleString('id-ID')}
                     </td>
                     
-                    ${aksiHTML}
+                    ${canEdit ? aksiHTML : ''}
                 `;
                 tbody.appendChild(tr);
             });
@@ -3818,17 +3853,17 @@
             const tbody = document.getElementById('poTableBody');
             if(!tbody) return;
 
-            // --- CEK HAK AKSES ADMIN (KACAMATA KUDA) ---
-            const currentUser = JSON.parse(localStorage.getItem('davclar_logged_in_user')) || {};
-            const role = (localStorage.getItem('davclar_role') || currentUser.role || 'SALES').toUpperCase().trim();
-            const isAdmin = (role === 'ADMIN');
+            // --- 1. CEK HAK AKSES MODUL PRODUCTION (PO) ---
+            const accessPO = (window.currentUserAccess && window.currentUserAccess['tab-production']) ? window.currentUserAccess['tab-production'] : 'READ';
+            const canEdit = (accessPO === 'FULL');
 
-            // Sembunyikan/tampilkan header kolom aksi & tombol tambah PO
-            const thAksiPO = document.getElementById('th-aksi-po');
-            if (thAksiPO) thAksiPO.style.display = isAdmin ? '' : 'none';
-
+            // Sembunyikan/tampilkan tombol "Buat PO" di atas berdasarkan hak akses FULL
             const btnActionPO = document.getElementById('btn-action-po');
-            if (btnActionPO) btnActionPO.style.display = isAdmin ? 'flex' : 'none';
+            if (btnActionPO) btnActionPO.style.display = canEdit ? 'flex' : 'none';
+
+            // Kolom Header "Aksi" TETAP TAMPIL karena butuh wadah tombol Preview/Cetak
+            const thAksiPO = document.getElementById('th-aksi-po');
+            if (thAksiPO) thAksiPO.style.display = '';
 
             const searchInput = document.getElementById('searchPO');
             const search = searchInput ? searchInput.value.toLowerCase() : '';
@@ -3852,8 +3887,8 @@
 
             tbody.innerHTML = '';
             if(paginatedData.length === 0) {
-                const colSpan = isAdmin ? 8 : 7;
-                tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400">Belum ada PO</td></tr>`;
+                // colSpan diset 8 agar pas dengan struktur 8 kolom tabel PO
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-400">Belum ada PO</td></tr>`;
                 if(typeof updatePaginationUI === 'function') updatePaginationUI('po', 0, 0, 0, 1, 1);
                 return;
             }
@@ -3904,11 +3939,12 @@
                     `;
                 }
 
-                // --- KONTROL TOMBOL AKSI BERDASARKAN ROLE ---
+                // --- 2. RENDER TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
-                if (isAdmin) {
+                if (canEdit) {
+                    // AKSES FULL: Tampil semua tombol (Preview, Edit, Print SPK, Print Barcode, Hapus)
                     aksiHTML = `
-                        <td class="flex flex-col md:flex-row!py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewPODetail('${po.id}')" title="Lihat/Cetak" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-eye text-xs"></i></button>
                             <button onclick="editPO('${po.id}')" title="Edit PO" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="printAction('${po.id}', 'SPK')" title="Print SPK" class="text-purple-600 hover:text-white hover:bg-purple-600 bg-purple-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-file-contract text-xs"></i></button>
@@ -3917,7 +3953,7 @@
                         </td>
                     `;
                 } else {
-                    // Khusus Sales: Hanya bisa melihat detail / cetak
+                    // AKSES LIHAT: Tombol edit, hapus, print disembunyikan, hanya menyisakan tombol Preview / Cetak
                     aksiHTML = `
                         <td class="flex flex-col !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewPODetail('${po.id}')" title="Lihat/Cetak" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-eye text-xs"></i></button>
@@ -3960,9 +3996,9 @@
 
                             <!-- Lantai Bawah: Rincian Produk & Status -->
                             <div class="bg-gray-50 p-2 rounded-lg text-[11px] space-y-1 border border-gray-100">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-gray-500">Art:</span>
-                                    <span class="font-semibold text-gray-800 text-right truncate max-w-[65%]">${merkUtama} - ${artikelUtama}</span>
+                                <div class="flex justify-between items-start gap-2">
+                                    <span class="text-gray-500 whitespace-nowrap">Art:</span>
+                                    <span class="font-semibold text-gray-800 text-right break-words">${merkUtama} - ${artikelUtama}</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-500">Qty:</span>
@@ -3976,6 +4012,7 @@
                                     <span class="text-gray-500">BC:</span>
                                     <div>${badgeBC}</div>
                                 </div>
+                            </div>
                             </div>
                         </div>
 
@@ -4471,18 +4508,21 @@
             const tbody = document.getElementById('soTableBody');
             if(!tbody) return;
 
-            // --- CEK HAK AKSES ADMIN (KACAMATA KUDA) ---
-            const currentUser = JSON.parse(localStorage.getItem('davclar_logged_in_user')) || {};
-            const role = (localStorage.getItem('davclar_role') || currentUser.role || 'SALES').toUpperCase().trim();
-            const isAdmin = (role === 'ADMIN');
+            // --- 1. CEK HAK AKSES MODUL SALES ORDER ---
+            const accessSO = (window.currentUserAccess && window.currentUserAccess['tab-order']) ? window.currentUserAccess['tab-order'] : 'READ';
+            const canEdit = (accessSO === 'FULL');
+
+            // (Tetap simpan role & nama user untuk kebutuhan filter data)
+            const role = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
             const loggedInUser = localStorage.getItem('davclar_user');
 
-            // Sembunyikan/tampilkan header kolom aksi & tombol tambah SO jika ada
-            const thAksiSO = document.getElementById('th-aksi-so');
-            if (thAksiSO) thAksiSO.style.display = isAdmin ? '' : 'none';
-
+            // Sembunyikan Tombol Atas (Import, Sinkron, Buat SO) jika cuma LIHAT
             const btnActionSO = document.getElementById('btn-action-so');
-            if (btnActionSO) btnActionSO.style.display = isAdmin ? 'flex' : 'none';
+            if (btnActionSO) btnActionSO.style.display = canEdit ? 'flex' : 'none';
+
+            // Kolom Header Aksi TETAP TAMPIL (karena butuh wadah tombol Preview)
+            const thAksiSO = document.getElementById('th-aksi-so');
+            if (thAksiSO) thAksiSO.style.display = '';
 
             const searchInput = document.getElementById('searchSO');
             const search = searchInput ? searchInput.value.toLowerCase() : '';
@@ -4512,8 +4552,8 @@
 
             tbody.innerHTML = '';
             if(paginatedData.length === 0) {
-                const colSpan = isAdmin ? 5 : 4;
-                tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400">Tidak ada data Sales Order</td></tr>`;
+                // colSpan di-fix jadi 5 karena kolom Aksi sekarang selalu tampil
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400">Tidak ada data Sales Order</td></tr>`;
                 if(typeof updatePaginationUI === 'function') updatePaginationUI('so', 0, 0, 0, 1, 1);
                 return;
             }
@@ -4529,9 +4569,10 @@
                     badge = '<span class="bg-orange-100 text-orange-700 text-[10px] px-2 py-1 rounded font-bold inline-block"><i class="fa-solid fa-clock"></i> BELUM DIKIRIM</span>';
                 }
 
-                // --- KONTROL TOMBOL AKSI BERDASARKAN ROLE ---
+                // --- 2. RENDER TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
-                if (isAdmin) {
+                if (canEdit) {
+                    // AKSES FULL: Tampil semua tombol (Preview, Edit, Hapus)
                     aksiHTML = `
                         <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewSODetail('${so.id}')" title="Preview / Kirim" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-eye"></i></button>
@@ -4540,7 +4581,7 @@
                         </td>
                     `;
                 } else {
-                    // Khusus Sales: Tombol edit & hapus disembunyikan, hanya bisa Preview/Kirim
+                    // AKSES LIHAT: Tombol edit & hapus disembunyikan, hanya bisa Preview/Kirim
                     aksiHTML = `
                         <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewSODetail('${so.id}')" title="Preview / Kirim" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-eye"></i></button>
@@ -4552,40 +4593,66 @@
                 tr.className = "hover:bg-gray-50 border-b border-gray-100 transition";
 
                 tr.innerHTML = `
-                    <!-- KOLOM 1: NO SO & TANGGAL -->
-                    <td class="!py-1.5 px-2 md:px-4 align-top">
-                        <div class="font-bold text-blue-700 text-xs md:text-sm leading-tight">${so.id}</div>
+                    <!-- KOLOM 1: NO SO & TANGGAL (PC ONLY) -->
+                    <td class="!py-2 px-4 align-top hidden md:table-cell">
+                        <div class="font-bold text-blue-700 text-sm leading-tight">${so.id}</div>
                         <div class="text-[10px] text-gray-500">${so.tanggal}</div>
                     </td>
                     
-                    <!-- KOLOM 2: TOKO / CUSTOMER (Dilengkapi ringkasan mobile super rapat) -->
-                    <td class="!py-1.5 px-2 md:px-4 align-top">
-                        <div class="font-bold text-gray-800 text-xs md:text-sm leading-tight">${so.toko}</div>
+                    <!-- KOLOM UTAMA: 1 KOLOM CARD DI HP / TOKO DI PC -->
+                    <td class="!py-2.5 px-3 md:px-4 align-top w-full md:w-auto whitespace-normal md:whitespace-nowrap">
                         
-                        <!-- MOBILE ONLY: Ringkasan mepet ke kiri tanpa celah -->
-                        <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-[11px] flex flex-col gap-0.5">
-                            <div class="flex items-center gap-2">
-                                <span class="text-gray-500">Status:</span>
-                                <div>${badge}</div>
+                        <!-- ================= MOBILE ONLY: CARD 1 KOLOM ================= -->
+                        <div class="md:hidden flex flex-col gap-1.5 w-full min-w-0">
+                            <!-- Lantai Atas: No SO, Tanggal, & Tombol Aksi Bawaan -->
+                            <div class="flex justify-between items-start gap-2 border-b border-gray-100 pb-1.5">
+                                <div>
+                                    <div class="font-bold text-blue-700 text-xs">${so.id}</div>
+                                    <div class="text-[10px] text-gray-400">${so.tanggal}</div>
+                                </div>
+                                <!-- Tombol aksi diselipin ke pojok kanan atas card -->
+                                <div class="flex items-center gap-1 shrink-0 [&>button]:!p-1.5 [&>button]:!text-xs">
+                                    ${aksiHTML.replace(/<\/?td[^>]*>/g, '')}
+                                </div>
                             </div>
-                            <div class="text-indigo-600 font-semibold text-[10px]">
-                                📦 ${so.items.length} Macam (${totalQty} Pasang)
+
+                            <!-- Lantai Tengah: Nama Toko -->
+                            <div class="font-bold text-gray-800 text-sm leading-tight truncate">
+                                ${so.toko}
                             </div>
+
+                            <!-- Lantai Bawah: Rincian Produk & Status -->
+                            <div class="bg-gray-50 p-2 rounded-lg text-[11px] space-y-1 border border-gray-100 mt-0.5">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Status:</span>
+                                    <div>${badge}</div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Rincian:</span>
+                                    <span class="text-indigo-600 font-bold">📦 ${so.items.length} Macam (${totalQty} Psg)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= PC ONLY: TOKO ================= -->
+                        <div class="hidden md:block font-bold text-gray-800 text-sm leading-tight">
+                            ${so.toko}
                         </div>
                     </td>
                     
                     <!-- KOLOM 3: JUMLAH ITEM (PC ONLY) -->
-                    <td class="!py-1.5 px-4 text-center text-sm font-bold hidden md:table-cell align-middle">
+                    <td class="!py-2 px-4 text-center text-sm font-bold hidden md:table-cell align-middle">
                         ${so.items.length} Macam <br><span class="text-xs text-gray-500 font-normal">(${totalQty} Psg)</span>
                     </td>
                     
                     <!-- KOLOM 4: STATUS (PC ONLY) -->
-                    <td class="!py-1.5 px-4 text-center hidden md:table-cell align-middle">
+                    <td class="!py-2 px-4 text-center hidden md:table-cell align-middle">
                         ${badge}
                     </td>
                     
-                    <!-- KOLOM 5: AKSI -->
-                    ${aksiHTML}
+                    <!-- KOLOM 5: AKSI (PC ONLY) -->
+                    <!-- Tambahkan class hidden md:table-cell pada td pembungkus aksi agar tidak dobel di HP -->
+                    ${aksiHTML.replace('class="', 'class="hidden md:table-cell ')}
                 `;
                 tbody.appendChild(tr);
             });
@@ -4950,19 +5017,25 @@
 
             const disc1 = parseFloat(document.getElementById('invDisc1').innerText) || 0;
             const disc2 = parseFloat(document.getElementById('invDisc2').innerText) || 0;
-            let valDisc1 = grandTotal * (disc1 / 100);
+
+            // Bulatkan tiap variabel diskon
+            let valDisc1 = Math.round(grandTotal * (disc1 / 100));
             let sisa = grandTotal - valDisc1;
-            let valDisc2 = sisa * (disc2 / 100);
-            
-            // Penyesuaian Manual
-            let penyesuaian = parseFloat(document.getElementById('invInpPenyesuaian')?.value) || 0;
+            let valDisc2 = Math.round(sisa * (disc2 / 100));
+
+            // Penyesuaian Manual & Total Diskon
+            let penyesuaian = Math.round(parseFloat(document.getElementById('invInpPenyesuaian')?.value) || 0);
+            let totalDiskon = valDisc1 + valDisc2;
+
+            // Total Akhir murni dari variabel yang sudah bulat
             let totalAkhir = (sisa - valDisc2) + penyesuaian;
-            
+
+            // Tampilan HTML langsung panggil variabel tanpa perlu Math.round() lagi
             document.getElementById('invGrandTotal').innerHTML = `
                 <div class="text-[10px] text-gray-500 font-normal">Subtotal: Rp ${grandTotal.toLocaleString('id-ID')}</div>
-                <div class="text-[10px] text-red-500 font-normal">Diskon: - Rp ${(valDisc1 + valDisc2).toLocaleString('id-ID')}</div>
+                <div class="text-[10px] text-red-500 font-normal">Diskon: - Rp ${totalDiskon.toLocaleString('id-ID')}</div>
                 <div class="text-[10px] text-amber-600 font-normal">Penyesuaian: Rp ${penyesuaian.toLocaleString('id-ID')}</div>
-                <div class="text-xl text-emerald-600">Rp ${Math.round(totalAkhir).toLocaleString('id-ID')}</div>
+                <div class="text-xl text-emerald-600">Rp ${totalAkhir.toLocaleString('id-ID')}</div>
             `;
         }
 
@@ -4974,20 +5047,34 @@
             const invId = document.getElementById('invFormNo').value;
             const soId = document.getElementById('invRefSO').value; // Bisa berisi: "SO-1, SO-2"
             
-            let subT = tempInvItems.reduce((s, i) => s + i.subtotal, 0);
+            // 1. Bulatkan Subtotal
+            let subT = Math.round(tempInvItems.reduce((s, i) => s + (Number(i.subtotal) || 0), 0));
+            
             let d1 = parseFloat(document.getElementById('invDisc1').innerText) || 0;
             let d2 = parseFloat(document.getElementById('invDisc2').innerText) || 0;
-            let valDisc1 = subT * (d1 / 100);
+            
+            // 2. Hitung diskon dengan Math.round agar perhitungan totalAkhir 100% bulat
+            let valDisc1 = Math.round(subT * (d1 / 100));
             let sisa = subT - valDisc1;
-            let valDisc2 = sisa * (d2 / 100);
-            let penyesuaian = parseFloat(document.getElementById('invInpPenyesuaian')?.value) || 0;
+            let valDisc2 = Math.round(sisa * (d2 / 100));
+            
+            // 3. Bulatkan Penyesuaian
+            let penyesuaian = Math.round(parseFloat(document.getElementById('invInpPenyesuaian')?.value) || 0);
+            
+            // 4. Total Akhir Murni Hasil Operasi Nilai Bulat
             let totalAkhir = (sisa - valDisc2) + penyesuaian;
 
             const newInvoice = {
-                id: invId, tanggal: document.getElementById('invFormTgl').value,
-                soId: soId, toko: document.getElementById('invCustomer').value,
+                id: invId, 
+                tanggal: document.getElementById('invFormTgl').value,
+                soId: soId, 
+                toko: document.getElementById('invCustomer').value,
                 type: document.getElementById('invType').innerText,
-                disc1: d1, disc2: d2, penyesuaian: penyesuaian, totalAkhir: totalAkhir, subtotal: subT,
+                disc1: d1, 
+                disc2: d2, 
+                penyesuaian: penyesuaian, 
+                totalAkhir: totalAkhir, 
+                subtotal: subT,
                 items: [...tempInvItems]
             };
 
@@ -4997,7 +5084,7 @@
             
             localStorage.setItem('davclar_invoice', JSON.stringify(db_invoice));
 
-            // [UPDATE] Pecah SO pakai koma dan update statusnya satu per satu
+            // Pecah SO pakai koma dan update statusnya satu per satu
             if(soId && soId !== "MANUAL" && soId !== "-") {
                 let soArray = soId.split(',').map(s => s.trim());
                 soArray.forEach(s => recalculateSOStatus(s));
@@ -5008,34 +5095,8 @@
             document.getElementById('view-inv-list').classList.remove('hidden');
             openTab('tab-invoice');
             
-            renderInvoiceList(); renderSOList();
-        }
-
-        async function deleteInvoice(id) {
-            const hasPayment = db_payment.some(p => p.invId === id);
-            if(hasPayment) {
-                showToast("❌ STOP! Invoice tidak bisa dihapus karena sudah ada riwayat pembayaran! Hapus riwayat pembayarannya terlebih dahulu di Buku Kas.", "error");
-                return;
-            }
-
-            const inv = db_invoice.find(i => i.id === id);
-            if (!inv) return;
-            
-            const isConfirmed = await showConfirm("Hapus Invoice", `Yakin ingin menghapus Invoice <b>${id}</b>?<br><br><span class="text-xs text-red-500 font-semibold">*Status Sales Order akan dikalkulasi ulang secara otomatis.</span>`, "danger");
-
-            if (isConfirmed) {
-                db_invoice = db_invoice.filter(i => i.id !== id);
-                localStorage.setItem('davclar_invoice', JSON.stringify(db_invoice));
-                
-                // [UPDATE] Kembalikan status SO (Bisa multi SO)
-                if(inv.soId && inv.soId !== "MANUAL" && inv.soId !== "-") {
-                    let soArray = inv.soId.split(',').map(s => s.trim());
-                    soArray.forEach(s => recalculateSOStatus(s));
-                }
-                
-                renderInvoiceList(); renderSOList();
-                showToast("Invoice berhasil dihapus!", "success");
-            }
+            renderInvoiceList(); 
+            renderSOList();
         }
 
         // --- DAFTAR INVOICE & CETAK ---
@@ -5043,17 +5104,17 @@
             const tbody = document.getElementById('invoiceTableBody');
             if(!tbody) return;
             
-            // --- CEK HAK AKSES ADMIN (KACAMATA KUDA) ---
-            const currentUser = JSON.parse(localStorage.getItem('davclar_logged_in_user')) || {};
-            const role = (localStorage.getItem('davclar_role') || currentUser.role || 'SALES').toUpperCase().trim();
-            const isAdmin = (role === 'ADMIN');
+            // --- 1. CEK HAK AKSES MODUL INVOICE ---
+            const accessInv = (window.currentUserAccess && window.currentUserAccess['tab-invoice']) ? window.currentUserAccess['tab-invoice'] : 'READ';
+            const canEdit = (accessInv === 'FULL');
 
-            // Sembunyikan/tampilkan header kolom aksi jika ada ID-nya
-            const thAksiInv = document.getElementById('th-aksi-inv');
-            if (thAksiInv) thAksiInv.style.display = isAdmin ? '' : 'none';
-
+            // Sembunyikan/tampilkan tombol "Buat Invoice" & "Import" di atas berdasarkan hak akses FULL
             const btnActionInv = document.getElementById('btn-action-inv');
-            if (btnActionInv) btnActionInv.style.display = isAdmin ? 'flex' : 'none';
+            if (btnActionInv) btnActionInv.style.display = canEdit ? 'flex' : 'none';
+
+            // Kolom Header Aksi TETAP TAMPIL (karena butuh wadah tombol Bayar & Print SJ)
+            const thAksiInv = document.getElementById('th-aksi-inv');
+            if (thAksiInv) thAksiInv.style.display = '';
 
             const searchInput = document.getElementById('searchInvoice');
             const search = searchInput ? searchInput.value.toLowerCase() : '';
@@ -5092,8 +5153,8 @@
 
             tbody.innerHTML = '';
             if(paginatedData.length === 0) {
-                const colSpan = isAdmin ? 6 : 5;
-                tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400">Tidak ada data Invoice</td></tr>`;
+                // colSpan diset 6 karena kolom Aksi selalu tampil
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400">Tidak ada data Invoice</td></tr>`;
                 if(typeof updatePaginationUI === 'function') updatePaginationUI('inv', 0, 0, 0, 1, 1);
                 return;
             }
@@ -5116,7 +5177,7 @@
                     dibayar += (parseFloat(p.nominal) || 0) + (parseFloat(p.retur) || 0) + (parseFloat(p.fee) || 0);
                 });
                 
-                let sisa = totalBulat - dibayar;
+                let sisa = totalBulat - Math.round(dibayar);
                 
                 let badgeStatus = '';
                 let displaySisa = '';
@@ -5136,9 +5197,10 @@
                         : `<br><span class="text-[10px] text-gray-400">Lunas</span>`;
                 }
 
-                // --- KONTROL TOMBOL AKSI BERDASARKAN ROLE ---
+                // --- 2. RENDER TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
-                if (isAdmin) {
+                if (canEdit) {
+                    // AKSES FULL: Bisa bayar, cetak SJ, edit, dan hapus invoice
                     aksiHTML = `
                         <td class="flex flex-col md:flex-row py-3 px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="openPaymentModal('${inv.id}')" title="Input Pembayaran" class="text-white bg-green-600 hover:bg-green-700 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-money-bill-wave"></i></button>
@@ -5148,7 +5210,7 @@
                         </td>
                     `;
                 } else {
-                    // Khusus Sales: Hanya bisa Input Pembayaran & Cetak SJ (Tombol Edit & Hapus disembunyikan)
+                    // AKSES LIHAT: Tombol edit & hapus disembunyikan, hanya bisa Input Pembayaran & Cetak SJ
                     aksiHTML = `
                         <td class="flex flex-col md:flex-row py-3 px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="openPaymentModal('${inv.id}')" title="Input Pembayaran" class="text-white bg-green-600 hover:bg-green-700 px-2 py-1.5 rounded transition shadow-sm font-semibold"><i class="fa-solid fa-money-bill-wave"></i></button>
@@ -5161,56 +5223,81 @@
                     tr.className = "hover:bg-gray-50 border-b border-gray-100 transition";
 
                     tr.innerHTML = `
-                        <!-- KOLOM 1: NO INVOICE & TANGGAL -->
-                        <td class="!py-1.5 px-2 md:px-4 align-top">
-                            <div class="font-bold text-emerald-700 text-xs md:text-sm leading-tight">${inv.id}</div>
-                            <div class="text-[10px] text-gray-500">${inv.tanggal}</div>
-                        </td>
+                    <!-- KOLOM 1: NO INVOICE & TANGGAL (PC ONLY) -->
+                    <td class="!py-2 px-4 align-top hidden md:table-cell">
+                        <div class="font-bold text-emerald-700 text-sm leading-tight">${inv.id}</div>
+                        <div class="text-[10px] text-gray-500">${inv.tanggal}</div>
+                    </td>
+                    
+                    <!-- KOLOM UTAMA: 1 KOLOM CARD DI HP / TOKO DI PC -->
+                    <td class="!py-2.5 px-3 md:px-4 align-top w-full md:w-auto whitespace-normal md:whitespace-nowrap">
                         
-                        <!-- KOLOM 2: TOKO & RINGKASAN MOBILE (RAPAT KE KIRI) -->
-                        <td class="!py-1.5 px-2 md:px-4 align-top">
-                            <div class="font-bold text-gray-800 text-xs md:text-sm flex flex-wrap items-center gap-1 leading-tight">
-                                <span>${inv.toko}</span> ${typeBadge}
+                        <!-- ================= MOBILE ONLY: CARD 1 KOLOM ================= -->
+                        <div class="md:hidden flex flex-col gap-1.5 w-full min-w-0">
+                            <!-- Lantai Atas: No Invoice, Tanggal, & Tombol Aksi Bawaan -->
+                            <div class="flex justify-between items-start gap-2 border-b border-gray-100 pb-1.5">
+                                <div>
+                                    <div class="font-bold text-emerald-700 text-xs">${inv.id}</div>
+                                    <div class="text-[10px] text-gray-400">${inv.tanggal}</div>
+                                </div>
+                                <!-- Tombol aksi diselipin ke pojok kanan atas card -->
+                                <div class="flex items-center gap-1 shrink-0 [&>button]:!p-1.5 [&>button]:!text-xs">
+                                    ${aksiHTML.replace(/<\/?td[^>]*>/g, '')}
+                                </div>
                             </div>
-                            <div class="text-[11px] text-blue-600 leading-tight">SO: ${inv.soId || '-'}</div>
-                            
-                            <!-- MOBILE ONLY: Blok rapat ke kiri tanpa celah -->
-                            <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-[11px] flex flex-col gap-0.5">
-                                <div class="flex items-center gap-2">
+
+                            <!-- Lantai Tengah: Nama Toko, Badge, & SO Ref -->
+                            <div>
+                                <div class="font-bold text-gray-800 text-sm leading-tight flex items-center flex-wrap gap-1">
+                                    <span class="truncate">${inv.toko}</span> ${typeBadge}
+                                </div>
+                                <div class="text-[11px] text-blue-600 font-semibold leading-tight mt-0.5">SO: ${inv.soId || '-'}</div>
+                            </div>
+
+                            <!-- Lantai Bawah: Rincian Keuangan & Status -->
+                            <div class="bg-gray-50 p-2 rounded-lg text-[11px] space-y-1.5 border border-gray-100 mt-0.5">
+                                <div class="flex justify-between items-center">
                                     <span class="text-gray-500">Total:</span>
                                     <span class="font-bold text-emerald-600">Rp ${totalBulat.toLocaleString('id-ID')}</span>
                                 </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-gray-500">Status:</span>
-                                    <div>${badgeStatus} ${displaySisa}</div>
+                                <div class="flex justify-between items-start pt-1 border-t border-gray-200/60">
+                                    <span class="text-gray-500 mt-0.5">Status:</span>
+                                    <div class="text-right">${badgeStatus} ${displaySisa}</div>
                                 </div>
-                                <div class="text-indigo-600 font-semibold text-[10px]">
-                                    📦 ${inv.items.length} Macam (${totalQty} Pasang)
+                                <div class="flex justify-between items-center pt-1 border-t border-gray-200/60">
+                                    <span class="text-gray-500">Rincian:</span>
+                                    <span class="text-indigo-600 font-bold">📦 ${inv.items.length} Macam (${totalQty} Psg)</span>
                                 </div>
                             </div>
-                        </td>
-                        
-                        <!-- KOLOM 3: JUMLAH ITEM (PC ONLY) -->
-                        <td class="!py-1.5 px-4 text-center hidden md:table-cell align-middle">
-                            ${totalItemDisplay}
-                        </td>
-                        
-                        <!-- KOLOM 4: NOMINAL TOTAL (PC ONLY) -->
-                        <td class="!py-1.5 px-4 text-right font-bold text-base text-emerald-600 hidden md:table-cell align-middle">
-                            Rp ${totalBulat.toLocaleString('id-ID')}
-                        </td>
-                        
-                        <!-- KOLOM 5: STATUS PEMBAYARAN (PC ONLY) -->
-                        <td class="!py-1.5 px-4 text-center leading-tight hidden md:table-cell align-middle">
-                            ${badgeStatus}
-                            ${displaySisa}
-                        </td>
-                        
-                        <!-- KOLOM 6: AKSI -->
-                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle">
-                            ${aksiHTML.includes('td') ? aksiHTML.replace(/<td[^>]*>|<\/td>/g, '') : aksiHTML}
-                        </td>
-                    `;
+                        </div>
+
+                        <!-- ================= PC ONLY: TOKO ================= -->
+                        <div class="hidden md:block font-bold text-gray-800 text-sm flex flex-wrap items-center gap-1 leading-tight">
+                            <span>${inv.toko}</span> ${typeBadge}
+                        </div>
+                        <div class="hidden md:block text-[11px] text-blue-600 leading-tight">SO: ${inv.soId || '-'}</div>
+                    </td>
+                    
+                    <!-- KOLOM 3: JUMLAH ITEM (PC ONLY) -->
+                    <td class="!py-2 px-4 text-center hidden md:table-cell align-middle">
+                        ${totalItemDisplay}
+                    </td>
+                    
+                    <!-- KOLOM 4: NOMINAL TOTAL (PC ONLY) -->
+                    <td class="!py-2 px-4 text-right font-bold text-base text-emerald-600 hidden md:table-cell align-middle">
+                        Rp ${totalBulat.toLocaleString('id-ID')}
+                    </td>
+                    
+                    <!-- KOLOM 5: STATUS PEMBAYARAN (PC ONLY) -->
+                    <td class="!py-2 px-4 text-center leading-tight hidden md:table-cell align-middle">
+                        ${badgeStatus}
+                        ${displaySisa}
+                    </td>
+                    
+                    <!-- KOLOM 6: AKSI (PC ONLY) -->
+                    <!-- Tambahkan class hidden md:table-cell pada td pembungkus aksi agar tidak dobel di HP -->
+                    ${aksiHTML.replace('class="', 'class="hidden md:table-cell ')}
+                `;
                 tbody.appendChild(tr);
             });
             
@@ -5798,17 +5885,16 @@
 
             if (!tbody) return;
 
-            // --- CEK HAK AKSES ADMIN (KACAMATA KUDA) ---
-            const currentUser = JSON.parse(localStorage.getItem('davclar_logged_in_user')) || {};
-            const role = (localStorage.getItem('davclar_role') || currentUser.role || 'SALES').toUpperCase().trim();
-            const isAdmin = (role === 'ADMIN');
+            // --- 1. CEK HAK AKSES MODUL DATA CUSTOMER ---
+            const accessCust = (window.currentUserAccess && window.currentUserAccess['tab-customer']) ? window.currentUserAccess['tab-customer'] : 'READ';
+            const canEdit = (accessCust === 'FULL');
 
-            // Sembunyikan/tampilkan header kolom aksi & tombol aksi customer
+            // Sembunyikan/tampilkan header kolom aksi & tombol aksi customer berdasarkan hak akses FULL
             const thAksiCustomer = document.getElementById('th-aksi-customer');
-            if (thAksiCustomer) thAksiCustomer.style.display = isAdmin ? '' : 'none';
+            if (thAksiCustomer) thAksiCustomer.style.display = canEdit ? '' : 'none';
 
             const btnActionCustomer = document.getElementById('btn-action-customer');
-            if (btnActionCustomer) btnActionCustomer.style.display = isAdmin ? 'flex' : 'none';
+            if (btnActionCustomer) btnActionCustomer.style.display = canEdit ? 'flex' : 'none';
 
             // SUPER SEARCH: CUSTOMER
             const filtered = db_customer.filter(c => {
@@ -5831,7 +5917,7 @@
 
             tbody.innerHTML = '';
             if(paginatedData.length === 0) {
-                const colSpan = isAdmin ? 10 : 9;
+                const colSpan = canEdit ? 10 : 9;
                 tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400">Tidak ada data customer</td></tr>`;
                 if(typeof updatePaginationUI === 'function') updatePaginationUI('cust', 0, 0, 0, 1, 1);
                 return;
@@ -5850,18 +5936,15 @@
                 let telpTampil = c.tlp || '-'; 
                 let bankTampil = c.bank || '-';
 
-                // --- KONTROL TOMBOL AKSI BERDASARKAN ROLE ---
+                // --- 2. KONTROL TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
-                if (isAdmin) {
+                if (canEdit) {
                     aksiHTML = `
                         <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="editCustomer('${c.id || c.nama}')" title="Edit" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2.5 py-1.5 rounded transition"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="deleteCustomer('${c.id || c.nama}')" title="Hapus" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 px-2.5 py-1.5 rounded transition"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
                     `;
-                } else {
-                    // Sales tidak punya hak edit/hapus master customer
-                    aksiHTML = '';
                 }
 
                 const tr = document.createElement('tr');
@@ -5921,7 +6004,7 @@
                     <td class="!py-1.5 px-4 text-gray-500 text-[11px] max-w-[100px] truncate hidden md:table-cell align-middle">${c.ket || '-'}</td>
                     
                     <!-- KOLOM 10: AKSI -->
-                    ${isAdmin ? aksiHTML : ''}
+                    ${canEdit ? aksiHTML : ''}
                 `;
                 tbody.appendChild(tr);
             });
@@ -6342,23 +6425,23 @@
             renderInvTempItems();
         }
 
-        // ==========================================
         // RENDER TABEL BUKU KAS (FILTER TANGGAL KOSONG & SEARCH ALL)
-        // ==========================================
         function renderPaymentList() {
             const tbody = document.getElementById('paymentTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
 
-            // --- CEK HAK AKSES ADMIN ---
-            const uRole = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
-            const isAdmin = (uRole === 'ADMIN');
+            // --- 1. CEK HAK AKSES MODUL PAYMENT (BUKU KAS) ---
+            const accessPay = (window.currentUserAccess && window.currentUserAccess['tab-payment']) ? window.currentUserAccess['tab-payment'] : 'READ';
+            const canEdit = (accessPay === 'FULL');
 
-            const thAksiPay = document.getElementById('th-aksi-pay');
-            if (thAksiPay) thAksiPay.style.display = isAdmin ? '' : 'none';
-
+            // Sembunyikan/tampilkan tombol "Tambah Kas" & "Import" di atas berdasarkan hak akses FULL
             const btnActionPay = document.getElementById('btn-action-pay');
-            if (btnActionPay) btnActionPay.style.display = isAdmin ? 'flex' : 'none';
+            if (btnActionPay) btnActionPay.style.display = canEdit ? 'flex' : 'none';
+
+            // Kolom Header Aksi TETAP TAMPIL atau disesuaikan dengan kebutuhan (karena ini transaksi uang masuk, jika READ kita biarkan kosong atau disembunyikan)
+            const thAksiPay = document.getElementById('th-aksi-pay');
+            if (thAksiPay) thAksiPay.style.display = canEdit ? '' : 'none';
 
             const searchInput = document.getElementById('searchPayment');
             const search = searchInput ? searchInput.value.toLowerCase() : '';
@@ -6428,7 +6511,7 @@
 
             // KONDISI KOSONG
             if (paginatedData.length === 0) {
-                const colSpan = isAdmin ? 6 : 5;
+                const colSpan = canEdit ? 6 : 5;
                 tbody.innerHTML = `<tr><td colspan="${colSpan}" class="py-8 text-center text-gray-400 italic font-medium">Tidak ada data pembayaran yang cocok...</td></tr>`;
                 if (typeof updatePaginationUI === 'function') {
                     updatePaginationUI('pay', 0, 0, 0, 1, 1);
@@ -6445,12 +6528,13 @@
 
                 let isUangMasuk = pay.invId === "TITIPAN" ? "bg-emerald-50" : "";
 
+                // --- 2. RENDER TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
-                if (isAdmin) {
+                if (canEdit) {
                     aksiHTML = `
                         <td class="flex flex-col md:flex-row py-3 px-4 text-center whitespace-nowrap align-middle">
-                            <button onclick="openPaymentModal('${pay.invId}', '${pay.id}')" class="text-amber-500 hover:bg-amber-100 p-1.5 rounded transition"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deletePayment('${pay.id}')" class="text-red-500 hover:bg-red-100 p-1.5 rounded transition ml-1"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="openPaymentModal('${pay.invId}', '${pay.id}')" class="text-amber-500 hover:bg-amber-100 p-1.5 rounded transition" title="Edit Pembayaran"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deletePayment('${pay.id}')" class="text-red-500 hover:bg-red-100 p-1.5 rounded transition ml-1" title="Hapus Pembayaran"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                 }
@@ -6459,44 +6543,88 @@
                 tr.className = `border-b border-gray-100 hover:bg-emerald-50 transition ${isUangMasuk}`;
                 
                 tr.innerHTML = `
-                    <!-- NO TRX & TGL -->
-                    <td class="py-3 px-2 md:px-4 align-top md:align-middle">
-                        <div class="font-bold text-gray-800 text-xs">${pay.id}</div>
+                    <!-- KOLOM 1: NO TRX & TGL (PC ONLY) -->
+                    <td class="!py-2 px-4 align-top hidden md:table-cell">
+                        <div class="font-bold text-gray-800 text-sm leading-tight">${pay.id}</div>
                         <div class="text-[10px] text-gray-500">${pay.tanggal}</div>
                     </td>
                     
-                    <!-- TOKO & INVOICE -->
-                    <td class="py-3 px-2 md:px-4 align-top md:align-middle">
-                        <div class="font-bold text-emerald-700 text-xs md:text-sm">${pay.toko}</div>
-                        <div class="text-[10px] text-gray-500 font-mono bg-gray-100 px-1 py-0.5 rounded inline-block mt-0.5">${pay.invId}</div>
+                    <!-- KOLOM UTAMA: 1 KOLOM CARD DI HP / TOKO DI PC -->
+                    <td class="!py-2.5 px-3 md:px-4 align-top w-full md:w-auto whitespace-normal md:whitespace-nowrap">
                         
-                        <!-- INFO KHUSUS MOBILE (RINGKASAN DATA) -->
-                        <div class="md:hidden mt-1.5 pt-1 border-t border-gray-100 text-[11px] space-y-0.5">
-                            <div class="font-bold text-gray-800">Bayar: Rp ${nBayar.toLocaleString('id-ID')} <span class="text-[9px] text-blue-600 bg-blue-50 px-1 rounded">${pay.metode}</span></div>
-                            ${nRetur > 0 || nFee > 0 ? `<div class="text-orange-600">Retur: Rp ${nRetur.toLocaleString('id-ID')} | Fee: Rp ${nFee.toLocaleString('id-ID')}</div>` : ''}
-                            <div class="text-indigo-700 font-semibold">Komisi: Rp ${nKomisi.toLocaleString('id-ID')} (${pay.sales || '-'}: ${pay.rate || 0}%)</div>
+                        <!-- ================= MOBILE ONLY: CARD 1 KOLOM ================= -->
+                        <div class="md:hidden flex flex-col gap-1.5 w-full min-w-0">
+                            <!-- Lantai Atas: No TRX, Tgl, & Tombol Aksi Bawaan -->
+                            <div class="flex justify-between items-start gap-2 border-b border-gray-100 pb-1.5">
+                                <div>
+                                    <div class="font-bold text-gray-800 text-xs">${pay.id}</div>
+                                    <div class="text-[10px] text-gray-400">${pay.tanggal}</div>
+                                </div>
+                                <!-- Tombol aksi diselipin ke pojok kanan atas card -->
+                                <div class="flex items-center gap-1 shrink-0 [&>button]:!p-1.5 [&>button]:!text-xs">
+                                    ${canEdit ? aksiHTML.replace(/<\/?td[^>]*>/g, '') : ''}
+                                </div>
+                            </div>
+
+                            <!-- Lantai Tengah: Toko & Invoice -->
+                            <div class="flex flex-col gap-0.5">
+                                <div class="font-bold text-emerald-700 text-sm leading-tight break-words">${pay.toko}</div>
+                                <div><span class="text-[10px] text-gray-500 font-mono bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">${pay.invId}</span></div>
+                            </div>
+
+                            <!-- Lantai Bawah: Rincian Keuangan -->
+                            <div class="bg-gray-50 p-2 rounded-lg text-[11px] space-y-1.5 border border-gray-100 mt-0.5">
+                                <div class="flex justify-between items-start gap-2">
+                                    <span class="text-gray-500 whitespace-nowrap">Bayar:</span>
+                                    <div class="text-right break-words font-bold text-gray-800">
+                                        Rp ${nBayar.toLocaleString('id-ID')}
+                                        <span class="text-[9px] text-blue-600 bg-blue-50 px-1 py-0.5 rounded border border-blue-100 ml-1 whitespace-nowrap">${pay.metode}</span>
+                                    </div>
+                                </div>
+                                
+                                ${nRetur > 0 || nFee > 0 ? `
+                                <div class="flex justify-between items-center text-orange-600 pt-1 border-t border-gray-200/60">
+                                    <span class="text-gray-500">Retur/Fee:</span>
+                                    <span class="font-bold">Rp ${(nRetur + nFee).toLocaleString('id-ID')}</span>
+                                </div>
+                                ` : ''}
+
+                                <div class="flex justify-between items-center pt-1 border-t border-gray-200/60">
+                                    <span class="text-gray-500">Komisi:</span>
+                                    <span class="text-indigo-700 font-bold">Rp ${nKomisi.toLocaleString('id-ID')} <span class="text-[9px] text-indigo-400 font-normal">(${pay.sales || '-'}: ${pay.rate || 0}%)</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= PC ONLY: TOKO & INVOICE ================= -->
+                        <div class="hidden md:block">
+                            <div class="font-bold text-emerald-700 text-sm">${pay.toko}</div>
+                            <div class="text-[10px] text-gray-500 font-mono bg-gray-100 px-1 py-0.5 rounded inline-block mt-0.5 border border-gray-200">${pay.invId}</div>
                         </div>
                     </td>
                     
                     <!-- UANG MASUK (PC ONLY) -->
-                    <td class="py-3 px-4 text-right hidden md:table-cell align-middle">
+                    <td class="!py-2 px-4 text-right hidden md:table-cell align-middle">
                         <div class="font-bold text-gray-800 text-sm mb-0.5">Rp ${nBayar.toLocaleString('id-ID')}</div>
                         <span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">${pay.metode}</span>
                     </td>
                     
                     <!-- RETUR / FEE (PC ONLY) -->
-                    <td class="py-3 px-4 text-right text-xs hidden md:table-cell align-middle">
-                        <div class="text-orange-600 font-bold">Retur: Rp ${nRetur.toLocaleString('id-ID')}</div>
-                        <div class="text-purple-600 font-bold">Fee: Rp ${nFee.toLocaleString('id-ID')}</div>
+                    <td class="!py-2 px-4 text-right text-xs hidden md:table-cell align-middle">
+                        ${nRetur > 0 ? `<div class="text-orange-600 font-bold">Retur: Rp ${nRetur.toLocaleString('id-ID')}</div>` : ''}
+                        ${nFee > 0 ? `<div class="text-purple-600 font-bold">Fee: Rp ${nFee.toLocaleString('id-ID')}</div>` : ''}
+                        ${nRetur === 0 && nFee === 0 ? `<div class="text-gray-400">-</div>` : ''}
                     </td>
                     
                     <!-- KOMISI SALES (PC ONLY) -->
-                    <td class="py-3 px-4 hidden md:table-cell align-middle">
+                    <td class="!py-2 px-4 hidden md:table-cell align-middle">
                         <div class="font-bold text-indigo-700 text-sm">Rp ${nKomisi.toLocaleString('id-ID')}</div>
                         <div class="text-xs text-gray-500 font-bold">${pay.sales || '-'} <span class="text-gray-400 font-normal">(${pay.rate || 0}%)</span></div>
                     </td>
                     
-                    ${aksiHTML}
+                    <!-- AKSI (PC ONLY) -->
+                    <!-- Tambahkan class hidden md:table-cell pada td pembungkus aksi -->
+                    ${canEdit ? aksiHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
                 `;
                 tbody.appendChild(tr);
             });
@@ -7317,19 +7445,18 @@
             const tbody = document.getElementById('userTableBody');
             if(!tbody) return;
             
-            // --- CEK HAK AKSES ADMIN (KACAMATA KUDA) ---
-            const currentUser = JSON.parse(localStorage.getItem('davclar_logged_in_user')) || {};
-            const role = (localStorage.getItem('davclar_role') || currentUser.role || 'SALES').toUpperCase().trim();
-            const isAdmin = (role === 'ADMIN');
+            // --- 1. CEK HAK AKSES MODUL USER MANAGEMENT ---
+            const accessUser = (window.currentUserAccess && window.currentUserAccess['tab-usersetting']) ? window.currentUserAccess['tab-usersetting'] : 'READ';
+            const canEdit = (accessUser === 'FULL');
 
-            // Pengaman ekstra: Sembunyikan header aksi jika ada (misal id-nya th-aksi-user)
+            // Pengaman ekstra: Sembunyikan header aksi JIKA HANYA AKSES LIHAT
             const thAksiUser = document.getElementById('th-aksi-user');
-            if (thAksiUser) thAksiUser.style.display = isAdmin ? '' : 'none';
+            if (thAksiUser) thAksiUser.style.display = canEdit ? '' : 'none';
 
             tbody.innerHTML = '';
             
             if (db_users.length === 0) {
-                const colSpan = isAdmin ? 4 : 3;
+                const colSpan = canEdit ? 4 : 3;
                 tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400">Tidak ada data user</td></tr>`;
                 return;
             }
@@ -7350,11 +7477,11 @@
                     ? `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-[9px] font-bold inline-block"><i class="fa-solid fa-user-shield mr-1"></i> ADMIN</span>`
                     : `<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-[9px] font-bold inline-block"><i class="fa-solid fa-user-tie mr-1"></i> AKSES: ${countAccess} MENU</span>`;
 
-                // --- KONTROL TOMBOL AKSI BERDASARKAN ROLE ---
+                // --- 2. KONTROL TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
-                if (isAdmin) {
+                if (canEdit) {
                     aksiHTML = `
-                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle">
+                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle gap-1 justify-center">
                             <button onclick="editUser('${user.username}')" title="Edit User" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2.5 py-1.5 rounded transition shadow-sm"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="deleteUser('${user.username}')" title="Hapus User" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 px-2.5 py-1.5 rounded transition shadow-sm"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
@@ -7383,7 +7510,7 @@
                     <td class="!py-1.5 px-4 text-center font-mono text-gray-400 tracking-widest text-xs hidden md:table-cell align-middle">${passBintang}</td>
                     
                     <!-- KOLOM 4: AKSI -->
-                    ${isAdmin ? aksiHTML : ''}
+                    ${canEdit ? aksiHTML : ''}
                 `;
                 tbody.appendChild(tr);
             });
@@ -8406,20 +8533,27 @@
         }
 
         function renderKomisi() {
-            // --- AMBIL ROLE DENGAN AMAN ---
+            // --- 1. CEK HAK AKSES MODUL KOMISI ---
+            const accessKomisi = (window.currentUserAccess && window.currentUserAccess['tab-komisi']) ? window.currentUserAccess['tab-komisi'] : 'READ';
+            const canEdit = (accessKomisi === 'FULL');
+
+            // --- AMBIL ROLE ATAU IDENTITAS ADMIN / MANAGER ---
             const currentUser = JSON.parse(localStorage.getItem('davclar_logged_in_user')) || {};
             const role = (localStorage.getItem('davclar_role') || currentUser.role || 'SALES').toUpperCase().trim();
-            const isAdmin = (role === 'ADMIN');
+            // Cek apakah akun ini adalah Admin / Manager (bebas melihat semua sales meski aksesnya cuma READ)
+            const isAdminOrManager = (role === 'ADMIN' || role === 'MANAGER' || (window.currentUserAccess && Object.keys(window.currentUserAccess).length > 5));
+            
             const loggedInUser = localStorage.getItem('davclar_user');
             let filterSales = loggedInUser; 
             
-            // --- KONTROL KACAMATA KUDA HEADER TABEL & FILTER ---
+            // --- KONTROL HEADER TABEL & FILTER DROPDOWN ---
             const thCeklis = document.getElementById('th-ceklis-komisi');
-            if (thCeklis) thCeklis.style.display = isAdmin ? '' : 'none';
+            if (thCeklis) thCeklis.style.display = canEdit ? '' : 'none';
 
             const adminFilterEl = document.getElementById('komisiAdminFilter');
             if (adminFilterEl) {
-                if (isAdmin) {
+                // Dropdown filter sales akan muncul jika dia Admin/Manager (meskipun aksesnya cuma READ)
+                if (isAdminOrManager) {
                     adminFilterEl.classList.remove('hidden');
                     adminFilterEl.classList.add('flex');
                 } else {
@@ -8428,7 +8562,7 @@
                 }
             }
 
-            if (isAdmin) {
+            if (isAdminOrManager) {
                 const selSales = document.getElementById('komisiFilterSales');
                 if (selSales && selSales.options.length <= 1) {
                     let salesSet = new Set();
@@ -8450,8 +8584,16 @@
             if(typeof updateSelectedKomisi === 'function') updateSelectedKomisi();
 
             if (filterSales === 'ALL' || !filterSales) {
-                const colSpan = isAdmin ? 6 : 5;
-                tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400 italic font-medium"><i class="fa-solid fa-user-tie text-2xl mb-2 block"></i>Pilih nama Sales di atas untuk melihat rincian komisinya.</td></tr>`;
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="py-12 px-4 text-center">
+                            <div class="w-full flex flex-col items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-user-tie text-3xl mb-2 text-gray-300"></i>
+                                <span class="text-xs md:text-sm font-medium italic whitespace-normal break-words max-w-xs md:max-w-md mx-auto px-2">Pilih nama Sales di atas untuk melihat rincian komisinya.</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
                 if(document.getElementById('komTotal')) document.getElementById('komTotal').innerText = 'Rp 0'; 
                 if(document.getElementById('komCair')) document.getElementById('komCair').innerText = 'Rp 0'; 
                 if(document.getElementById('komSisa')) document.getElementById('komSisa').innerText = 'Rp 0';
@@ -8502,8 +8644,16 @@
             const paginatedData = validKomisi.slice(startIndex, endIndex);
 
             if (paginatedData.length === 0) {
-                const colSpan = isAdmin ? 6 : 5;
-                tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400 italic">Belum ada data komisi untuk ${filterSales}.</td></tr>`;
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="py-12 px-4 text-center">
+                            <div class="w-full flex flex-col items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-folder-open text-3xl mb-2 text-gray-300"></i>
+                                <span class="text-xs md:text-sm font-medium italic whitespace-normal break-words max-w-xs md:max-w-md mx-auto px-2">Belum ada data komisi untuk ${filterSales}.</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
                 if(typeof updatePaginationUI === 'function') updatePaginationUI('komisi', 0, 0, 0, 1, 1);
                 return;
             }
@@ -8513,7 +8663,7 @@
                 let isCair = p.statusCP === 'CAIR' || p.statusCP === 'SUDAH';
 
                 let checkboxHtml = '';
-                if (isAdmin) {
+                if (canEdit) {
                     if (!isCair) {
                         checkboxHtml = `<input type="checkbox" class="komisi-checkbox w-4 h-4 cursor-pointer rounded accent-purple-600" value="${p.id}" data-nominal="${nilaiKomisi}" onchange="updateSelectedKomisi()">`;
                     } else {
@@ -8528,29 +8678,76 @@
                 const tr = document.createElement('tr');
                 tr.className = `hover:bg-purple-50 transition border-b border-gray-100 ${isCair ? 'bg-gray-50' : ''}`;
                 
-                let tdCeklisAdmin = isAdmin ? `<td class="py-2.5 px-2 md:px-3 text-center border-r border-gray-100 align-top md:align-middle">${checkboxHtml}</td>` : '';
+                let tdCeklisAdmin = canEdit ? `<td class="py-2.5 px-2 md:px-3 text-center border-r border-gray-100 align-top md:align-middle">${checkboxHtml}</td>` : '';
                 
                 tr.innerHTML = `
-                    ${tdCeklisAdmin}
-                    <td class="py-2.5 px-2 md:px-4 align-top md:align-middle">
-                        <div class="font-bold text-gray-800 text-[11px]">${p.tanggal}</div>
+                    <!-- KOLOM CEKLIS ADMIN (PC ONLY) -->
+                    ${canEdit ? `<td class="py-2.5 px-3 text-center border-r border-gray-100 align-middle hidden md:table-cell">${checkboxHtml}</td>` : ''}
+
+                    <!-- KOLOM 1: TGL & NO TRX (PC ONLY) -->
+                    <td class="py-2.5 px-4 align-top hidden md:table-cell">
+                        <div class="font-bold text-gray-800 text-sm">${p.tanggal}</div>
                         <div class="text-[10px] text-gray-500">${p.id}</div>
                     </td>
-                    <td class="py-2.5 px-2 md:px-4 align-top md:align-middle">
-                        <div class="font-bold text-emerald-700 text-xs md:text-sm">${p.toko}</div>
-                        <div class="text-[10px] text-gray-400 font-mono">Merk: <span class="font-bold text-gray-600">${p.merk || '-'}</span> | Inv: ${p.invId}</div>
-                        <div class="md:hidden mt-1.5 pt-1 border-t border-gray-100 text-[11px] space-y-0.5">
-                            <div class="text-gray-700 font-semibold">Nominal: Rp ${Math.round(p.nominal).toLocaleString('id-ID')}</div>
-                            <div class="text-indigo-600 font-bold">Komisi: Rp ${nilaiKomisi.toLocaleString('id-ID')}</div>
-                            <div>${badge}</div>
+                    
+                    <!-- KOLOM UTAMA: 1 KOLOM CARD DI HP / TOKO DI PC -->
+                    <td class="!py-2.5 px-3 md:px-4 align-top w-full md:w-auto whitespace-normal md:whitespace-nowrap">
+                        
+                        <!-- ================= MOBILE ONLY: CARD 1 KOLOM ================= -->
+                        <div class="md:hidden flex flex-col gap-1.5 w-full min-w-0">
+                            <!-- Lantai Atas: Tgl, No TRX, & Ceklis Pencairan -->
+                            <div class="flex justify-between items-start gap-2 border-b border-gray-100 pb-1.5">
+                                <div>
+                                    <div class="font-bold text-gray-800 text-xs">${p.tanggal}</div>
+                                    <div class="text-[10px] text-gray-400">${p.id}</div>
+                                </div>
+                                <!-- Checkbox / Centang ditaruh di pojok kanan atas -->
+                                <div class="flex items-center shrink-0 mt-0.5">
+                                    ${canEdit ? checkboxHtml : ''}
+                                </div>
+                            </div>
+
+                            <!-- Lantai Tengah: Toko & Info -->
+                            <div class="flex flex-col gap-0.5">
+                                <div class="font-bold text-emerald-700 text-sm leading-tight break-words">${p.toko}</div>
+                                <div class="text-[10px] text-gray-500 font-mono">Merk: <span class="font-bold text-gray-600">${p.merk || '-'}</span> | Inv: ${p.invId}</div>
+                            </div>
+
+                            <!-- Lantai Bawah: Keuangan & Status -->
+                            <div class="bg-gray-50 p-2 rounded-lg text-[11px] space-y-1.5 border border-gray-100 mt-0.5">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Nominal:</span>
+                                    <span class="font-bold text-gray-800">Rp ${Math.round(p.nominal).toLocaleString('id-ID')}</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-1 border-t border-gray-200/60">
+                                    <span class="text-gray-500">Komisi:</span>
+                                    <span class="text-indigo-600 font-bold text-xs">Rp ${nilaiKomisi.toLocaleString('id-ID')}</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-1 border-t border-gray-200/60">
+                                    <span class="text-gray-500">Status:</span>
+                                    <div class="text-right">${badge}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= PC ONLY: TOKO ================= -->
+                        <div class="hidden md:block">
+                            <div class="font-bold text-emerald-700 text-sm leading-tight">${p.toko}</div>
+                            <div class="text-[10px] text-gray-400 font-mono mt-0.5">Merk: <span class="font-bold text-gray-600">${p.merk || '-'}</span> | Inv: ${p.invId}</div>
                         </div>
                     </td>
+                    
+                    <!-- KOLOM NOMINAL (PC ONLY) -->
                     <td class="py-2.5 px-4 text-right font-bold text-gray-700 text-sm hidden md:table-cell align-middle">
                         Rp ${Math.round(p.nominal).toLocaleString('id-ID')}
                     </td>
+                    
+                    <!-- KOLOM KOMISI (PC ONLY) -->
                     <td class="py-2.5 px-4 text-right font-bold text-indigo-600 text-sm hidden md:table-cell align-middle">
                         Rp ${nilaiKomisi.toLocaleString('id-ID')}
                     </td>
+                    
+                    <!-- KOLOM STATUS (PC ONLY) -->
                     <td class="py-2.5 px-4 text-center hidden md:table-cell align-middle">
                         ${badge}
                     </td>
@@ -8659,17 +8856,28 @@
         }
 
         // ==========================================
-        // FITUR SALES LEDGER, CP, & KASBON
+        // FITUR SALES LEDGER, CP, & KASBON (ALL IN ONE)
         // ==========================================
 
         let currentKasbonPage = 1;
         const itemsPerKasbonPage = 20;
 
         function renderSalesLedger() {
-            let salesMap = {}; 
-            let cpHistoryMap = {}; // Penampung untuk Tabel Riwayat CP
+            // --- 1. CEK HAK AKSES MODUL (KHUSUS UNTUK TOMBOL AKSI) ---
+            const accessLedger = (window.currentUserAccess && window.currentUserAccess['tab-salesledger']) ? window.currentUserAccess['tab-ledger'] || window.currentUserAccess['tab-salesledger'] : 'READ';
+            const canEdit = (accessLedger === 'FULL');
 
-            // 1. TARIK SEMUA DATA DARI BUKU KAS (SINGLE SOURCE OF TRUTH)
+            // --- 2. CEK IDENTITAS (KHUSUS UNTUK FILTER TAMPILAN DATA) ---
+            const role = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
+            const uName = (localStorage.getItem('davclar_user') || "").toUpperCase().trim();
+            const isSales = (role === 'SALES'); // Admin & Manager lolos murni
+
+            let salesMap = {}; 
+            let cpHistoryMap = {}; 
+
+            // ==========================================
+            // TAHAP 1: OLAH DATA DARI SEMUA SUMBER
+            // ==========================================
             db_payment.forEach(p => {
                 let komisiFix = Math.round(parseFloat(p.komisi) || 0);
                 let bayarFix = Math.round(parseFloat(p.nominal) || 0);
@@ -8681,21 +8889,15 @@
                     salesMap[s].netPayment += bayarFix;
                     salesMap[s].komisi += komisiFix;
 
-                    // [IDE JENIUS BOSKU]: HITUNG "SUDAH CAIR" LANGSUNG DARI BUKU KAS!
                     let isCair = (p.statusCP === 'CAIR' || p.statusCP === 'SUDAH' || (p.noCP && String(p.noCP).startsWith('CP')));
                     
                     if (isCair && komisiFix > 0) {
                         salesMap[s].cp += komisiFix;
 
-                        // Kumpulkan & Jumlahkan untuk Tabel Riwayat CP di bawah
                         let noCpAman = (p.noCP && p.noCP !== '-') ? p.noCP : `CP-MANUAL-${s}`;
                         if (!cpHistoryMap[noCpAman]) {
                             cpHistoryMap[noCpAman] = {
-                                id: noCpAman,
-                                tanggal: p.tanggal, // Pakai tanggal transaksi sebagai default
-                                sales: s,
-                                nominal: 0,
-                                jmlNota: 0
+                                id: noCpAman, tanggal: p.tanggal, sales: s, nominal: 0, jmlNota: 0
                             };
                         }
                         cpHistoryMap[noCpAman].nominal += komisiFix;
@@ -8704,33 +8906,24 @@
                 }
             });
 
-            // 2. GABUNGKAN METADATA DARI db_sales_cp 
-            // (Untuk ngambil 'Note/Catatan' dan 'Tanggal Asli Pencairan')
             db_sales_cp.forEach(cp => {
                 let cpFix = Math.round(parseFloat(cp.nominal) || 0);
                 let sName = cp.sales ? cp.sales.toUpperCase().trim() : "TANPA NAMA";
 
                 if (cpHistoryMap[cp.id]) {
-                    // Jika CP hasil tarikan Buku Kas ketemu di db_sales_cp, lengkapi datanya
                     cpHistoryMap[cp.id].tanggal = cp.tanggal; 
                     cpHistoryMap[cp.id].note = cp.note;
                 } else if (cpFix > 0) {
-                    // Jika ini CP Manual (Bonus/Luar Nota) yang diketik langsung dari tombol "Cairkan" di Ledger
                     if(!salesMap[sName]) salesMap[sName] = { netPayment:0, komisi:0, cp:0, kasbon:0 };
                     salesMap[sName].cp += cpFix;
 
                     cpHistoryMap[cp.id] = {
-                        id: cp.id,
-                        tanggal: cp.tanggal,
-                        sales: sName,
-                        nominal: cpFix,
-                        note: cp.note || "Pencairan Manual Khusus",
-                        jmlNota: 0
+                        id: cp.id, tanggal: cp.tanggal, sales: sName, nominal: cpFix,
+                        note: cp.note || "Pencairan Manual Khusus", jmlNota: 0
                     };
                 }
             });
 
-            // 3. Tarik UTANG dari db_kasbon
             db_kasbon.forEach(k => {
                 let kasbonFix = Math.round(parseFloat(k.nominal) || 0);
                 if(k.sales && kasbonFix > 0) {
@@ -8740,144 +8933,237 @@
                 }
             });
 
-            // --- RENDER TABEL KLASEMEN ---
+            // ==========================================
+            // TAHAP 2: RENDER TABEL KLASEMEN (MOBILE 1 KOLOM)
+            // ==========================================
+            const thKlasemen = document.getElementById('th-aksi-klasemen');
+            if (thKlasemen) thKlasemen.style.display = canEdit ? '' : 'none';
+
             const tbodyLedger = document.getElementById('slLedgerBody');
             if(tbodyLedger) {
                 tbodyLedger.innerHTML = '';
                 let hasData = false;
                 
                 Object.keys(salesMap).sort().forEach(nama => {
-                    const uRole = localStorage.getItem('davclar_role');
-                    const uName = localStorage.getItem('davclar_user');
-                    if (uRole === 'SALES' && nama !== uName) return;
+                    // [KUNCI]: Hanya blokir jika dia SALES murni, Admin/Manager tembus semua data!
+                    if (isSales && nama !== uName) return;
 
                     hasData = true;
                     let data = salesMap[nama];
                     let sisaKomisi = Math.round(data.komisi - data.cp);
-                    
-                    // [BARU] Hitung Saldo Bersih
                     let saldoAkhir = sisaKomisi - data.kasbon;
-                    let classSaldo = saldoAkhir >= 0 ? "text-emerald-600" : "text-red-600 font-bold bg-red-50";
+                    
+                    let classSaldo = saldoAkhir >= 0 ? "text-emerald-600" : "text-red-600 font-bold";
                     let formatSaldo = saldoAkhir >= 0 ? `Rp ${saldoAkhir.toLocaleString('id-ID')}` : `- Rp ${Math.abs(saldoAkhir).toLocaleString('id-ID')}`;
 
+                    let aksiKlasemenHTML = canEdit ? `<td class="p-3 text-center"><button onclick="openModalKasbon('${nama}')" class="bg-orange-100 text-orange-700 hover:bg-orange-600 hover:text-white px-3 py-1.5 rounded text-[10px] font-bold transition w-full shadow-sm whitespace-nowrap" title="Beri Kasbon"><i class="fa-solid fa-money-bill-transfer mr-1"></i> Kasbon</button></td>` : '';
+
                     tbodyLedger.innerHTML += `
-                        <tr class="hover:bg-gray-50 transition border-b border-gray-100 h-10">
-                            <td class="p-3 font-bold text-gray-800">${nama}</td>
-                            <!-- Kolom Net Payment Sudah Dihapus -->
-                            <td class="p-3 text-right">Rp ${data.komisi.toLocaleString('id-ID')}</td>
-                            <td class="p-3 text-right text-emerald-600 font-bold">Rp ${data.cp.toLocaleString('id-ID')}</td>
-                            <td class="p-3 text-right font-bold text-indigo-700 bg-indigo-50/50">Rp ${sisaKomisi.toLocaleString('id-ID')}</td>
-                            <td class="p-3 text-right font-bold text-red-600 bg-red-50/50">Rp ${data.kasbon.toLocaleString('id-ID')}</td>
-                            
-                            <!-- Kolom Saldo Bersih Dimasukkan -->
-                            <td class="p-3 text-right font-bold ${classSaldo}">${formatSaldo}</td>
-                            
-                            <td class="p-3 text-center whitespace-nowrap">
-                                <button onclick="openModalKasbon('${nama}')" class="bg-orange-100 text-orange-700 hover:bg-orange-600 hover:text-white px-3 py-1 rounded text-[10px] font-bold transition w-full shadow-sm" title="Beri Kasbon"><i class="fa-solid fa-money-bill-transfer mr-1"></i> Kasbon</button>
+                        <!-- Border tr dikembalikan ke ukuran tipis standar untuk versi PC -->
+                        <tr class="hover:bg-gray-50 transition border-b border-gray-100 w-full text-xs md:text-sm">
+                            <!-- [KUNCI] p-0 di mobile supaya balok pembatas bisa full lebar -->
+                            <td class="!p-0 md:!p-3 align-top md:align-middle w-full md:w-auto">
+                                <!-- MOBILE VIEW -->
+                                <div class="md:hidden flex flex-col w-full min-w-0">
+                                    <!-- Padding dipindah ke dalam sini -->
+                                    <div class="p-4 flex flex-col gap-1">
+                                        <div class="flex justify-between items-start border-b-2 border-gray-100 pb-2 mb-1.5">
+                                            <div class="font-bold text-gray-800 text-[15px] uppercase tracking-wide">${nama}</div>
+                                            <div class="shrink-0">${canEdit ? aksiKlasemenHTML.replace(/<\/?td[^>]*>/g, '') : ''}</div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 text-[10px]">
+                                            <div class="bg-white p-2 rounded-lg border border-gray-200 shadow-sm">Hak Komisi: <br><span class="font-bold text-gray-800 text-xs">Rp ${data.komisi.toLocaleString('id-ID')}</span></div>
+                                            <div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 shadow-sm">Sudah Cair: <br><span class="text-emerald-700 font-bold text-xs">Rp ${data.cp.toLocaleString('id-ID')}</span></div>
+                                        </div>
+                                        <div class="mt-1 p-2 bg-indigo-50 rounded-lg flex justify-between items-center text-[11px] border border-indigo-200 shadow-sm">
+                                            <span class="text-gray-500">Sisa Komisi:</span>
+                                            <span class="font-bold text-indigo-700 text-xs">Rp ${sisaKomisi.toLocaleString('id-ID')}</span>
+                                        </div>
+                                        <div class="mt-1 p-2 bg-red-50 rounded-lg flex justify-between items-center text-[11px] border border-red-200 shadow-sm">
+                                            <span class="text-gray-500">Total Kasbon:</span>
+                                            <span class="font-bold text-red-600 text-xs">Rp ${data.kasbon.toLocaleString('id-ID')}</span>
+                                        </div>
+                                        <div class="mt-2 flex justify-between items-center text-xs font-bold pt-2 border-t-2 border-gray-100">
+                                            <span class="text-gray-500 uppercase tracking-wide text-[10px]">Saldo Bersih:</span>
+                                            <span class="${classSaldo} text-[15px]">${formatSaldo}</span>
+                                        </div>
+                                    </div>
+                                    <!-- 🧱 BALOK PEMBATAS TEGAS 8px (Hanya di HP) 🧱 -->
+                                    <div class="h-2 w-full bg-gray-200"></div>
+                                </div>
+                                <!-- PC VIEW -->
+                                <div class="hidden md:block font-bold text-gray-800">${nama}</div>
                             </td>
+                            <td class="p-3 text-right hidden md:table-cell">Rp ${data.komisi.toLocaleString('id-ID')}</td>
+                            <td class="p-3 text-right text-emerald-600 font-bold hidden md:table-cell">Rp ${data.cp.toLocaleString('id-ID')}</td>
+                            <td class="p-3 text-right font-bold text-indigo-700 bg-indigo-50/50 hidden md:table-cell">Rp ${sisaKomisi.toLocaleString('id-ID')}</td>
+                            <td class="p-3 text-right font-bold text-red-600 bg-red-50/50 hidden md:table-cell">Rp ${data.kasbon.toLocaleString('id-ID')}</td>
+                            <td class="p-3 text-right font-bold ${classSaldo} hidden md:table-cell">${formatSaldo}</td>
+                            ${canEdit ? aksiKlasemenHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
                         </tr>
                     `;
                 });
 
-                if(!hasData) tbodyLedger.innerHTML = `<tr><td colspan="7" class="text-center p-6 text-gray-400 italic">Belum ada data komisi atau sales tercatat.</td></tr>`;
+                if(!hasData) tbodyLedger.innerHTML = `<tr><td colspan="${canEdit ? 7 : 6}" class="text-center p-6 text-gray-400 italic">Belum ada data komisi atau sales tercatat.</td></tr>`;
             }
 
-            // --- RENDER RIWAYAT CP ---
+            // ==========================================
+            // TAHAP 3: RENDER TABEL RIWAYAT CP (MOBILE 1 KOLOM)
+            // ==========================================
+            const thCp = document.getElementById('th-aksi-cp');
+            if (thCp) thCp.style.display = canEdit ? '' : 'none';
+
             const tbodyCp = document.getElementById('slCpBody');
             if(tbodyCp) {
                 tbodyCp.innerHTML = '';
                 
                 let arrCP = Object.values(cpHistoryMap);
                 arrCP.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
-                
-                // [KUNCI RAHASIA KACAMATA KUDA UNTUK RIWAYAT CP]
-                const uRole = localStorage.getItem('davclar_role');
-                const uName = localStorage.getItem('davclar_user');
-                let cpCount = 0; // Buat ngitung baris yang tampil
+                let cpCount = 0; 
 
                 arrCP.forEach(cp => {
-                    // Skip data CP sales lain kalau dia login sbg SALES
-                    if (uRole === 'SALES' && cp.sales !== uName) return; 
+                    // [KUNCI]: Filter di sini
+                    if (isSales && cp.sales !== uName) return; 
 
                     cpCount++;
                     let noteTampil = cp.note || `Cair Otomatis (${cp.jmlNota} Nota)`;
+                    let aksiCpHTML = canEdit ? `<td class="p-2.5 text-center"><button onclick="deleteCP('${cp.id}')" class="text-red-500 bg-red-50 hover:bg-red-500 hover:text-white px-2 py-1.5 rounded transition" title="Hapus CP"><i class="fa-solid fa-trash"></i></button></td>` : '';
+
                     tbodyCp.innerHTML += `
-                        <tr class="hover:bg-indigo-50 transition border-b border-gray-100 h-10">
-                            <td class="p-2.5"><div class="font-bold text-indigo-700">${cp.id}</div><div class="text-[10px] text-gray-500">${cp.tanggal}</div></td>
-                            <td class="p-2.5 font-bold text-gray-800">${cp.sales}</td>
-                            <td class="p-2.5 text-gray-600 truncate max-w-[100px]" title="${noteTampil}">${noteTampil}</td>
-                            <td class="p-2.5 text-right font-bold text-emerald-600">Rp ${cp.nominal.toLocaleString('id-ID')}</td>
-                            <td class="p-2.5 text-center"><button onclick="deleteCP('${cp.id}')" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button></td>
+                        <tr class="hover:bg-indigo-50 transition border-b border-gray-100 w-full text-xs">
+                            <td class="!p-0 md:!p-3 align-top md:align-middle w-full md:w-auto">
+                                <!-- MOBILE VIEW -->
+                                <div class="md:hidden flex flex-col w-full min-w-0">
+                                    <div class="p-4 flex flex-col gap-1.5">
+                                        <div class="flex justify-between items-start border-b border-indigo-100 pb-2 mb-1">
+                                            <div>
+                                                <div class="font-bold text-indigo-700 text-sm">${cp.id}</div>
+                                                <div class="text-[10px] text-gray-500">${cp.tanggal}</div>
+                                            </div>
+                                            <div class="shrink-0">${canEdit ? aksiCpHTML.replace(/<\/?td[^>]*>/g, '') : ''}</div>
+                                        </div>
+                                        <div class="font-bold text-gray-800 text-[13px] uppercase tracking-wide">${cp.sales}</div>
+                                        <div class="text-[11px] text-gray-600 italic whitespace-normal break-words leading-tight bg-white p-2 rounded border border-indigo-50 shadow-sm">${noteTampil}</div>
+                                        <div class="flex justify-between items-center pt-2 border-t border-indigo-100 mt-1">
+                                            <span class="text-gray-500 font-medium">Nominal Cair:</span>
+                                            <span class="font-bold text-emerald-600 text-[15px]">Rp ${cp.nominal.toLocaleString('id-ID')}</span>
+                                        </div>
+                                    </div>
+                                    <!-- 🧱 BALOK PEMBATAS TEGAS 8px (Hanya di HP) 🧱 -->
+                                    <div class="h-2 w-full bg-indigo-200"></div>
+                                </div>
+                                <!-- PC VIEW -->
+                                <div class="hidden md:block">
+                                    <div class="font-bold text-indigo-700">${cp.id}</div>
+                                    <div class="text-[10px] text-gray-500">${cp.tanggal}</div>
+                                </div>
+                            </td>
+                            <td class="p-2.5 font-bold text-gray-800 hidden md:table-cell">${cp.sales}</td>
+                            <td class="p-2.5 text-gray-600 truncate max-w-[150px] hidden md:table-cell" title="${noteTampil}">${noteTampil}</td>
+                            <td class="p-2.5 text-right font-bold text-emerald-600 hidden md:table-cell">Rp ${cp.nominal.toLocaleString('id-ID')}</td>
+                            ${canEdit ? aksiCpHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
                         </tr>
                     `;
                 });
                 
-                // Kalau tabel kosong setelah difilter, tampilkan pesan
                 if(cpCount === 0) {
-                    tbodyCp.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-gray-400 italic">Belum ada riwayat CP.</td></tr>`;
+                    tbodyCp.innerHTML = `<tr><td colspan="${canEdit ? 5 : 4}" class="text-center p-6 text-gray-400 italic">Belum ada riwayat CP.</td></tr>`;
                 }
             }
 
-            if(typeof renderKasbonTable === 'function') renderKasbonTable();
-        }
-
-        /// --- FUNGSI PAGINATION KASBON (DENGAN KACAMATA KUDA) ---
-        function renderKasbonTable() {
+            // ==========================================
+            // TAHAP 4: RENDER TABEL KASBON (MOBILE 1 KOLOM)
+            // ==========================================
             const tbodyKsb = document.getElementById('slKasbonBody');
-            if(!tbodyKsb) return;
-            tbodyKsb.innerHTML = '';
+            if(tbodyKsb) {
+                tbodyKsb.innerHTML = '';
 
-            // [KUNCI RAHASIA KACAMATA KUDA UNTUK TABEL KASBON]
-            const uRole = localStorage.getItem('davclar_role');
-            const uName = (localStorage.getItem('davclar_user') || "").toUpperCase().trim();
+                const thKsb = document.getElementById('th-aksi-ksb');
+                if (thKsb) thKsb.style.display = canEdit ? '' : 'none';
 
-            // Filter data kasbon berdasarkan siapa yang login
-            let filteredKsb = db_kasbon.filter(k => {
-                if (uRole === 'SALES') {
-                    let kSales = (k.sales || "").toUpperCase().trim();
-                    if (kSales !== uName) return false;
+                const cardHeaderKasbon = document.querySelector('#slKasbonBody')?.closest('.bg-white')?.querySelector('.bg-orange-600');
+                if (cardHeaderKasbon) {
+                    const actionButtons = cardHeaderKasbon.querySelector('div');
+                    if (actionButtons) actionButtons.style.display = canEdit ? 'flex' : 'none';
                 }
-                return true;
-            });
 
-            let sortedKsb = [...filteredKsb].sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
-            const totalItems = sortedKsb.length;
-            
-            if(totalItems === 0) {
-                tbodyKsb.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-gray-400 italic">Belum ada riwayat Kasbon.</td></tr>`;
-                if(document.getElementById('ksbPageInfo')) document.getElementById('ksbPageInfo').innerText = `Tampil: 0 Data`;
-                if(document.getElementById('ksbPageNum')) document.getElementById('ksbPageNum').innerText = `1/1`;
-                return;
+                let filteredKsb = db_kasbon.filter(k => {
+                    // [KUNCI]: Filter di sini
+                    if (isSales) {
+                        let kSales = (k.sales || "").toUpperCase().trim();
+                        if (kSales !== uName) return false;
+                    }
+                    return true;
+                });
+
+                let sortedKsb = [...filteredKsb].sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
+                const totalItems = sortedKsb.length;
+                
+                if(totalItems === 0) {
+                    tbodyKsb.innerHTML = `<tr><td colspan="${canEdit ? 5 : 4}" class="text-center p-6 text-gray-400 italic">Belum ada riwayat Kasbon.</td></tr>`;
+                    if(document.getElementById('ksbPageInfo')) document.getElementById('ksbPageInfo').innerText = `Tampil: 0 Data`;
+                    if(document.getElementById('ksbPageNum')) document.getElementById('ksbPageNum').innerText = `1/1`;
+                    return;
+                }
+
+                const totalPages = Math.ceil(totalItems / itemsPerKasbonPage) || 1;
+                if (currentKasbonPage > totalPages) currentKasbonPage = totalPages;
+                if (currentKasbonPage < 1) currentKasbonPage = 1;
+
+                const startIndex = (currentKasbonPage - 1) * itemsPerKasbonPage;
+                const endIndex = Math.min(startIndex + itemsPerKasbonPage, totalItems);
+                const paginatedData = sortedKsb.slice(startIndex, endIndex);
+
+                if(document.getElementById('ksbPageInfo')) document.getElementById('ksbPageInfo').innerText = `Tampil: ${startIndex + 1} - ${endIndex} dari ${totalItems} Data`;
+                if(document.getElementById('ksbPageNum')) document.getElementById('ksbPageNum').innerText = `${currentKasbonPage}/${totalPages}`;
+
+                paginatedData.forEach(k => {
+                    let nNominal = Math.round(parseFloat(k.nominal) || 0);
+                    
+                    let aksiHTML = canEdit ? `<td class="p-2.5 text-center"><button onclick="deleteKasbon('${k.id}')" class="text-red-500 bg-red-50 hover:bg-red-500 hover:text-white px-2 py-1.5 rounded transition" title="Hapus Kasbon"><i class="fa-solid fa-trash"></i></button></td>` : '';
+
+                    tbodyKsb.innerHTML += `
+                        <tr class="hover:bg-orange-50 transition border-b border-gray-100 w-full text-xs">
+                            <td class="p-2.5 text-gray-600 hidden md:table-cell">${k.tanggal}</td>
+                            
+                            <td class="!p-0 md:!p-3 align-top md:align-middle w-full md:w-auto">
+                                <!-- MOBILE CARD -->
+                                <div class="md:hidden flex flex-col w-full min-w-0">
+                                    <div class="p-4 flex flex-col gap-1">
+                                        <div class="flex justify-between items-start gap-2 border-b border-orange-100 pb-2 mb-1">
+                                            <div>
+                                                <div class="font-bold text-gray-800 text-sm uppercase tracking-wide">${k.sales}</div>
+                                                <div class="text-[10px] text-gray-500">${k.tanggal}</div>
+                                            </div>
+                                            <div class="flex items-center shrink-0">
+                                                ${canEdit ? aksiHTML.replace(/<\/?td[^>]*>/g, '') : ''}
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs pt-1">
+                                            <span class="font-bold px-2 py-1 rounded text-[10px] uppercase shadow-sm border ${k.tipe === 'Cash' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-blue-50 text-blue-700 border-blue-200'}">${k.tipe}</span>
+                                            <span class="font-bold text-red-600 text-[15px]">Rp ${nNominal.toLocaleString('id-ID')}</span>
+                                        </div>
+                                    </div>
+                                    <!-- 🧱 BALOK PEMBATAS TEGAS 8px (Hanya di HP) 🧱 -->
+                                    <div class="h-2 w-full bg-orange-200"></div>
+                                </div>
+
+                                <!-- PC VIEW -->
+                                <div class="hidden md:block font-bold">${k.sales}</div>
+                            </td>
+                            
+                            <td class="p-2.5 font-bold ${k.tipe === 'Cash' ? 'text-green-600' : 'text-blue-600'} hidden md:table-cell">${k.tipe}</td>
+                            <td class="p-2.5 text-right font-bold text-red-600 hidden md:table-cell">Rp ${nNominal.toLocaleString('id-ID')}</td>
+                            ${canEdit ? aksiHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
+                        </tr>
+                    `;
+                });
             }
-
-            const totalPages = Math.ceil(totalItems / itemsPerKasbonPage);
-            if (currentKasbonPage > totalPages) currentKasbonPage = totalPages;
-            if (currentKasbonPage < 1) currentKasbonPage = 1;
-
-            const startIndex = (currentKasbonPage - 1) * itemsPerKasbonPage;
-            const endIndex = Math.min(startIndex + itemsPerKasbonPage, totalItems);
-            const paginatedData = sortedKsb.slice(startIndex, endIndex);
-
-            if(document.getElementById('ksbPageInfo')) document.getElementById('ksbPageInfo').innerText = `Tampil: ${startIndex + 1} - ${endIndex} dari ${totalItems} Data`;
-            if(document.getElementById('ksbPageNum')) document.getElementById('ksbPageNum').innerText = `${currentKasbonPage}/${totalPages}`;
-
-            paginatedData.forEach(k => {
-                let nNominal = Math.round(parseFloat(k.nominal) || 0);
-                tbodyKsb.innerHTML += `
-                    <tr class="hover:bg-orange-50 transition border-b border-gray-100 h-10">
-                        <td class="p-2.5 text-gray-600">${k.tanggal}</td>
-                        <td class="p-2.5 font-bold">${k.sales}</td>
-                        <td class="p-2.5 font-bold ${k.tipe === 'Cash' ? 'text-green-600' : 'text-blue-600'}">${k.tipe}</td>
-                        <td class="p-2.5 text-right font-bold text-red-600">Rp ${nNominal.toLocaleString('id-ID')}</td>
-                        <td class="p-2.5 text-center"><button onclick="deleteKasbon('${k.id}')" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button></td>
-                    </tr>
-                `;
-            });
         }
 
         function changeKasbonPage(step) {
             currentKasbonPage += step;
-            renderKasbonTable();
+            renderSalesLedger(); 
         }
 
         async function deleteCP(id) {
@@ -9216,28 +9502,57 @@
                 tr.className = "hover:bg-blue-50 transition border-b border-gray-100";
                 
                 tr.innerHTML = `
-                    <!-- NO. KONTRA BON & TGL -->
-                    <td class="py-3 px-2 md:px-4 align-top md:align-middle">
-                        <div class="font-mono font-bold text-blue-700 text-xs md:text-sm">${kb.id}</div>
+                    <!-- KOLOM 1: NO. KONTRA BON & TGL (PC ONLY) -->
+                    <td class="!py-2 px-4 align-top hidden md:table-cell">
+                        <div class="font-mono font-bold text-blue-700 text-sm leading-tight">${kb.id}</div>
                         <div class="text-[10px] text-gray-500 font-semibold">${kb.tanggal}</div>
                     </td>
                     
-                    <!-- TOKO / CUSTOMER -->
-                    <td class="py-3 px-2 md:px-4 align-top md:align-middle">
-                        <div class="font-bold text-gray-800 text-xs md:text-sm">${kb.toko}</div>
+                    <!-- KOLOM UTAMA: 1 KOLOM CARD DI HP / TOKO DI PC -->
+                    <td class="!py-2.5 px-3 md:px-4 align-top w-full md:w-auto whitespace-normal md:whitespace-nowrap">
                         
-                        <!-- MOBILE ONLY: TOTAL TAGIHAN NUMPANG DI BAWAH -->
-                        <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-xs font-bold text-red-600">
-                            Tagihan: Rp ${Number(kb.total).toLocaleString('id-ID')}
+                        <!-- ================= MOBILE ONLY: CARD 1 KOLOM ================= -->
+                        <div class="md:hidden flex flex-col gap-1.5 w-full min-w-0">
+                            <!-- Lantai Atas: No KB, Tgl, & Tombol Aksi Bawaan -->
+                            <div class="flex justify-between items-start gap-2 border-b border-gray-100 pb-1.5">
+                                <div>
+                                    <div class="font-mono font-bold text-blue-700 text-xs">${kb.id}</div>
+                                    <div class="text-[10px] text-gray-400">${kb.tanggal}</div>
+                                </div>
+                                <!-- Tombol aksi diselipin ke pojok kanan atas card -->
+                                <div class="flex items-center gap-1 shrink-0 [&>button]:!p-1.5 [&>button]:!text-xs">
+                                    ${aksiHTML.replace(/<\/?td[^>]*>/g, '')}
+                                </div>
+                            </div>
+
+                            <!-- Lantai Tengah: Toko -->
+                            <div class="font-bold text-gray-800 text-sm leading-tight truncate">
+                                ${kb.toko}
+                            </div>
+
+                            <!-- Lantai Bawah: Rincian Tagihan -->
+                            <div class="bg-gray-50 p-2 rounded-lg text-[11px] space-y-1 border border-gray-100 mt-0.5">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Total Tagihan:</span>
+                                    <span class="font-bold text-red-600 text-xs">Rp ${Number(kb.total).toLocaleString('id-ID')}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= PC ONLY: TOKO ================= -->
+                        <div class="hidden md:block font-bold text-gray-800 text-sm leading-tight">
+                            ${kb.toko}
                         </div>
                     </td>
                     
                     <!-- TOTAL TAGIHAN (PC ONLY) -->
-                    <td class="py-3 px-4 text-right font-bold text-red-600 hidden md:table-cell align-middle text-sm">
+                    <td class="!py-2 px-4 text-right font-bold text-red-600 hidden md:table-cell align-middle text-sm">
                         Rp ${Number(kb.total).toLocaleString('id-ID')}
                     </td>
                     
-                    ${aksiHTML}
+                    <!-- AKSI (PC ONLY) -->
+                    <!-- Tambahkan class hidden md:table-cell pada td pembungkus aksi agar tidak dobel di HP -->
+                    ${aksiHTML.replace('class="', 'class="hidden md:table-cell ')}
                 `;
                 tbody.appendChild(tr);
             });
@@ -10136,55 +10451,6 @@
         // Pantau jaringan secara real-time dari browser
         window.addEventListener('online', updateNetworkStatus);
         window.addEventListener('offline', updateNetworkStatus);   
-
-        // ==========================================
-// MESIN KACAMATA KUDA (ROLE-BASED SENSOR)
-// ==========================================
-function applyKacamataKuda() {
-    // Ambil data role dari penyimpanan lokal aplikasi Bosku secara konsisten
-    const currentUser = JSON.parse(localStorage.getItem('davclar_logged_in_user')) || {};
-    const role = (localStorage.getItem('davclar_role') || currentUser.role || 'SALES').toUpperCase().trim();
-
-    console.log("👁️ Mengaktifkan Kacamata Kuda untuk Role:", role);
-
-    // Daftar ID sensor elemen khusus Admin (termasuk tombol aksi, header kolom aksi, dan checkbox komisi)
-    const actionIDs = [
-        'btn-action-barang', 'th-aksi-barang',
-        'btn-action-customer', 'th-aksi-customer',
-        'btn-action-po', 'th-aksi-po',
-        'btn-action-so', 'th-aksi-so',
-        'btn-action-inv', 'th-aksi-inv',
-        'btn-action-pay', 'th-aksi-pay',
-        'btn-action-kb', 'th-aksi-kb',
-        'komisiAdminFilter', 'th-ceklis-komisi',
-        'tab-usersetting-menu' // Menu User Management di Sidebar
-    ];
-
-    if (role === 'SALES') {
-        // Jika SALES, sembunyikan semua elemen admin menggunakan kelas 'hidden'
-        actionIDs.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.classList.add('hidden');
-            }
-        });
-
-        // Sembunyikan elemen lain dengan class rahasia .admin-only
-        document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
-    } else {
-        // Jika ADMIN, tampilkan kembali semua elemen aksi
-        actionIDs.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.classList.remove('hidden');
-            }
-        });
-
-        // Tampilkan kembali elemen .admin-only
-        document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
-    }
-}
-
 
         // INISIALISASI SAAT HALAMAN DIBUKA
         renderItemTable();
