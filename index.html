@@ -2417,25 +2417,26 @@
                     </div>
                     <div class="p-5 space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="w-full">
+                            <!-- Bungkus diperkuat w-full dan box-sizing untuk menjinakkan Safari iPhone -->
+                            <div class="w-full overflow-hidden">
                                 <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Tanggal</label>
-                                <input type="date" id="ksbDate" style="max-width: 100%; box-sizing: border-box;" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 font-bold text-gray-700">
+                                <input type="date" id="ksbDate" style="box-sizing: border-box; max-width: 100%;" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 font-bold text-gray-700 bg-white">
                             </div>
-                            <div>
+                            <div class="w-full overflow-hidden">
                                 <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Sales</label>
-                                <div class="relative">
-                                    <input type="text" id="ksbSales" oninput="searchSalesKasbon()" autocomplete="off" placeholder="Nama Sales..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 font-bold text-gray-700 uppercase transition">
+                                <div class="relative w-full">
+                                    <input type="text" id="ksbSales" oninput="searchSalesKasbon()" autocomplete="off" placeholder="Nama Sales..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 font-bold text-gray-700 uppercase transition box-sizing: border-box;">
                                     <div id="ksbSalesDropdown" class="absolute top-10 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-orange-600 uppercase mb-1">Jumlah Kasbon (Rp)</label>
-                            <input type="number" id="ksbNominal" placeholder="0" class="w-full px-3 py-2 border border-orange-400 rounded-lg text-lg font-bold text-orange-700 text-right focus:ring-2 focus:ring-orange-500">
+                            <input type="number" id="ksbNominal" placeholder="0" class="w-full px-3 py-2 border border-orange-400 rounded-lg text-lg font-bold text-orange-700 text-right focus:ring-2 focus:ring-orange-500 box-border">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Tipe / Metode</label>
-                            <select id="ksbTipe" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-bold text-gray-700 focus:ring-2 focus:ring-orange-500">
+                            <select id="ksbTipe" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-bold text-gray-700 focus:ring-2 focus:ring-orange-500 bg-white">
                                 <option value="Cash">Cash</option>
                                 <option value="Transfer">Transfer</option>
                             </select>
