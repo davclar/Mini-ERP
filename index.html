@@ -733,8 +733,6 @@
 
                 <!-- TAB: PRODUCTION DATA (PO MAKALOON) -->
                 <section id="tab-production" class="tab-content hidden-tab h-full">
-                    
-                    <!-- VIEW 1: LIST PO (Pakai Blueprint Utama) -->
                     <div id="view-po-list" class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER PO -->
@@ -824,196 +822,258 @@
                             </div>
                         </div> 
                     </div>
-                    
+                </section>
 
-                    <!-- VIEW 2: FORM BUAT PO BARU -->
-                    <div id="view-po-form" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col h-[800px]">
-                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100 shrink-0">
-                            <h3 class="text-lg font-bold text-gray-800">Buat PO Produksi Baru</h3>
-                            <button onclick="closePOForm()" class="text-gray-500 hover:text-red-500 font-semibold px-3 py-1 rounded transition">
-                                <i class="fa-solid fa-xmark mr-1"></i> Batal
-                            </button>
+                <!-- MODAL FORM BUAT PO BARU -->
+                <div id="modal-po-form" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <!-- Backdrop Gelap dengan Blur -->
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closePOForm()"></div>
+                    
+                    <!-- Konten Modal Utama -->
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-4xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
+                        
+                        <!-- Header Modal -->
+                        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-blue-50 rounded-t-2xl shrink-0">
+                            <h3 class="text-lg font-bold text-blue-800"><i class="fa-solid fa-industry mr-2"></i> Buat PO Produksi Baru</h3>
+                            <button onclick="closePOForm()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
                         </div>
 
-                        <div class="flex-1 flex flex-col overflow-hidden pr-2">
-                            <!-- Header PO -->
-                            <div class="grid grid-cols-4 gap-4 bg-blue-50 p-4 rounded-lg border border-blue-100 mb-4 shrink-0">
-                                <div>
+                        <!-- Body Form (Bisa di-scroll jika layar kecil) -->
+                        <div class="p-5 overflow-y-auto flex-1 space-y-4">
+                            
+                            <!-- Header PO Grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                                <div class="w-full">
                                     <label class="block text-xs font-semibold text-blue-800 uppercase mb-1">No. PO</label>
                                     <input type="text" id="poFormNo" readonly class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-gray-100 font-mono font-bold text-gray-600">
                                 </div>
-                                <div>
+                                <div class="w-full">
                                     <label class="block text-xs font-semibold text-blue-800 uppercase mb-1">Tanggal PO</label>
-                                    <input type="date" id="poFormTgl" required class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-white">
+                                    <input type="date" id="poFormTgl" required style="box-sizing: border-box; max-width: 100%;" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-white font-bold text-gray-700">
                                 </div>
-                                <div>
+                                <div class="w-full">
                                     <label class="block text-xs font-semibold text-blue-800 uppercase mb-1">Vendor / Makloon</label>
-                                    <input type="text" id="poFormMakloon" required placeholder="Cth: PORTI" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-white uppercase">
+                                    <input type="text" id="poFormMakloon" required placeholder="Cth: PORTI" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-white uppercase font-bold text-gray-700">
                                 </div>
-                                <div>
+                                <div class="w-full">
                                     <label class="block text-xs font-semibold text-blue-800 uppercase mb-1">Harga Makloon (Rp)</label>
-                                    <input type="number" id="poFormHarga" required placeholder="Cth: 65000" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-white">
+                                    <input type="number" id="poFormHarga" required placeholder="Cth: 65000" class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-white font-bold text-gray-700">
                                 </div>
-                                <div class="col-span-2">
+                                <div class="sm:col-span-2">
                                     <label class="block text-xs font-semibold text-blue-800 uppercase mb-1">Catatan PO</label>
                                     <input type="text" id="poFormNote" placeholder="Catatan keseluruhan PO..." class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm bg-white">
                                 </div>
-                                <div class="col-span-2">
+                                <div class="sm:col-span-2">
                                     <label class="block text-xs font-bold text-indigo-700 uppercase mb-1">Label Nomor Ukuran (S1 - S6)</label>
                                     <div class="grid grid-cols-6 gap-1">
-                                        <input type="text" id="poL1" placeholder="Cth: 36" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateTempLabels()">
-                                        <input type="text" id="poL2" placeholder="Cth: 37" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateTempLabels()">
-                                        <input type="text" id="poL3" placeholder="Cth: 38" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateTempLabels()">
-                                        <input type="text" id="poL4" placeholder="Opsional" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold" oninput="updateTempLabels()">
-                                        <input type="text" id="poL5" placeholder="Opsional" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold" oninput="updateTempLabels()">
-                                        <input type="text" id="poL6" placeholder="Opsional" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold" oninput="updateTempLabels()">
+                                        <input type="text" id="poL1" placeholder="36" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateTempLabels()">
+                                        <input type="text" id="poL2" placeholder="37" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateTempLabels()">
+                                        <input type="text" id="poL3" placeholder="38" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateTempLabels()">
+                                        <input type="text" id="poL4" placeholder="Opt" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold" oninput="updateTempLabels()">
+                                        <input type="text" id="poL5" placeholder="Opt" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold" oninput="updateTempLabels()">
+                                        <input type="text" id="poL6" placeholder="Opt" class="w-full px-1 py-1.5 border border-indigo-300 rounded text-center text-xs font-bold" oninput="updateTempLabels()">
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Tambah Item / SKU -->
-                            <h4 class="font-bold text-gray-700 mb-2 border-b pb-1 shrink-0">Tambah Barang ke PO</h4>
-                            
-                            <div class="grid grid-cols-12 gap-3 mb-2 items-end shrink-0">
-                                <div class="col-span-2">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Merk</label>
-                                    <input type="text" id="poInpMerk" placeholder="Merk..." class="w-full px-3 py-2 border border-blue-400 rounded-lg text-sm uppercase">
+                            <div>
+                                <h4 class="font-bold text-gray-700 mb-2 border-b pb-1 text-sm">Tambah Barang ke PO</h4>
+                                
+                                <div class="grid grid-cols-12 gap-2 mb-2 items-end">
+                                    <div class="col-span-4 sm:col-span-2">
+                                        <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Merk</label>
+                                        <input type="text" id="poInpMerk" placeholder="Merk..." class="w-full px-2 py-2 border border-blue-400 rounded-lg text-xs uppercase">
+                                    </div>
+                                    <div class="col-span-8 sm:col-span-4 relative">
+                                        <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Artikel</label>
+                                        <input type="text" id="poInputBarang" oninput="searchArtikelPO()" autocomplete="off" placeholder="Ketik artikel..." class="w-full px-2 py-2 border border-emerald-400 rounded-lg text-xs uppercase">
+                                        <div id="poSkuDropdown" class="absolute top-14 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
+                                    </div>
+                                    <div class="col-span-12 sm:col-span-2">
+                                        <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Warna</label>
+                                        <input type="text" id="poInpWarna" placeholder="Warna..." class="w-full px-2 py-2 border border-emerald-400 rounded-lg text-xs uppercase">
+                                    </div>
+                                    <div class="col-span-2 sm:col-span-1"><label id="lblS1" class="block text-[10px] font-bold text-gray-600 uppercase mb-1 text-center">36</label><input type="number" id="poInpS1" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-xs text-center"></div>
+                                    <div class="col-span-2 sm:col-span-1"><label id="lblS2" class="block text-[10px] font-bold text-gray-600 uppercase mb-1 text-center">37</label><input type="number" id="poInpS2" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-xs text-center"></div>
+                                    <div class="col-span-2 sm:col-span-1"><label id="lblS3" class="block text-[10px] font-bold text-gray-600 uppercase mb-1 text-center">38</label><input type="number" id="poInpS3" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-xs text-center"></div>
+                                    <div class="col-span-2 sm:col-span-1"><label id="lblS4" class="block text-[10px] font-bold text-gray-600 uppercase mb-1 text-center">39</label><input type="number" id="poInpS4" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-xs text-center"></div>
+                                    <div class="col-span-2 sm:col-span-1"><label id="lblS5" class="block text-[10px] font-bold text-gray-600 uppercase mb-1 text-center">40</label><input type="number" id="poInpS5" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-xs text-center"></div>
+                                    <div class="col-span-2 sm:col-span-1"><label id="lblS6" class="block text-[10px] font-bold text-gray-600 uppercase mb-1 text-center">-</label><input type="number" id="poInpS6" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-xs text-center"></div>
                                 </div>
-                                <div class="col-span-3 relative">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Artikel</label>
-                                    <input type="text" id="poInputBarang" oninput="searchArtikelPO()" autocomplete="off" placeholder="Ketik artikel..." class="w-full px-3 py-2 border border-emerald-400 rounded-lg text-sm uppercase">
-                                    <div id="poSkuDropdown" class="absolute top-16 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-end">
+                                    <div class="sm:col-span-9">
+                                        <input type="text" id="poInpKet" placeholder="Keterangan Item (Opsional)..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs">
+                                    </div>
+                                    <div class="sm:col-span-3">
+                                        <button type="button" onclick="addPOItem()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg text-xs transition shadow-sm">
+                                            <i class="fa-solid fa-arrow-down mr-1"></i> Tambah Item
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-span-1">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Warna</label>
-                                    <input type="text" id="poInpWarna" placeholder="Warna..." class="w-full px-2 py-2 border border-emerald-400 rounded-lg text-xs uppercase">
-                                </div>
-                                <div class="col-span-1"><label id="lblS1" class="block text-xs font-bold text-gray-600 uppercase mb-1 text-center">36</label><input type="number" id="poInpS1" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-sm text-center"></div>
-                                <div class="col-span-1"><label id="lblS2" class="block text-xs font-bold text-gray-600 uppercase mb-1 text-center">37</label><input type="number" id="poInpS2" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-sm text-center"></div>
-                                <div class="col-span-1"><label id="lblS3" class="block text-xs font-bold text-gray-600 uppercase mb-1 text-center">38</label><input type="number" id="poInpS3" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-sm text-center"></div>
-                                <div class="col-span-1"><label id="lblS4" class="block text-xs font-bold text-gray-600 uppercase mb-1 text-center">39</label><input type="number" id="poInpS4" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-sm text-center"></div>
-                                <div class="col-span-1"><label id="lblS5" class="block text-xs font-bold text-gray-600 uppercase mb-1 text-center">40</label><input type="number" id="poInpS5" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-sm text-center"></div>
-                                <div class="col-span-1"><label id="lblS6" class="block text-xs font-bold text-gray-600 uppercase mb-1 text-center">-</label><input type="number" id="poInpS6" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-lg text-sm text-center"></div>
                             </div>
 
-                            <div class="grid grid-cols-12 gap-3 mb-6 items-end shrink-0">
-                                <div class="col-span-9">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Keterangan Item (Opsional)</label>
-                                    <input type="text" id="poInpKet" placeholder="Contoh: Label custom, packing khusus, dll..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                </div>
-                                <div class="col-span-3">
-                                    <button type="button" onclick="addPOItem()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg text-sm transition">
-                                        <i class="fa-solid fa-arrow-down mr-1"></i> Tambah Item
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Wadah Tabel PO -->
-                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg mb-4 bg-white">
-                                <table class="w-full text-left border-collapse text-sm">
+                            <!-- Wadah Tabel Item PO Sementara -->
+                            <div class="border border-gray-200 rounded-lg bg-white overflow-x-auto max-h-48">
+                                <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
                                     <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm">
-                                        <tr class="text-gray-600 uppercase text-xs border-b border-gray-300">
+                                        <tr class="text-gray-600 uppercase border-b border-gray-300">
                                             <th class="py-2 px-3">Artikel - Warna</th>
-                                            <th id="thS1" class="py-2 px-2 text-center">36</th><th id="thS2" class="py-2 px-2 text-center">37</th><th id="thS3" class="py-2 px-2 text-center">38</th>
-                                            <th id="thS4" class="py-2 px-2 text-center">39</th><th id="thS5" class="py-2 px-2 text-center">40</th><th id="thS6" class="py-2 px-2 text-center">-</th>
+                                            <th id="thS1" class="py-2 px-2 text-center">36</th>
+                                            <th id="thS2" class="py-2 px-2 text-center">37</th>
+                                            <th id="thS3" class="py-2 px-2 text-center">38</th>
+                                            <th id="thS4" class="py-2 px-2 text-center">39</th>
+                                            <th id="thS5" class="py-2 px-2 text-center">40</th>
+                                            <th id="thS6" class="py-2 px-2 text-center">-</th>
                                             <th class="py-2 px-3 text-center font-bold">Total</th>
                                             <th class="py-2 px-2 text-center">Ket</th>
                                             <th class="py-2 px-3 text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="poTempItemsBody" class="divide-y divide-gray-200">
-                                        <!-- Item sementara -->
+                                        <!-- Item sementara dirender disini -->
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
 
-                        <div class="pt-4 border-t border-gray-200 flex justify-between items-center shrink-0">
-                            <div class="text-lg font-bold text-gray-700">Total Qty: <span id="poGrandQty" class="text-indigo-600">0 Psg</span></div>
-                            <button onclick="savePO()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg text-sm transition shadow-md">
-                                <i class="fa-solid fa-save mr-2"></i> Simpan PO Produksi
-                            </button>
+                        <!-- Footer Modal -->
+                        <div class="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-between items-center shrink-0">
+                            <div class="text-sm font-bold text-gray-700">Total Qty: <span id="poGrandQty" class="text-indigo-600">0 Psg</span></div>
+                            <div class="flex gap-2">
+                                <button onclick="closePOForm()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg text-sm transition">Batal</button>
+                                <button onclick="savePO()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-lg text-sm transition shadow-md flex items-center">
+                                    <i class="fa-solid fa-save mr-1.5"></i> Simpan PO
+                                </button>
+                            </div>
                         </div>
+
                     </div>
+                </div>
 
-                    <!-- VIEW 3: DETAIL PO (Mirip Format Cetak Excel) -->
-                    <div id="view-po-detail" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col h-[800px]">
-                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100 print:hidden shrink-0">
-                            <button onclick="closePODetail()" class="text-gray-600 hover:text-blue-600 font-semibold px-3 py-1 bg-gray-100 rounded transition flex items-center">
+                <!-- MODAL DETAIL & CETAK PO -->
+                <div id="modal-po-detail" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <!-- Backdrop Gelap dengan Blur -->
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closePODetail()"></div>
+                    
+                    <!-- Konten Modal Utama (Lebar maksimal untuk kertas cetak) -->
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-5xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92vh]">
+                        
+                        <!-- Header Aksi Modal (Tombol Kembali, PDF, Cetak) -->
+                        <div class="p-4 border-b border-gray-100 bg-gray-50 rounded-t-2xl flex justify-between items-center shrink-0 print:hidden">
+                            <button onclick="closePODetail()" class="text-gray-600 hover:text-blue-600 font-semibold px-3 py-1.5 bg-white border border-gray-200 rounded-lg transition flex items-center shadow-sm text-xs md:text-sm">
                                 <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
                             </button>
-                            <div class="space-x-2">
-                                <!-- Tombol PDF & Cetak -->
-                                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow-sm text-sm transition" onclick="exportToPDF()"><i class="fa-solid fa-file-pdf mr-1"></i> Export PDF</button>
-                                <button class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded shadow-sm text-sm transition" onclick="window.print()"><i class="fa-solid fa-print mr-1"></i> Cetak PO</button>
+                            <div class="flex gap-2">
+                                <button class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg shadow-sm text-xs md:text-sm font-bold transition flex items-center" onclick="exportToPDF()">
+                                    <i class="fa-solid fa-file-pdf mr-1.5"></i> Export PDF
+                                </button>
+                                <button class="bg-gray-800 hover:bg-gray-900 text-white px-3.5 py-1.5 rounded-lg shadow-sm text-xs md:text-sm font-bold transition flex items-center" onclick="window.print()">
+                                    <i class="fa-solid fa-print mr-1.5"></i> Cetak PO
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Area Kertas Cetak -->
-                        <div id="print-area" class="flex-1 overflow-y-auto p-4 border border-gray-200 bg-white shadow-inner font-sans text-sm">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="flex items-center space-x-4">
-                                    <img src="porti.png" alt="Logo Porti" class="h-16 object-contain">
-                                    
-                                    <div class="text-[14px] text-gray-600">
-                                        Grand Kopo Parahyangan<br>Blok A6 Kec. Margahayu Kab. Bandung<br>Telp/FAX (022) 54423424
+                        <!-- Area Kertas Cetak (Background abu-abu, bisa di-scroll) -->
+                        <div class="flex-1 overflow-auto p-4 md:p-8 bg-slate-200">
+                            <style>
+                                @media print {
+                                    body * { visibility: hidden; }
+                                    #print-area, #print-area * { 
+                                        visibility: visible; 
+                                        color: black !important;
+                                    }
+                                    /* PAKSA KERTAS KE POJOK KIRI ATAS SAAT PRINT */
+                                    #print-area { 
+                                        position: absolute !important; 
+                                        left: 0 !important; 
+                                        top: 0 !important; 
+                                        width: 100% !important; 
+                                        margin: 0 !important; 
+                                        padding: 0 !important; 
+                                        box-shadow: none !important;
+                                        border: none !important;
+                                    }
+                                    @page {
+                                        size: A4 portrait;
+                                        margin: 0.5cm; /* Margin tipis biar gak kepotong printer */
+                                    }
+                                }
+                            </style>
+
+                            <!-- Kertas Cetak A4 (Dikunci ukurannya, anti-gencet) -->
+                            <div id="print-area" class="bg-white mx-auto w-[210mm] min-h-[297mm] shadow-2xl border border-gray-300 p-8 relative font-sans text-sm shrink-0 box-border print:shadow-none print:border-none print:m-0 print:p-0">
+                                
+                                <!-- Header PO -->
+                                <div class="flex justify-between items-start mb-4 gap-4">
+                                    <div class="flex items-center space-x-4 w-[60%]">
+                                        <img src="porti.png" alt="Logo Porti" class="h-14 md:h-16 object-contain">
+                                        <div class="text-[12px] md:text-[14px] text-gray-600 leading-tight">
+                                            Grand Kopo Parahyangan<br>Blok A6 Kec. Margahayu Kab. Bandung<br>Telp/FAX (022) 54423424
+                                        </div>
+                                    </div>
+                                    <div class="text-xs w-[40%] flex justify-end">
+                                        <table class="text-left font-semibold">
+                                            <tr><td class="pr-2 align-top">TGL PO</td><td class="align-top">: <span id="detTanggal"></span></td></tr>
+                                            <tr><td class="pr-2 align-top">NO PO</td><td class="align-top">: <span id="detNoPO"></span></td></tr>
+                                            <tr><td class="pr-2 align-top">MAKLOON</td><td class="align-top">: <span id="detMakloon"></span></td></tr>
+                                            <tr><td class="pr-2 align-top">HARGA</td><td class="align-top">: Rp <span id="detHarga"></span></td></tr>
+                                            <tr><td class="pr-2 align-top">CATATAN</td><td class="align-top">: <span id="detCatatan" class="text-red-600"></span></td></tr>
+                                        </table>
                                     </div>
                                 </div>
-                                <div class="text-xs">
-                                    <table class="text-left font-semibold">
-                                        <tr><td class="pr-2">TGL PO</td><td>: <span id="detTanggal"></span></td></tr>
-                                        <tr><td class="pr-2">NO PO</td><td>: <span id="detNoPO"></span></td></tr>
-                                        <tr><td class="pr-2">MAKLOON</td><td>: <span id="detMakloon"></span></td></tr>
-                                        <tr><td class="pr-2">HARGA</td><td>: Rp <span id="detHarga"></span></td></tr>
-                                        <tr><td class="pr-2">CATATAN</td><td>: <span id="detCatatan" class="text-red-600"></span></td></tr>
+
+                                <div class="w-full h-1.5 bg-red-600 mb-4"></div>
+
+                                <!-- Tabel PO (Tanpa overflow supaya ikut kertas A4) -->
+                                <div class="w-full">
+                                    <table class="w-full border-collapse border border-black text-xs text-center" style="table-layout: fixed;">
+                                        <thead>
+                                            <tr class="font-bold border border-black bg-gray-50">
+                                                <th class="border border-black py-1 px-1 w-[12%]">MERK</th>
+                                                <th class="border border-black py-1 px-1 w-[20%]">ARTIKEL</th>
+                                                <th class="border border-black py-1 px-1 w-[12%]">WARNA</th>
+                                                <th id="pTh1" class="border border-black py-1 w-[6%]"></th>
+                                                <th id="pTh2" class="border border-black py-1 w-[6%]"></th>
+                                                <th id="pTh3" class="border border-black py-1 w-[6%]"></th>
+                                                <th id="pTh4" class="border border-black py-1 w-[6%]"></th>
+                                                <th id="pTh5" class="border border-black py-1 w-[6%]"></th>
+                                                <th id="pTh6" class="border border-black py-1 w-[6%]"></th>
+                                                <th class="border border-black py-1 px-1 w-[8%]">JUMLAH</th>
+                                                <th class="border border-black py-1 px-1 w-[12%]">KETERANGAN</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detTableBody"></tbody>
+                                        <tfoot>
+                                            <tr class="font-bold bg-gray-50">
+                                                <td colspan="3" class="border border-black py-1 text-right pr-2">TOTAL</td>
+                                                <td id="detT1" class="border border-black py-1"></td><td id="detT2" class="border border-black py-1"></td>
+                                                <td id="detT3" class="border border-black py-1"></td><td id="detT4" class="border border-black py-1"></td>
+                                                <td id="detT5" class="border border-black py-1"></td><td id="detT6" class="border border-black py-1"></td>
+                                                <td id="detTAll" class="border border-black py-1 text-blue-700"></td>
+                                                <td class="border border-black py-1"></td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
+                                </div>
+                                
+                                <!-- Tempat Cap Status & Barcode -->
+                                <div class="mt-8 flex justify-end text-xs font-bold text-gray-500 space-x-6">
+                                    <div>SPK: <span id="detStSPK" class="border-b border-gray-400 px-4 inline-block w-32 font-normal text-gray-800 text-center"></span></div>
+                                    <div>BARCODE: <span id="detStBC" class="border-b border-gray-400 px-4 inline-block w-32 font-normal text-gray-800 text-center"></span></div>
                                 </div>
                             </div>
 
-                            <div class="w-full h-2 bg-red-600 mb-2"></div>
-
-                            <table class="w-full border-collapse border border-black text-xs text-center">
-                                <thead>
-                                    <tr class="font-bold border border-black">
-                                        <th class="border border-black py-1 px-1">MERK</th>
-                                        <th class="border border-black py-1 px-1">ARTIKEL</th>
-                                        <th class="border border-black py-1 px-1">WARNA</th>
-                                        <th id="pTh1" class="border border-black py-1 w-8"></th>
-                                        <th id="pTh2" class="border border-black py-1 w-8"></th>
-                                        <th id="pTh3" class="border border-black py-1 w-8"></th>
-                                        <th id="pTh4" class="border border-black py-1 w-8"></th>
-                                        <th id="pTh5" class="border border-black py-1 w-8"></th>
-                                        <th id="pTh6" class="border border-black py-1 w-8"></th>
-                                        <th class="border border-black py-1 px-2">JUMLAH</th>
-                                        <th class="border border-black py-1 px-2">KETERANGAN</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detTableBody"></tbody>
-                                <tfoot>
-                                    <tr class="font-bold bg-gray-50">
-                                        <td colspan="3" class="border border-black py-1 text-right pr-2">TOTAL</td>
-                                        <td id="detT1" class="border border-black py-1"></td><td id="detT2" class="border border-black py-1"></td>
-                                        <td id="detT3" class="border border-black py-1"></td><td id="detT4" class="border border-black py-1"></td>
-                                        <td id="detT5" class="border border-black py-1"></td><td id="detT6" class="border border-black py-1"></td>
-                                        <td id="detTAll" class="border border-black py-1 text-blue-700"></td>
-                                        <td class="border border-black py-1"></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                            
-                            <!-- Tempat Cap Status & Barcode -->
-                            <div class="mt-8 flex justify-end text-xs font-bold text-gray-500 space-x-6">
-                                <div>SPK: <span id="detStSPK" class="border-b border-gray-400 px-4 inline-block w-32 font-normal text-gray-800"></span></div>
-                                <div>BARCODE: <span id="detStBC" class="border-b border-gray-400 px-4 inline-block w-32 font-normal text-gray-800"></span></div>
-                            </div>
                         </div>
+
                     </div>
-                </section>
+                </div>
+
 
                 <!-- TAB: SALES ORDER (SO) -->
                 <section id="tab-order" class="tab-content hidden-tab h-full">
-            
-                    <!-- VIEW 1: DAFTAR SALES ORDER (Pakai Blueprint Utama) -->
                     <div id="view-so-list" class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
                         <!-- HEADER SO -->
@@ -1111,65 +1171,92 @@
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <!-- VIEW 2: FORM BUAT SO BARU -->
-                    <div id="view-so-form" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col h-[800px]">
-                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100 shrink-0">
-                            <h3 class="text-lg font-bold text-gray-800">Form Sales Order</h3>
-                            <button onclick="closeSOForm()" class="text-gray-500 hover:text-red-500 font-semibold px-3 py-1 rounded transition"><i class="fa-solid fa-xmark mr-1"></i> Batal</button>
-                        </div>
+                <!-- MODAL FORM BUAT SO BARU -->
+                <div id="modal-so-form" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeSOForm()"></div>
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-5xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92vh]">
                         
-                        <div class="flex-1 flex flex-col overflow-hidden pr-2">
-                            <!-- Header SO -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-orange-50 p-4 rounded-lg border border-orange-100 mb-4 shrink-0">
-                                <div><label class="block text-[11px] font-semibold text-orange-800 uppercase mb-1">No. Order</label><input type="text" id="soFormNo" readonly class="w-full px-3 py-2 border border-orange-200 rounded-md text-sm bg-gray-100 font-mono font-bold text-gray-600"></div>
-                                <div><label class="block text-[11px] font-semibold text-orange-800 uppercase mb-1">Tanggal Order</label><input type="date" id="soFormTgl" required class="w-full px-3 py-2 border border-orange-200 rounded-md text-sm bg-white"></div>
-                                <div class="col-span-2 relative">
+                        <!-- Header Modal -->
+                        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-orange-50 rounded-t-2xl shrink-0">
+                            <h3 class="text-lg font-bold text-orange-800"><i class="fa-solid fa-cart-shopping mr-2"></i> Form Sales Order</h3>
+                            <button onclick="closeSOForm()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                        </div>
+
+                        <!-- Body Form -->
+                        <div class="p-5 overflow-y-auto flex-1 space-y-4">
+                            <!-- Header SO Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 bg-orange-50/50 p-4 rounded-xl border border-orange-100">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-orange-800 uppercase mb-1">No. Order</label>
+                                    <input type="text" id="soFormNo" readonly class="w-full px-3 py-2 border border-orange-200 rounded-md text-sm bg-gray-100 font-mono font-bold text-gray-600">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-orange-800 uppercase mb-1">Tanggal Order</label>
+                                    <input type="date" id="soFormTgl" required style="box-sizing: border-box; max-width: 100%;" class="w-full px-3 py-2 border border-orange-200 rounded-md text-sm bg-white font-bold text-gray-700">
+                                </div>
+                                <div class="md:col-span-2 relative">
                                     <label class="block text-[11px] font-semibold text-orange-800 uppercase mb-1">Cari Toko / Customer</label>
-                                    <input type="text" id="soInpToko" oninput="searchToko()" autocomplete="off" placeholder="Ketik nama toko..." class="w-full px-3 py-2 border border-orange-300 rounded-md text-sm bg-white font-bold text-gray-800">
+                                    <input type="text" id="soInpToko" oninput="searchToko()" autocomplete="off" placeholder="Ketik nama toko..." class="w-full px-3 py-2 border border-orange-300 rounded-md text-sm bg-white font-bold text-gray-800 uppercase">
                                     <div id="tokoDropdown" class="absolute top-16 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
                                 </div>
-                                <div class="col-span-1 md:col-span-4 grid grid-cols-2 md:grid-cols-6 gap-3 pt-2 border-t border-orange-200">
-                                    <div class="col-span-3"><label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Alamat Kirim</label><input type="text" id="soInpAlamat" class="w-full px-3 py-1.5 border border-orange-200 rounded-md text-xs bg-white"></div>
-                                    <div class="col-span-1"><label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Tipe</label><input type="text" id="soInpType" class="w-full px-3 py-1.5 border border-orange-200 rounded-md text-xs bg-white"></div>
-                                    <div class="col-span-1"><label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Disc 1 (%)</label><input type="number" id="soInpDisc" class="w-full px-3 py-1.5 border border-orange-200 rounded-md text-xs bg-white"></div>
-                                    <div class="col-span-1"><label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Disc 2 (%)</label><input type="number" id="soInpDisc2" class="w-full px-3 py-1.5 border border-orange-200 rounded-md text-xs bg-white"></div>
+                                <div class="col-span-1 md:col-span-4 grid grid-cols-12 gap-2 pt-3 border-t border-orange-200 items-end">
+                                    <div class="col-span-12 sm:col-span-6">
+                                        <label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Alamat Kirim</label>
+                                        <input type="text" id="soInpAlamat" class="w-full px-3 py-1.5 border border-orange-200 rounded-md text-xs bg-white">
+                                    </div>
+                                    <div class="col-span-6 sm:col-span-4">
+                                        <label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Tipe</label>
+                                        <input type="text" id="soInpType" class="w-full px-3 py-1.5 border border-orange-200 rounded-md text-xs bg-white uppercase font-bold text-gray-700">
+                                    </div>
+                                    <div class="col-span-3 sm:col-span-1">
+                                        <label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Disc 1 (%)</label>
+                                        <input type="number" id="soInpDisc" class="w-full px-2 py-1.5 border border-orange-200 rounded-md text-xs text-center bg-white">
+                                    </div>
+                                    <div class="col-span-3 sm:col-span-1">
+                                        <label class="block text-[11px] font-semibold text-orange-700 uppercase mb-1">Disc 2 (%)</label>
+                                        <input type="number" id="soInpDisc2" class="w-full px-2 py-1.5 border border-orange-200 rounded-md text-xs text-center bg-white">
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Tambah Item -->
-                            <div class="flex flex-wrap lg:flex-nowrap gap-2 items-end mb-3 shrink-0">
-                                <div class="w-20">
-                                    <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Merk</label>
-                                    <input type="text" id="soInpMerk" placeholder="Merk..." class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs uppercase">
-                                </div>
-                                <div class="flex-1 min-w-[150px] relative">
-                                    <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Artikel</label>
-                                    <input type="text" id="soInputBarang" oninput="searchArtikelSO()" autocomplete="off" placeholder="Nama artikel..." class="w-full px-2 py-2 border border-emerald-400 rounded-md text-xs uppercase">
-                                    <div id="soSkuDropdown" class="absolute top-14 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
-                                </div>
-                                <div class="w-24">
-                                    <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Warna</label>
-                                    <input type="text" id="soInpWarna" placeholder="Warna..." class="w-full px-2 py-2 border border-emerald-400 rounded-md text-xs uppercase">
-                                </div>
-                                <div class="w-24">
-                                    <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Harga (Rp)</label>
-                                    <input type="number" id="soInpHarga" placeholder="0" class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs font-bold text-blue-700 text-right">
-                                </div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S1</label><input type="number" id="soInpS1" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S2</label><input type="number" id="soInpS2" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S3</label><input type="number" id="soInpS3" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S4</label><input type="number" id="soInpS4" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S5</label><input type="number" id="soInpS5" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S6</label><input type="number" id="soInpS6" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10">
-                                    <button type="button" onclick="addSOItem()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 rounded-md text-sm transition h-[34px]"><i class="fa-solid fa-check"></i></button>
+                            <div>
+                                <h4 class="font-bold text-gray-700 mb-2 border-b pb-1 text-sm">Tambah Item Pesanan</h4>
+                                <div class="flex flex-wrap lg:flex-nowrap gap-2 items-end mb-3">
+                                    <div class="w-full sm:w-24">
+                                        <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Merk</label>
+                                        <input type="text" id="soInpMerk" placeholder="Merk..." class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs uppercase">
+                                    </div>
+                                    <div class="flex-1 min-w-[150px] relative">
+                                        <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Artikel</label>
+                                        <input type="text" id="soInputBarang" oninput="searchArtikelSO()" autocomplete="off" placeholder="Nama artikel..." class="w-full px-2 py-2 border border-emerald-400 rounded-md text-xs uppercase">
+                                        <div id="soSkuDropdown" class="absolute top-14 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
+                                    </div>
+                                    <div class="w-full sm:w-28">
+                                        <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Warna</label>
+                                        <input type="text" id="soInpWarna" placeholder="Warna..." class="w-full px-2 py-2 border border-emerald-400 rounded-md text-xs uppercase">
+                                    </div>
+                                    <div class="w-full sm:w-32">
+                                        <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Harga (Rp)</label>
+                                        <input type="number" id="soInpHarga" placeholder="0" class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs font-bold text-blue-700 text-right">
+                                    </div>
+                                    <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S1</label><input type="number" id="soInpS1" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                    <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S2</label><input type="number" id="soInpS2" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                    <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S3</label><input type="number" id="soInpS3" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                    <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S4</label><input type="number" id="soInpS4" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                    <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S5</label><input type="number" id="soInpS5" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                    <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S6</label><input type="number" id="soInpS6" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                    <div class="w-full sm:w-12">
+                                        <button type="button" onclick="addSOItem()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-md text-sm transition"><i class="fa-solid fa-check"></i></button>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Wadah Tabel SO -->
-                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg mb-4 bg-white">
-                                <table class="w-full text-left border-collapse text-sm">
+                            <!-- Wadah Tabel SO Sementara -->
+                            <div class="border border-gray-200 rounded-lg bg-white overflow-x-auto max-h-48">
+                                <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
                                     <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] border-b border-gray-300">
                                             <th class="py-2 px-2 w-16">Merk</th><th class="py-2 px-2">Artikel</th><th class="py-2 px-2 text-right">Harga</th>
@@ -1182,29 +1269,44 @@
                                 </table>
                             </div>
                         </div>
-                        
-                        <div class="pt-4 border-t border-gray-200 flex justify-between items-center shrink-0">
+
+                        <!-- Footer Modal -->
+                        <div class="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex flex-col sm:flex-row justify-between items-center gap-3 shrink-0">
                             <div>
-                                <div class="text-sm font-bold text-gray-500">Total Qty: <span id="soGrandQty" class="text-blue-600">0 Psg</span></div>
-                                <div class="text-lg font-bold text-gray-700">Total Order: <span id="soGrandTotal" class="text-orange-600">Rp 0</span></div>
+                                <div class="text-xs font-bold text-gray-500">Total Qty: <span id="soGrandQty" class="text-blue-600">0 Psg</span></div>
+                                <div class="text-base font-bold text-gray-700">Total Order: <span id="soGrandTotal" class="text-orange-600">Rp 0</span></div>
                             </div>
-                            <button onclick="saveSO()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg text-sm transition shadow-md">
-                                <i class="fa-solid fa-save mr-2"></i> Simpan Sales Order
+                            <div class="flex gap-2 w-full sm:w-auto justify-end">
+                                <button onclick="closeSOForm()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg text-sm transition">Batal</button>
+                                <button onclick="saveSO()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-5 rounded-lg text-sm transition shadow-md flex items-center">
+                                    <i class="fa-solid fa-save mr-1.5"></i> Simpan Sales Order
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- MODAL PREVIEW DETAIL SO -->
+                <div id="modal-so-detail" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeSODetail()"></div>
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-5xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92vh]">
+                        
+                        <!-- Header Aksi Modal -->
+                        <div class="p-4 border-b border-gray-100 bg-gray-50 rounded-t-2xl flex justify-between items-center shrink-0">
+                            <button onclick="closeSODetail()" class="text-gray-600 hover:text-blue-600 font-semibold px-3 py-1.5 bg-white border border-gray-200 rounded-lg transition flex items-center shadow-sm text-xs md:text-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button id="btnProsesInvoice" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg shadow-sm text-xs md:text-sm transition font-bold flex items-center">
+                                <i class="fa-solid fa-truck-fast mr-2"></i> Proses Kirim (Buat Invoice)
                             </button>
                         </div>
-                    </div>
 
-                    <!-- VIEW 3: PREVIEW DETAIL SO -->
-                    <div id="view-so-detail" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col h-[800px]">
-                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
-                            <button onclick="closeSODetail()" class="text-gray-600 hover:text-blue-600 font-semibold px-3 py-1 bg-gray-100 rounded transition"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
-                            <button id="btnProsesInvoice" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded shadow-sm text-sm transition font-bold"><i class="fa-solid fa-truck-fast mr-2"></i> Proses Kirim (Buat Invoice)</button>
-                        </div>
-                        <div class="flex-1 overflow-y-auto p-2">
-                            
+                        <!-- Body Detail SO -->
+                        <div class="flex-1 overflow-y-auto p-6 space-y-4">
                             <div id="detSOWarning"></div> <!-- Tempat Notif Sudah Dikirim -->
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4 border-b border-gray-100">
                                 <div>
                                     <h2 class="text-xl font-bold text-gray-800">Sales Order Detail</h2>
                                     <p class="text-sm text-gray-500">No: <span id="detSONo" class="font-bold text-gray-700"></span></p>
@@ -1216,20 +1318,31 @@
                                     <p class="text-xs font-semibold text-gray-600 mt-1">Tipe: <span id="detSOType"></span> | Disc: <span id="detSODisc1"></span>% + <span id="detSODisc2"></span>%</p>
                                 </div>
                             </div>
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead class="bg-gray-100 text-gray-600 uppercase text-[11px]">
-                                    <tr>
-                                        <th class="py-2 px-2 border">Merk</th><th class="py-2 px-2 border">Artikel</th><th class="py-2 px-2 border">Harga (Rp)</th>
-                                        <th class="py-2 px-1 border text-center">S1</th><th class="py-2 px-1 border text-center">S2</th><th class="py-2 px-1 border text-center">S3</th>
-                                        <th class="py-2 px-1 border text-center">S4</th><th class="py-2 px-1 border text-center">S5</th><th class="py-2 px-1 border text-center">S6</th>
-                                        <th class="py-2 px-2 border text-center">Qty</th><th class="py-2 px-2 border text-right">Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detSOTableBody"></tbody>
-                            </table>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse text-sm min-w-[650px]">
+                                    <thead class="bg-gray-100 text-gray-600 uppercase text-[11px]">
+                                        <tr>
+                                            <th class="py-2 px-2 border">Merk</th>
+                                            <th class="py-2 px-2 border">Artikel</th>
+                                            <th class="py-2 px-2 border">Harga (Rp)</th>
+                                            <th class="py-2 px-1 border text-center">S1</th>
+                                            <th class="py-2 px-1 border text-center">S2</th>
+                                            <th class="py-2 px-1 border text-center">S3</th>
+                                            <th class="py-2 px-1 border text-center">S4</th>
+                                            <th class="py-2 px-1 border text-center">S5</th>
+                                            <th class="py-2 px-1 border text-center">S6</th>
+                                            <th class="py-2 px-2 border text-center">Qty</th>
+                                            <th class="py-2 px-2 border text-right">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detSOTableBody"></tbody>
+                                </table>
+                            </div>
                         </div>
+
                     </div>
-                </section>
+                </div>
 
                 <!-- TAB: INVOICE & SURAT JALAN (REPORT) -->
                 <section id="tab-invoice" class="tab-content hidden-tab h-full">
@@ -1327,20 +1440,31 @@
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <!-- VIEW 2: FORM INVOICE (SO / MANUAL) -->
-                    <div id="view-invoice-form" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col h-[800px]">
-                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100 shrink-0">
-                            <h3 class="text-lg font-bold text-gray-800">Form Invoice / Surat Jalan</h3>
-                            <button onclick="closeInvoiceForm()" class="text-gray-500 hover:text-red-500 font-semibold px-3 py-1 rounded transition"><i class="fa-solid fa-xmark mr-1"></i> Batal</button>
-                        </div>
+                <!-- MODAL FORM INVOICE / SURAT JALAN -->
+                <div id="modal-invoice-form" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeInvoiceForm()"></div>
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-5xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92vh]">
                         
-                        <!-- [PERUBAHAN]: flex-col dan overflow-hidden biar nahan tabel di dalam -->
-                        <div class="flex-1 flex flex-col overflow-hidden pr-2">
-                            <!-- Header Invoice (Diberi shrink-0 biar gak gepeng) -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-emerald-50 p-4 rounded-lg border border-emerald-100 mb-4 shrink-0">
-                                <div><label class="block text-[11px] font-semibold text-emerald-800 uppercase mb-1">No. INV / SJ</label><input type="text" id="invFormNo" class="w-full px-3 py-2 border border-emerald-200 rounded-md text-sm bg-white font-mono font-bold text-gray-800"></div>
-                                <div><label class="block text-[11px] font-semibold text-emerald-800 uppercase mb-1">Tanggal Kirim</label><input type="date" id="invFormTgl" required class="w-full px-3 py-2 border border-emerald-200 rounded-md text-sm bg-white"></div>
+                        <!-- Header Modal -->
+                        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-emerald-50 rounded-t-2xl shrink-0">
+                            <h3 class="text-lg font-bold text-emerald-800"><i class="fa-solid fa-file-invoice-dollar mr-2"></i> Form Invoice / Surat Jalan</h3>
+                            <button onclick="closeInvoiceForm()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                        </div>
+
+                        <!-- Body Form -->
+                        <div class="p-5 overflow-y-auto flex-1 space-y-4">
+                            <!-- Header Invoice Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-emerald-800 uppercase mb-1">No. INV / SJ</label>
+                                    <input type="text" id="invFormNo" class="w-full px-3 py-2 border border-emerald-200 rounded-md text-sm bg-white font-mono font-bold text-gray-800">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-emerald-800 uppercase mb-1">Tanggal Kirim</label>
+                                    <input type="date" id="invFormTgl" required style="box-sizing: border-box; max-width: 100%;" class="w-full px-3 py-2 border border-emerald-200 rounded-md text-sm bg-white font-bold text-gray-700">
+                                </div>
                                 <div class="relative">
                                     <label class="block text-[11px] font-semibold text-emerald-800 uppercase mb-1">Ref SO</label>
                                     <input type="text" id="invRefSO" onclick="showOutstandingSOs()" oninput="showOutstandingSOs()" autocomplete="off" class="w-full px-3 py-2 border border-emerald-300 rounded-md text-sm bg-white font-bold text-gray-800 cursor-pointer focus:ring-2 focus:ring-emerald-500" placeholder="Pilih Customer Dulu...">
@@ -1348,21 +1472,21 @@
                                 </div>
                                 <div class="relative">
                                     <label class="block text-[11px] font-semibold text-emerald-800 uppercase mb-1">Nama Customer</label>
-                                    <input type="text" id="invCustomer" oninput="searchTokoInv()" autocomplete="off" class="w-full px-3 py-2 border border-emerald-300 rounded-md text-sm bg-white font-bold text-gray-800">
+                                    <input type="text" id="invCustomer" oninput="searchTokoInv()" autocomplete="off" class="w-full px-3 py-2 border border-emerald-300 rounded-md text-sm bg-white font-bold text-gray-800 uppercase">
                                     <div id="tokoDropdownInv" class="absolute top-16 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
                                 </div>
                                 
-                                <div class="col-span-1 md:col-span-4 flex flex-col md:flex-row md:gap-4 text-xs font-semibold text-emerald-700 border-t border-emerald-200 pt-2 mt-2">
-                                    <div>Tipe: <span id="invType" class="text-gray-800"></span></div>
-                                    <div>Disc 1: <span id="invDisc1" class="text-gray-800"></span>%</div>
-                                    <div>Disc 2: <span id="invDisc2" class="text-gray-800"></span>%</div>
-                                    <div class="flex-1 text-right">Alamat: <span id="invAlamat" class="text-gray-800 font-normal"></span></div>
+                                <div class="col-span-1 md:col-span-4 flex flex-col md:flex-row md:gap-4 text-xs font-semibold text-emerald-700 border-t border-emerald-200 pt-2 mt-1">
+                                    <div>Tipe: <span id="invType" class="text-gray-800 font-bold"></span></div>
+                                    <div>Disc 1: <span id="invDisc1" class="text-gray-800 font-bold"></span>%</div>
+                                    <div>Disc 2: <span id="invDisc2" class="text-gray-800 font-bold"></span>%</div>
+                                    <div class="flex-1 text-right truncate">Alamat: <span id="invAlamat" class="text-gray-800 font-normal"></span></div>
                                 </div>
                             </div>
 
                             <!-- Area Input Tambah Barang Manual -->
-                            <div id="invAddManualArea" class="flex flex-wrap lg:flex-nowrap gap-2 items-end mb-4 bg-emerald-50/50 p-2 rounded border border-emerald-100 shrink-0">
-                                <div class="w-20">
+                            <div id="invAddManualArea" class="flex flex-wrap lg:flex-nowrap gap-2 items-end bg-emerald-50/50 p-3 rounded-xl border border-emerald-100">
+                                <div class="w-full sm:w-20">
                                     <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Merk</label>
                                     <input type="text" id="invInpMerk" placeholder="Merk..." class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs uppercase">
                                 </div>
@@ -1371,29 +1495,28 @@
                                     <input type="text" id="invInputBarang" oninput="searchArtikelInv()" autocomplete="off" placeholder="+ Tambah barang..." class="w-full px-2 py-2 border border-emerald-400 rounded-md text-xs uppercase">
                                     <div id="invSkuDropdown" class="absolute top-14 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
                                 </div>
-                                <div class="w-24">
+                                <div class="w-full sm:w-24">
                                     <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Warna</label>
                                     <input type="text" id="invInpWarna" placeholder="Warna..." class="w-full px-2 py-2 border border-emerald-400 rounded-md text-xs uppercase">
                                 </div>
-                                <div class="w-24">
+                                <div class="w-full sm:w-28">
                                     <label class="block text-[10px] font-semibold text-gray-600 uppercase mb-1">Harga</label>
                                     <input type="number" id="invInpHarga" placeholder="0" class="w-full px-2 py-2 border border-gray-300 rounded-md text-xs font-bold text-blue-700 text-right">
                                 </div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S1</label><input type="number" id="invInpS1" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S2</label><input type="number" id="invInpS2" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S3</label><input type="number" id="invInpS3" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S4</label><input type="number" id="invInpS4" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S5</label><input type="number" id="invInpS5" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S6</label><input type="number" id="invInpS6" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
-                                <div class="w-10">
-                                    <button type="button" onclick="addInvItem()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 rounded-md text-sm transition h-[34px]"><i class="fa-solid fa-plus"></i></button>
+                                <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S1</label><input type="number" id="invInpS1" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S2</label><input type="number" id="invInpS2" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S3</label><input type="number" id="invInpS3" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S4</label><input type="number" id="invInpS4" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S5</label><input type="number" id="invInpS5" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                <div class="w-12"><label class="block text-[10px] font-bold text-gray-600 mb-1 text-center">S6</label><input type="number" id="invInpS6" placeholder="0" class="w-full px-1 py-2 border border-gray-300 rounded-md text-xs text-center"></div>
+                                <div class="w-full sm:w-12">
+                                    <button type="button" onclick="addInvItem()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-md text-sm transition"><i class="fa-solid fa-plus"></i></button>
                                 </div>
                             </div>
 
-                            <!-- [PERUBAHAN]: Bungkusan Tabel dengan flex-1 dan overflow-y-auto -->
-                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg mb-4 bg-white">
-                                <table class="w-full text-left border-collapse text-sm">
-                                    <!-- [PERUBAHAN]: sticky header agar nempel di atas -->
+                            <!-- Wadah Tabel Item Invoice Sementara -->
+                            <div class="border border-gray-200 rounded-lg bg-white overflow-x-auto max-h-48">
+                                <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
                                     <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] border-b border-gray-300">
                                             <th class="py-2 px-2 w-16">Merk</th><th class="py-2 px-2">Artikel</th><th class="py-2 px-2 text-right">Harga</th>
@@ -1406,37 +1529,49 @@
                                 </table>
                             </div>
                         </div>
-                        
-                        <div class="pt-4 border-t border-gray-200 flex justify-between items-center shrink-0">
-                            <div class="flex gap-6 items-end">
+
+                        <!-- Footer Modal -->
+                        <div class="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex flex-col sm:flex-row justify-between items-center gap-3 shrink-0">
+                            <div class="flex flex-wrap gap-4 items-center w-full sm:w-auto">
                                 <div>
-                                    <div class="text-sm font-bold text-gray-500 mb-1">Total Qty: <span id="invGrandQty" class="text-blue-600">0 Psg</span></div>
-                                    <div class="text-lg font-bold text-gray-700 flex items-end gap-3">
-                                        Total Invoice: <span id="invGrandTotal" class="text-emerald-600">Rp 0</span>
-                                    </div>
+                                    <div class="text-xs font-bold text-gray-500">Total Qty: <span id="invGrandQty" class="text-blue-600">0 Psg</span></div>
+                                    <div class="text-base font-bold text-gray-700">Total Invoice: <span id="invGrandTotal" class="text-emerald-600">Rp 0</span></div>
                                 </div>
-                                <!-- FITUR BARU: PENYESUAIAN MANUAL -->
                                 <div class="w-32">
                                     <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Penyesuaian (+/-)</label>
-                                    <input type="number" id="invInpPenyesuaian" value="0" oninput="renderInvTempItems()" class="w-full px-2 py-1.5 border border-amber-300 rounded text-sm text-right focus:outline-none focus:ring-2 focus:ring-amber-500 bg-amber-50">
+                                    <input type="number" id="invInpPenyesuaian" value="0" oninput="renderInvTempItems()" class="w-full px-2 py-1.5 border border-amber-300 rounded text-xs text-right focus:outline-none focus:ring-2 focus:ring-amber-500 bg-amber-50 font-bold">
                                 </div>
                             </div>
-                            <button onclick="saveInvoice()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-lg text-sm transition shadow-md">
-                                <i class="fa-solid fa-save mr-2"></i> Simpan & Kirim
+                            <div class="flex gap-2 w-full sm:w-auto justify-end">
+                                <button onclick="closeInvoiceForm()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg text-sm transition">Batal</button>
+                                <button onclick="saveInvoice()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-5 rounded-lg text-sm transition shadow-md flex items-center">
+                                    <i class="fa-solid fa-save mr-1.5"></i> Simpan & Kirim
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- MODAL PREVIEW & CETAK NOTA / SURAT JALAN -->
+                <div id="modal-inv-detail" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeInvoiceDetail()"></div>
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-5xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92vh]">
+                        
+                        <!-- Header Aksi Modal -->
+                        <div class="p-4 border-b border-gray-100 bg-gray-50 rounded-t-2xl flex justify-between items-center shrink-0 print:hidden">
+                            <button onclick="closeInvoiceDetail()" class="text-gray-600 hover:text-blue-600 font-semibold px-3 py-1.5 bg-white border border-gray-200 rounded-lg transition flex items-center shadow-sm text-xs md:text-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button onclick="printInvoice()" class="bg-gray-800 hover:bg-black text-white px-4 py-1.5 rounded-lg shadow-sm text-xs md:text-sm font-bold transition flex items-center">
+                                <i class="fa-solid fa-print mr-2"></i> Cetak Dokumen
                             </button>
                         </div>
-                    </div>
 
-                    <!-- VIEW 3: CETAK NOTA / SURAT JALAN -->
-                    <div id="view-inv-detail" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col h-[800px]">
-                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
-                            <button onclick="closeInvoiceDetail()" class="text-gray-600 hover:text-blue-600 font-semibold px-3 py-1 bg-gray-100 rounded transition"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
-                            <button onclick="printInvoice()" class="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded shadow-sm text-sm transition font-bold"><i class="fa-solid fa-print mr-2"></i> Cetak Dokumen</button>
-                        </div>
-                        <div class="flex-1 overflow-y-auto p-4 bg-gray-100 flex justify-center">
-                            <!-- (Area Print Dokumen Biarkan Seperti Sebelumnya) -->
-                            <div id="print-invoice-area" class="bg-white w-[210mm] min-h-[297mm] shadow-lg border border-gray-300 p-8 relative">
-                                <!-- Header -->
+                        <!-- Area Kertas Cetak (Bisa di-scroll) -->
+                        <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-200 flex justify-center items-start">
+                            <div id="print-invoice-area" class="w-full relative font-sans text-xs">
+                                <!-- Header Nota -->
                                 <div class="flex justify-between border-b-2 border-black pb-4 mb-4">
                                     <div>
                                         <h1 class="text-4xl font-serif font-bold tracking-tight">PORTI<span class="text-3xl ml-1 font-light text-gray-700">SHOES</span></h1>
@@ -1444,7 +1579,8 @@
                                     </div>
                                     <div class="text-right text-xs"><p>Grand Kopo Parahyangan</p><p>Blok A6 Kec. Margahayu Kab. Bandung</p><p>Telp/FAX (022)54423424</p></div>
                                 </div>
-                                <!-- Info -->
+                                
+                                <!-- Info Customer & No Nota -->
                                 <div class="flex justify-between text-sm mb-4">
                                     <div class="w-1/2">
                                         <table class="w-full"><tr><td class="w-24 font-bold">Tanggal</td><td>: <span id="printInvTgl"></span></td></tr><tr><td class="font-bold">No Faktur/SJ</td><td>: <span id="printInvNo"></span></td></tr></table>
@@ -1453,11 +1589,17 @@
                                         <table class="w-full"><tr><td class="w-24 font-bold">Customer</td><td>: <span id="printInvCustomer" class="font-bold"></span></td></tr><tr><td class="font-bold align-top">Alamat</td><td class="align-top">: <span id="printInvAlamat"></span></td></tr></table>
                                     </div>
                                 </div>
+
+                                <!-- Tabel Item Nota -->
                                 <table class="w-full border-collapse border border-black text-xs text-center">
                                     <thead>
                                         <tr>
-                                            <th class="border border-black p-1 w-20" rowspan="2">Merk</th><th class="border border-black p-1" rowspan="2">Artikel - Warna</th><th class="border border-black p-1" colspan="6">Size</th>
-                                            <th class="border border-black p-1 w-16" rowspan="2">Jumlah<br>(Psg)</th><th class="border border-black p-1 w-20" rowspan="2">Harga<br>Perpasang</th><th class="border border-black p-1 w-24" rowspan="2">Total</th>
+                                            <th class="border border-black p-1 w-20" rowspan="2">Merk</th>
+                                            <th class="border border-black p-1" rowspan="2">Artikel - Warna</th>
+                                            <th class="border border-black p-1" colspan="6">Size</th>
+                                            <th class="border border-black p-1 w-16" rowspan="2">Jumlah<br>(Psg)</th>
+                                            <th class="border border-black p-1 w-20" rowspan="2">Harga<br>Perpasang</th>
+                                            <th class="border border-black p-1 w-24" rowspan="2">Total</th>
                                         </tr>
                                         <tr>
                                             <th class="border border-black p-1 w-6"></th><th class="border border-black p-1 w-6"></th><th class="border border-black p-1 w-6"></th>
@@ -1471,14 +1613,17 @@
                                         <tr><td colspan="4" class="border border-black p-2"></td><td colspan="6" class="border border-black p-2 text-right font-bold text-lg">TOTAL</td><td id="printInvGrandTotal" class="border border-black p-2 text-right font-bold text-lg"></td></tr>
                                     </tfoot>
                                 </table>
+
+                                <!-- Tanda Tangan -->
                                 <div class="flex justify-between mt-12 text-sm px-8">
                                     <div class="text-center"><p class="mb-16">Tanda Terima,</p><p>( .............................. )</p></div>
                                     <div class="text-center"><p class="mb-16">Hormat Kami,</p><p>( .............................. )</p></div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                </section>
+                </div>
 
                 <!-- TAB: BUKU KAS (PAYMENT) -->
                 <section id="tab-payment" class="tab-content hidden-tab h-full">
@@ -1799,33 +1944,40 @@
                             </div>
                         </div>
                     </div>
-    
-                    <!-- 2. VIEW FORM BUAT KONTRA BON BARU -->
-                    <div id="kb-form-view" class="h-full flex flex-col hidden">
-                        <div class="bg-white p-5 border-b border-gray-200 flex justify-between items-center shrink-0 shadow-sm">
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-file-circle-plus text-blue-600 mr-2"></i> Buat Kontra Bon Baru</h2>
-                            </div>
-                            <button onclick="closeFormKB()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-4 py-2 rounded-lg text-sm transition shadow-sm flex items-center">
-                                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
-                            </button>
+
+                    <!-- WADAH GAIB UNTUK CETAK PRINTER -->
+                    <div id="print-kontrabon" class="hidden"></div>
+                </section>
+
+                <!-- MODAL FORM BUAT KONTRA BON BARU -->
+                <div id="modal-kb-form" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <!-- Backdrop Gelap dengan Blur -->
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeFormKB()"></div>
+                    
+                    <!-- Konten Modal Utama (Lebar Maksimal) -->
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-5xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92vh]">
+                        
+                        <!-- Header Modal -->
+                        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-blue-50 rounded-t-2xl shrink-0">
+                            <h3 class="text-lg font-bold text-blue-800"><i class="fa-solid fa-file-circle-plus mr-2"></i> Buat Kontra Bon Baru</h3>
+                            <button onclick="closeFormKB()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
                         </div>
 
                         <!-- Filter Area: Search & Date -->
-                        <div class="p-6 shrink-0">
+                        <div class="p-5 shrink-0 bg-gray-50/50 border-b border-gray-100">
                             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-wrap gap-4 items-end relative">
-                                <div class="w-full md:w-1/3">
+                                <div class="w-full md:w-5/12">
                                     <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Cari Toko / Customer</label>
                                     <div class="relative">
                                         <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400 text-sm pointer-events-none"></i>
-                                        <input type="search" id="kbSearchCust" oninput="searchCustForKB()" autocomplete="off" placeholder="Ketik Nama Toko..." class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 bg-white font-bold text-gray-700 shadow-sm">
+                                        <input type="search" id="kbSearchCust" oninput="searchCustForKB()" autocomplete="off" placeholder="Ketik Nama Toko..." class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 bg-white font-bold text-gray-700 shadow-sm uppercase">
                                         <!-- Kotak Suggestion Dropdown -->
                                         <div id="kbCustDropdown" class="absolute top-10 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-44 overflow-y-auto"></div>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/6">
+                                <div class="w-full md:w-3/12">
                                     <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Tgl Kontra Bon</label>
-                                    <input type="date" id="kbDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 font-bold text-gray-700">
+                                    <input type="date" id="kbDate" style="box-sizing: border-box; max-width: 100%;" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 font-bold text-gray-700 bg-white">
                                 </div>
                                 <div>
                                     <button onclick="simpanDanCetakKB()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-lg text-sm transition shadow-md flex items-center">
@@ -1836,10 +1988,19 @@
                         </div>
 
                         <!-- Area List Invoice (Checklist) -->
-                        <div class="flex-1 overflow-y-auto px-6 pb-6">
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-                                <table class="w-full text-sm text-left whitespace-nowrap min-w-max">
-                                    <thead class="bg-gray-800 text-white font-bold text-xs uppercase tracking-wider">
+                        <div class="flex-1 overflow-y-auto p-5 space-y-3">
+                            <!-- Judul List Invoice yang selalu tampil -->
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-gray-700 text-sm flex items-center">
+                                    <i class="fa-solid fa-list-check mr-2 text-blue-600"></i> List Invoice
+                                </h4>
+                                <span class="text-xs text-gray-400 italic">Centang faktur yang akan dikontrabon</span>
+                            </div>
+
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                <table class="w-full text-sm text-left border-collapse">
+                                    <!-- Header Kolom Tabel (Sembunyi di HP, tampil di PC) -->
+                                    <thead class="bg-gray-800 text-white font-bold text-xs uppercase tracking-wider hidden md:table-header-group">
                                         <tr>
                                             <th class="p-3 text-center w-12"><input type="checkbox" id="kbCheckAll" onchange="toggleAllKB(this)" class="w-4 h-4 rounded cursor-pointer accent-blue-500"></th>
                                             <th class="p-3">Tgl Faktur</th>
@@ -1855,11 +2016,14 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- WADAH GAIB UNTUK CETAK PRINTER -->
-                    <div id="print-kontrabon" class="hidden"></div>
-                </section>
+                        <!-- Footer Modal -->
+                        <div class="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end shrink-0">
+                            <button onclick="closeFormKB()" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg text-sm transition">Tutup</button>
+                        </div>
+
+                    </div>
+                </div>
 
                 <!-- TAB: SALES LEDGER & KASBON -->
                 <section id="tab-salesledger" class="tab-content hidden-tab h-full">
@@ -2793,66 +2957,52 @@
             });
             
             // 4. Tampilkan tab yang dipilih
-            document.getElementById(tabId).classList.remove('hidden-tab');
+            const targetTab = document.getElementById(tabId);
+            if(targetTab) targetTab.classList.remove('hidden-tab');
             
             // 5. Warnai tombol menu yang sedang aktif
             const activeBtn = document.getElementById('btn-' + tabId);
             if(activeBtn) {
                 activeBtn.classList.add('bg-blue-600', 'text-white');
                 activeBtn.classList.remove('text-gray-400');
-                document.getElementById('pageTitle').innerText = activeBtn.innerText;
+                if(document.getElementById('pageTitle')) {
+                    document.getElementById('pageTitle').innerText = activeBtn.innerText;
+                }
             }
 
-            // 6. Trigger render otomatis jika masuk ke tab tertentu
+            // 6. Trigger render otomatis & reset modal jika masuk ke tab tertentu
             if(tabId === 'tab-dashboard') {
                 if(typeof renderDashboard === 'function') renderDashboard();
             }
-            // Logika Reset Layar Tab PO (Production)
+
             if(tabId === 'tab-production') { 
-                document.getElementById('view-po-list').classList.remove('hidden');
-                
-                // Pastikan ID form PO di HTML Bosku namanya 'view-po-form' ya
-                if(document.getElementById('view-po-form')) {
-                    document.getElementById('view-po-form').classList.add('hidden');
-                }
-                
-                // Kalau ada halaman detail PO, sembunyikan juga
-                if(document.getElementById('view-po-detail')) {
-                    document.getElementById('view-po-detail').classList.add('hidden');
-                }
-                
-                renderPOList(); 
+                if(typeof renderPOList === 'function') renderPOList(); 
             }
             
             if(tabId === 'tab-databarang') { 
                 itemCurrentPage = 1; 
-                renderItemTable(); 
+                if(typeof renderItemTable === 'function') renderItemTable(); 
             }
+            
             if(tabId === 'tab-customer') { 
                 custCurrentPage = 1; 
-                renderCustomerList(); 
+                if(typeof renderCustomerList === 'function') renderCustomerList(); 
             }
             
             if(tabId === 'tab-order') {
-                document.getElementById('view-so-list').classList.remove('hidden');
-                document.getElementById('view-so-form').classList.add('hidden');
-                document.getElementById('view-so-detail').classList.add('hidden');
-                renderSOList();
+                if(typeof renderSOList === 'function') renderSOList();
             }
             
             if(tabId === 'tab-invoice') {
-                document.getElementById('view-inv-list').classList.remove('hidden');
-                document.getElementById('view-invoice-form').classList.add('hidden');
-                document.getElementById('view-inv-detail').classList.add('hidden');
-                renderInvoiceList();
+                if(typeof renderInvoiceList === 'function') renderInvoiceList();
             }
 
             if(tabId === 'tab-payment') {
-                renderPaymentList();
+                if(typeof renderPaymentList === 'function') renderPaymentList();
             }
 
             if(tabId === 'tab-komisi') {
-                renderKomisi();
+                if(typeof renderKomisi === 'function') renderKomisi();
             }
 
             if (tabId === 'tab-kontrabon') {
@@ -3658,6 +3808,24 @@
             }
         }
 
+        function openBarangModal() {
+            if(document.getElementById('itemProdId').value === '') {
+                document.getElementById('itemProdId').readOnly = false;
+                document.getElementById('itemProdId').classList.remove('bg-gray-200', 'cursor-not-allowed');
+            }
+            
+            const modal = document.getElementById('modal-input-barang');
+            const box = modal.querySelector('div.bg-white');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
+        }
+        function closeBarangModal() {
+            const modal = document.getElementById('modal-input-barang');
+            const box = modal.querySelector('div.bg-white');
+            modal.classList.add('opacity-0'); box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
         // Fungsi Otomatis Isi No. Urut dari Artikel
         function autoFillUrut() {
             const artikelInput = document.getElementById('itemArtikel').value.trim();
@@ -3867,12 +4035,14 @@
         // ==========================================
         let selectedProdIdTemp = ""; 
 
-        // [REPLACE] Buka Form PO & Reset Data
         function openPOForm() {
-            document.getElementById('view-po-list').classList.add('hidden');
-            document.getElementById('view-po-form').classList.remove('hidden');
-            document.querySelector('#view-po-form h3').innerText = "Buat PO Produksi Baru";
+            const modal = document.getElementById('modal-po-form');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
             
+            // Generator Nomor PO Otomatis
             const now = new Date();
             const yyyy = now.getFullYear();
             const mm = String(now.getMonth()+1).padStart(2,'0');
@@ -3904,6 +4074,23 @@
             selectedProdIdTemp = "";
             updateTempLabels(); 
             renderTempPOItems();
+        }
+
+        function closePOForm() {
+            const modal = document.getElementById('modal-po-form');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+            
+            // BERSIHKAN FIELD SAAT KLIK BATAL
+            document.getElementById('poInputBarang').value = '';
+            document.getElementById('poInpMerk').value = '';
+            document.getElementById('poInpKet').value = '';
+            for(let i=1; i<=6; i++) {
+                if(document.getElementById(`poInpS${i}`)) document.getElementById(`poInpS${i}`).value = '';
+            }
+            selectedProdIdTemp = "";
         }
 
         // [REPLACE] Autocomplete Barang (Auto-fill Merk & Harga Makloon)
@@ -3945,24 +4132,6 @@
                 };
                 dropdown.appendChild(div);
             });
-        }
-
-        function openBarangModal() {
-            if(document.getElementById('itemProdId').value === '') {
-                document.getElementById('itemProdId').readOnly = false;
-                document.getElementById('itemProdId').classList.remove('bg-gray-200', 'cursor-not-allowed');
-            }
-            
-            const modal = document.getElementById('modal-input-barang');
-            const box = modal.querySelector('div.bg-white');
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
-        }
-        function closeBarangModal() {
-            const modal = document.getElementById('modal-input-barang');
-            const box = modal.querySelector('div.bg-white');
-            modal.classList.add('opacity-0'); box.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
         function renderPOList() {
@@ -4179,21 +4348,28 @@
             }
         }
 
-        // [REPLACE] Lihat & Cetak Detail PO (Adaptasi Barang Manual)
         function viewPODetail(poId) {
             const po = db_po.find(p => p.id === poId);
             if(!po) return;
 
-            document.getElementById('view-po-list').classList.add('hidden');
-            document.getElementById('view-po-detail').classList.remove('hidden');
+            // Buka Modal Detail dengan animasi halus
+            const modal = document.getElementById('modal-po-detail');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
 
             document.getElementById('detTanggal').innerText = po.tanggal;
             document.getElementById('detNoPO').innerText = po.id;
             document.getElementById('detMakloon').innerText = po.makloon;
-            document.getElementById('detHarga').innerText = parseInt(po.harga).toLocaleString('id-ID');
+            document.getElementById('detHarga').innerText = parseInt(po.harga || 0).toLocaleString('id-ID');
             document.getElementById('detCatatan').innerText = po.catatan || "-";
 
-            for(let i=1; i<=6; i++) document.getElementById(`pTh${i}`).innerText = po.sizeLabels[i-1] || '';
+            for(let i=1; i<=6; i++) {
+                const thEl = document.getElementById(`pTh${i}`);
+                if(thEl) thEl.innerText = (po.sizeLabels && po.sizeLabels[i-1]) ? po.sizeLabels[i-1] : '';
+            }
+            
             document.getElementById('detStSPK').innerText = po.spkPrintedAt || '';
             
             // [FIX] Mengambil status Barcode Luar & Dalam dari variabel baru
@@ -4205,64 +4381,92 @@
             let printTextBC = "";
             if(tLuar !== '-' || tDalam !== '-') {
                 if(tLuar !== '-') printTextBC += `L: ${tLuar}   `;
-                if(tDalam !== '-') printTextBC += `D: ${tDalam}`;
+                if(tIn = tDalam !== '-') printTextBC += `D: ${tDalam}`;
             }
             
-            document.getElementById('detStBC').innerText = printTextBC.trim();
-            // Perlebar sedikit garis bawahnya biar muat 2 tanggal (Luar & Dalam)
-            document.getElementById('detStBC').className = "border-b border-gray-400 px-2 inline-block min-w-[160px] font-normal text-gray-800 text-[10px]";
+            const detStBC = document.getElementById('detStBC');
+            if(detStBC) {
+                detStBC.innerText = printTextBC.trim();
+                detStBC.className = "border-b border-gray-400 px-2 inline-block min-w-[160px] font-normal text-gray-800 text-[10px]";
+            }
 
             const tbody = document.getElementById('detTableBody');
-            tbody.innerHTML = '';
-            let t = [0,0,0,0,0,0,0]; 
+            if(tbody) {
+                tbody.innerHTML = '';
+                let t = [0,0,0,0,0,0,0]; 
 
-            po.items.forEach(item => {
-                const brg = db_databarang.find(b => b.prodId === item.prodId);
-                let m = item.merk || (brg ? brg.merk : '-');
-                let a = item.artikel || (brg ? brg.artikel : item.namaBarang || '-');
-                let w = item.warna || (brg ? brg.warna : '-');
+                (po.items || []).forEach(item => {
+                    const brg = (typeof db_databarang !== 'undefined' ? db_databarang : []).find(b => b.prodId === item.prodId);
+                    let m = item.merk || (brg ? brg.merk : '-');
+                    let a = item.artikel || (brg ? brg.artikel : item.namaBarang || '-');
+                    let w = item.warna || (brg ? brg.warna : '-');
 
-                t[0]+=item.s1; t[1]+=item.s2; t[2]+=item.s3; t[3]+=item.s4; t[4]+=item.s5; t[5]+=item.s6; t[6]+=item.total;
-                
-                let htmlS = [item.s1, item.s2, item.s3, item.s4, item.s5, item.s6].map(v => v === 0 ? '' : v);
-         
-                // Jika input manual, pecah kata terakhir sebagai warna
-                if(item.prodId === "MANUAL") {
-                     let parts = a.split(' ');
-                     if(parts.length > 1) {
-                         w = parts.pop();
-                         a = parts.join(' ');
-                     }
+                    t[0] += (item.s1 || 0); 
+                    t[1] += (item.s2 || 0); 
+                    t[2] += (item.s3 || 0); 
+                    t[3] += (item.s4 || 0); 
+                    t[4] += (item.s5 || 0); 
+                    t[5] += (item.s6 || 0); 
+                    t[6] += (item.total || 0);
+                    
+                    let htmlS = [item.s1, item.s2, item.s3, item.s4, item.s5, item.s6].map(v => (v === 0 || !v) ? '' : v);
+            
+                    if(item.prodId === "MANUAL") {
+                        let parts = a.split(' ');
+                        if(parts.length > 1) {
+                            w = parts.pop();
+                            a = parts.join(' ');
+                        }
+                    }
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="border border-black py-1 px-1">${m}</td>
+                            <td class="border border-black py-1 px-1">${a}</td>
+                            <td class="border border-black py-1 px-1">${w}</td>
+                            <td class="border border-black py-1">${htmlS[0]}</td>
+                            <td class="border border-black py-1">${htmlS[1]}</td>
+                            <td class="border border-black py-1">${htmlS[2]}</td>
+                            <td class="border border-black py-1">${htmlS[3]}</td>
+                            <td class="border border-black py-1">${htmlS[4]}</td>
+                            <td class="border border-black py-1">${htmlS[5]}</td>
+                            <td class="border border-black py-1 font-bold">${item.total}</td>
+                            <td class="border border-black py-1 px-2 text-left">${item.ket || ''}</td>
+                        </tr>
+                    `;
+                });
+
+                for(let i=0; i<6; i++) {
+                    const tEl = document.getElementById(`detT${i+1}`);
+                    if(tEl) tEl.innerText = t[i] === 0 ? '' : t[i];
                 }
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="border border-black py-1 px-1">${m}</td>
-                        <td class="border border-black py-1 px-1">${a}</td>
-                        <td class="border border-black py-1 px-1">${w}</td>
-                        <td class="border border-black py-1">${htmlS[0]}</td><td class="border border-black py-1">${htmlS[1]}</td>
-                        <td class="border border-black py-1">${htmlS[2]}</td><td class="border border-black py-1">${htmlS[3]}</td>
-                        <td class="border border-black py-1">${htmlS[4]}</td><td class="border border-black py-1">${htmlS[5]}</td>
-                        <td class="border border-black py-1 font-bold">${item.total}</td>
-                        <td class="border border-black py-1 px-2 text-left">${item.ket || ''}</td>
-                    </tr>
-                `;
-            });
-
-            for(let i=0; i<6; i++) document.getElementById(`detT${i+1}`).innerText = t[i] === 0 ? '' : t[i];
-            document.getElementById('detTAll').innerText = t[6] === 0 ? '' : t[6];
+                const tAll = document.getElementById('detTAll');
+                if(tAll) tAll.innerText = t[6] === 0 ? '' : t[6];
+            }
         }
 
-        // [REPLACE] Fungsi Edit PO
+        function closePODetail() {
+            const modal = document.getElementById('modal-po-detail');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
         function editPO(poId) {
             const po = db_po.find(p => p.id === poId);
             if(!po) return;
 
-            document.getElementById('view-po-list').classList.add('hidden');
-            document.getElementById('view-po-form').classList.remove('hidden');
+            // Buka Modal Form PO dengan animasi
+            const modal = document.getElementById('modal-po-form');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
             
-            // Ubah judul form
-            document.querySelector('#view-po-form h3').innerText = "Edit PO Produksi";
+            // Ubah judul form modal menjadi Edit
+            const titleEl = document.querySelector('#modal-po-form h3');
+            if(titleEl) titleEl.innerText = "Edit PO Produksi";
 
             // Masukkan data lama ke form
             document.getElementById('poFormNo').value = po.id;
@@ -4272,35 +4476,25 @@
             document.getElementById('poFormNote').value = po.catatan || "";
 
             for(let i=1; i<=6; i++) {
-                document.getElementById(`poL${i}`).value = po.sizeLabels[i-1] || "";
+                const lEl = document.getElementById(`poL${i}`);
+                if(lEl) lEl.value = (po.sizeLabels && po.sizeLabels[i-1]) ? po.sizeLabels[i-1] : "";
             }
             
             // PASTIKAN FIELD INPUT BARANG KOSONG SAAT MASUK MODE EDIT
             document.getElementById('poInputBarang').value = '';
             document.getElementById('poInpMerk').value = '';
             document.getElementById('poInpKet').value = '';
-            for(let i=1; i<=6; i++) document.getElementById(`poInpS${i}`).value = '';
+            for(let i=1; i<=6; i++) {
+                const sEl = document.getElementById(`poInpS${i}`);
+                if(sEl) sEl.value = '';
+            }
             
             // Pindahkan daftar barang ke keranjang sementara
-            tempPOItems = [...po.items];
+            tempPOItems = JSON.parse(JSON.stringify(po.items || []));
             selectedProdIdTemp = "";
             
             updateTempLabels(); 
             renderTempPOItems();
-        }
-
-        // [REPLACE] Fungsi Tutup Form (Batal)
-        function closePOForm() {
-            document.getElementById('view-po-detail').classList.add('hidden'); // Jaga-jaga kalau dipanggil dari detail
-            document.getElementById('view-po-form').classList.add('hidden');
-            document.getElementById('view-po-list').classList.remove('hidden');
-            
-            // BERSIHKAN FIELD SAAT KLIK BATAL
-            document.getElementById('poInputBarang').value = '';
-            document.getElementById('poInpMerk').value = '';
-            document.getElementById('poInpKet').value = '';
-            for(let i=1; i<=6; i++) document.getElementById(`poInpS${i}`).value = '';
-            selectedProdIdTemp = "";
         }
 
         // ==========================================
@@ -4559,11 +4753,6 @@
             renderPOList();
         }
 
-        function closePODetail() {
-            document.getElementById('view-po-detail').classList.add('hidden');
-            document.getElementById('view-po-list').classList.remove('hidden');
-        }
-
         // ==========================================
         // FITUR EXPORT PDF
         // ==========================================
@@ -4629,16 +4818,17 @@
         let selectedProdIdSO = ""; 
         let selectedMerkSO = ""; // Memori Merk sementara
 
-        // --- BAGIAN SALES ORDER ---
         function renderSOList() {
             const tbody = document.getElementById('soTableBody');
             if(!tbody) return;
 
-            // --- 1. CEK HAK AKSES MODUL SALES ORDER ---
-            const accessSO = (window.currentUserAccess && window.currentUserAccess['tab-order']) ? window.currentUserAccess['tab-order'] : 'READ';
-            const canEdit = (accessSO === 'FULL');
-
+            // --- 1. CEK HAK AKSES MODUL SALES ORDER (DIPERBAIKI) ---
             const role = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
+            const accessSO = (window.currentUserAccess && window.currentUserAccess['tab-order']) ? window.currentUserAccess['tab-order'] : 'READ';
+            
+            // Pastikan ADMIN atau role FULL langsung dapat akses edit
+            const canEdit = (role === 'ADMIN' || accessSO === 'FULL');
+
             const loggedInUser = localStorage.getItem('davclar_user');
 
             // Sembunyikan Tombol Atas (Import, Sinkron, Buat SO) jika cuma LIHAT
@@ -4670,21 +4860,18 @@
             let totalQtySent = 0;
 
             filtered.forEach(so => {
-                // Hitung total pasang di dalam SO ini
                 let qtySoItem = (so.items || []).reduce((sum, item) => sum + (parseFloat(item.total) || 0), 0);
-                
                 totalQtySO += qtySoItem;
 
-                // Cek jika statusnya sudah dikirim (mendukung varian teks 'SUDAH', 'KIRIM', atau 'SENT')
                 let statusStr = String(so.status || '').toUpperCase();
                 if (statusStr.includes('SUDAH') || statusStr.includes('KIRIM') || statusStr.includes('SENT')) {
                     totalQtySent += qtySoItem;
                 }
             });
 
-            // Masukkan ke elemen HTML Kotak 1 & Kotak 2
+            // Masukkan ke elemen HTML Kotak 1 & Kotak 2 (Typo diperbaiki)
             if(document.getElementById('soTotalFiltered')) {
-                document.getElementById('soTotalFilteredenerText') || (document.getElementById('soTotalFiltered').innerText = `${totalQtySO.toLocaleString('id-ID')} Psg`);
+                document.getElementById('soTotalFiltered').innerText = `${totalQtySO.toLocaleString('id-ID')} Psg`;
             }
             if(document.getElementById('soTotalSent')) {
                 document.getElementById('soTotalSent').innerText = `${totalQtySent.toLocaleString('id-ID')} Psg`;
@@ -4942,180 +5129,6 @@
             renderSOList();
         }
 
-        function viewSODetail(soId) {
-            const so = db_so.find(s => s.id === soId); if(!so) return;
-            document.getElementById('view-so-list').classList.add('hidden'); document.getElementById('view-so-detail').classList.remove('hidden');
-            document.getElementById('btnProsesInvoice').setAttribute('onclick', `openInvoiceForm('${so.id}')`);
-
-            document.getElementById('detSONo').innerText = so.id; document.getElementById('detSOTgl').innerText = so.tanggal;
-            document.getElementById('detSOToko').innerText = so.toko; document.getElementById('detSOAlamat').innerText = so.alamat;
-            document.getElementById('detSOType').innerText = so.type;
-            document.getElementById('detSODisc1').innerText = so.disc; document.getElementById('detSODisc2').innerText = so.disc2;
-
-            const tbody = document.getElementById('detSOTableBody'); tbody.innerHTML = '';
-            so.items.forEach(item => {
-                let htmlS = [item.s1, item.s2, item.s3, item.s4, item.s5, item.s6].map(v => v===0 ? '' : v);
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="py-2 px-2 border text-[10px] text-gray-500 uppercase">${item.merk||'-'}</td>
-                        <td class="py-2 px-2 border font-medium">${item.namaBarang}</td>
-                        <td class="py-2 px-2 border">${item.harga.toLocaleString('id-ID')}</td>
-                        <td class="py-2 px-1 border text-center">${htmlS[0]}</td><td class="py-2 px-1 border text-center">${htmlS[1]}</td>
-                        <td class="py-2 px-1 border text-center">${htmlS[2]}</td><td class="py-2 px-1 border text-center">${htmlS[3]}</td>
-                        <td class="py-2 px-1 border text-center">${htmlS[4]}</td><td class="py-2 px-1 border text-center">${htmlS[5]}</td>
-                        <td class="py-2 px-2 border text-center font-bold">${item.total}</td>
-                        <td class="py-2 px-2 border text-right font-bold text-gray-700">Rp ${item.subtotal.toLocaleString('id-ID')}</td>
-                    </tr>`;
-            });
-        }
-
-        // [NEW] Fungsi Buka Form Edit SO Lama
-        function editSO(id) {
-            const so = db_so.find(s => s.id === id);
-            if(!so) return;
-
-            document.getElementById('view-so-list').classList.add('hidden');
-            document.getElementById('view-so-form').classList.remove('hidden');
-            
-            // Kembalikan data SO yang sudah ada ke dalam Form
-            document.getElementById('soFormNo').value = so.id;
-            document.getElementById('soFormTgl').value = so.tanggal;
-            document.getElementById('soInpToko').value = so.toko;
-            document.getElementById('soInpAlamat').value = so.alamat;
-            document.getElementById('soInpType').value = so.type;
-            document.getElementById('soInpDisc').value = so.disc;
-            document.getElementById('soInpDisc2').value = so.disc2;
-            
-            // Kloning daftar barangnya agar bisa diedit ulang di keranjang
-            tempSOItems = JSON.parse(JSON.stringify(so.items));
-            renderSOTempItems();
-        }
-
-        // [POKA-YOKE & ANTI-CRASH] Buka Form Invoice (SUPER ROBUST KEY)
-        function openInvoiceForm(soId = null) {
-            try {
-                let cleanSoId = soId ? String(soId).trim().toUpperCase() : '';
-                let isFromSO = (cleanSoId !== '' && !cleanSoId.includes('EVENT') && cleanSoId !== 'MANUAL');
-                let soData = null;
-
-                if (isFromSO) {
-                    soData = db_so.find(s => String(s.id).trim().toUpperCase() === cleanSoId); 
-                    if(!soData) { alert("❌ Data SO tidak ditemukan!"); return; }
-
-                    let sentData = {}; 
-                    
-                    let relatedInvoices = db_invoice.filter(inv => {
-                        if(!inv.soId) return false;
-                        return String(inv.soId).split(',').map(s => s.trim().toUpperCase()).includes(cleanSoId);
-                    });
-
-                    relatedInvoices.forEach(inv => {
-                        inv.items.forEach(item => {
-                            // [FIX] Kunci Super Kuat (Anti Tabrakan Merk)
-                            let key = `${item.namaBarang || ''}${item.artikel || ''}${item.merk || ''}`.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-                            if(!sentData[key]) sentData[key] = {s1:0,s2:0,s3:0,s4:0,s5:0,s6:0};
-                            for(let i=1; i<=6; i++) {
-                                sentData[key][`s${i}`] += (parseInt(item[`s${i}`]) || 0); 
-                            }
-                        });
-                    });
-
-                    tempInvItems = [];
-                    soData.items.forEach(soItem => {
-                        let key = `${soItem.namaBarang || ''}${soItem.artikel || ''}${soItem.merk || ''}`.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-                        let sent = sentData[key] || {s1:0,s2:0,s3:0,s4:0,s5:0,s6:0};
-                        
-                        let remS1 = Math.max(0, (parseInt(soItem.s1)||0) - sent.s1);
-                        let remS2 = Math.max(0, (parseInt(soItem.s2)||0) - sent.s2);
-                        let remS3 = Math.max(0, (parseInt(soItem.s3)||0) - sent.s3);
-                        let remS4 = Math.max(0, (parseInt(soItem.s4)||0) - sent.s4);
-                        let remS5 = Math.max(0, (parseInt(soItem.s5)||0) - sent.s5);
-                        let remS6 = Math.max(0, (parseInt(soItem.s6)||0) - sent.s6);
-                        let totalRem = remS1+remS2+remS3+remS4+remS5+remS6;
-
-                        if(totalRem > 0) {
-                            tempInvItems.push({
-                                ...soItem,
-                                s1: remS1, s2: remS2, s3: remS3, s4: remS4, s5: remS5, s6: remS6,
-                                total: totalRem,
-                                subtotal: totalRem * soItem.harga
-                            });
-                        }
-                    });
-
-                    if(tempInvItems.length === 0) {
-                        showToast("✅ Semua barang di SO ini sudah terkirim penuh!");
-                        return; 
-                    }
-                } else {
-                    tempInvItems = []; 
-                }
-
-                openTab('tab-invoice'); 
-
-                if(document.getElementById('view-inv-list')) document.getElementById('view-inv-list').classList.add('hidden'); 
-                if(document.getElementById('view-inv-detail')) document.getElementById('view-inv-detail').classList.add('hidden');
-                if(document.getElementById('view-invoice-form')) document.getElementById('view-invoice-form').classList.remove('hidden');
-
-                const prefix = `INV${new Date().getFullYear()}${String(new Date().getMonth()+1).padStart(2,'0')}${String(new Date().getDate()).padStart(2,'0')}`;
-                let seq = 1;
-                const todayInvs = db_invoice.filter(p => String(p.id).startsWith(prefix));
-                if(todayInvs.length > 0) seq = Math.max(...todayInvs.map(p => parseInt(String(p.id).slice(-3)))) + 1;
-
-                if(document.getElementById('invFormNo')) document.getElementById('invFormNo').value = `${prefix}${String(seq).padStart(3,'0')}`;
-                if(document.getElementById('invFormTgl')) document.getElementById('invFormTgl').value = new Date().toISOString().split('T')[0];
-                if(document.getElementById('invType')) document.getElementById('invType').innerText = '-';
-                if(document.getElementById('invDisc1')) document.getElementById('invDisc1').innerText = '0'; 
-                if(document.getElementById('invDisc2')) document.getElementById('invDisc2').innerText = '0';
-                if(document.getElementById('invAlamat')) document.getElementById('invAlamat').innerText = '-';
-                if(document.getElementById('invInpPenyesuaian')) document.getElementById('invInpPenyesuaian').value = 0;
-
-                let custInput = document.getElementById('invCustomer');
-                let refInput = document.getElementById('invRefSO');
-
-                if(isFromSO && soData) {
-                    invSource = 'so';
-                    if(document.getElementById('view-so-detail')) document.getElementById('view-so-detail').classList.add('hidden'); 
-                    if(document.getElementById('view-so-list')) document.getElementById('view-so-list').classList.remove('hidden');
-
-                    if(refInput) {
-                        refInput.value = soData.id; 
-                        refInput.readOnly = false;
-                        refInput.classList.remove('bg-gray-100');
-                        refInput.classList.add('bg-blue-50', 'border-blue-300');
-                    }
-                    
-                    if(custInput) {
-                        custInput.value = soData.toko;
-                        custInput.readOnly = true;
-                        custInput.classList.add('bg-gray-100');
-                    }
-                    if(document.getElementById('invType')) document.getElementById('invType').innerText = soData.type || '-';
-                    if(document.getElementById('invDisc1')) document.getElementById('invDisc1').innerText = soData.disc !== undefined ? soData.disc : (soData.disc1 || 0); 
-                    if(document.getElementById('invDisc2')) document.getElementById('invDisc2').innerText = soData.disc2 || 0;
-                } else {
-                    invSource = 'manual';
-                    if(refInput) {
-                        refInput.value = "MANUAL";
-                        refInput.readOnly = false;
-                        refInput.classList.remove('bg-gray-100');
-                        refInput.classList.remove('bg-blue-50', 'border-blue-300');
-                    }
-                    if(custInput) {
-                        custInput.value = '';
-                        custInput.readOnly = false;
-                        custInput.classList.remove('bg-gray-100');
-                    }
-                }
-
-                if(typeof renderInvTempItems === 'function') renderInvTempItems();
-                
-            } catch (error) {
-                console.error("ERROR FATAL BUKA INVOICE:", error);
-                alert("Gagal membuka form! Penyebab: " + error.message);
-            }
-        }
-
         // ==========================================
         // RENDER ITEM INVOICE (ANTI CRASH & FIX UNDEFINED)
         // ==========================================
@@ -5241,13 +5254,52 @@
             }
 
             showToast('Invoice Berhasil Disimpan!'); 
-            document.getElementById('view-invoice-form').classList.add('hidden');
-            document.getElementById('view-inv-list').classList.remove('hidden');
-            openTab('tab-invoice');
             
-            renderInvoiceList(); 
-            renderSOList();
+            // Tutup Modal Form Invoice dengan animasi mulus
+            const modal = document.getElementById('modal-invoice-form');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+
+            // Kembalikan arah tab sesuai sumber pembuatannya
+            if(typeof invSource !== 'undefined' && invSource === 'so') {
+                openTab('tab-order');
+            } else {
+                openTab('tab-invoice');
+            }
+            
+            if(typeof renderInvoiceList === 'function') renderInvoiceList(); 
+            if(typeof renderSOList === 'function') renderSOList();
         }
+
+        async function deleteInvoice(id) {
+            const hasPayment = db_payment.some(p => p.invId === id);
+            if(hasPayment) {
+                showToast("❌ STOP! Invoice tidak bisa dihapus karena sudah ada riwayat pembayaran! Hapus riwayat pembayarannya terlebih dahulu di Buku Kas.", "error");
+                return;
+            }
+
+            const inv = db_invoice.find(i => i.id === id);
+            if (!inv) return;
+            
+            const isConfirmed = await showConfirm("Hapus Invoice", `Yakin ingin menghapus Invoice <b>${id}</b>?<br><br><span class="text-xs text-red-500 font-semibold">*Status Sales Order akan dikalkulasi ulang secara otomatis.</span>`, "danger");
+
+            if (isConfirmed) {
+                db_invoice = db_invoice.filter(i => i.id !== id);
+                localStorage.setItem('davclar_invoice', JSON.stringify(db_invoice));
+                
+                // [UPDATE] Kembalikan status SO (Bisa multi SO)
+                if(inv.soId && inv.soId !== "MANUAL" && inv.soId !== "-") {
+                    let soArray = inv.soId.split(',').map(s => s.trim());
+                    soArray.forEach(s => recalculateSOStatus(s));
+                }
+                
+                renderInvoiceList(); renderSOList();
+                showToast("Invoice berhasil dihapus!", "success");
+            }
+        }
+
 
         // --- DAFTAR INVOICE & CETAK ---
         function renderInvoiceList() {
@@ -5495,255 +5547,6 @@
             showToast("✅ File CSV berhasil didownload!", "success");
         }
 
-       function viewInvoiceDetail(id) {
-            const inv = db_invoice.find(i => i.id === id);
-            if(!inv) return;
-
-            const cust = db_customer.find(c => c.nama === inv.toko) || {};
-            
-            // Format Alamat (Sesuai editan Bosku)
-            let alamatToko = [cust.alamat].filter(Boolean).join(' - ') || '-';
-            
-            // Deteksi nomor telepon (Sesuai editan Bosku pakai <br>)
-            const noTelp = cust.tlp || cust.telp || cust.noHp || cust.hp;
-            if (noTelp && noTelp !== "-" && noTelp !== "") {
-                alamatToko += `<br>Telp. ${noTelp}`;
-            }
-
-            // ==========================================
-            // [BARU] LOGIKA KOP SURAT BUNGLON (FAJAR MAKMUR vs PORTI)
-            // ==========================================
-            let salesNota = (cust.sales || inv.sales || "").toUpperCase().trim();
-            let merkNota = (inv.items && inv.items.length > 0 ? (inv.items[0].merk || "") : "").toUpperCase().trim();
-
-            let logoSrc = "porti.png";
-            let infoRekening = "BCA a/n DAVIT BAMBANG IRAWAN - NO REK : 3791201240";
-            let infoAlamatHtml = `
-                <p>Grand Kopo Parahyangan</p>
-                <p>Blok A6 Kec. Margahayu Kab. Bandung</p>
-                <p>Telp/FAX (022)54423424</p>
-            `;
-
-            // Jika Sales TAUFIK dan jual CLARIFELA, berubah jadi FAJAR MAKMUR
-            if (salesNota.includes("TAUFIK") && merkNota.includes("CLARIFELA")) {
-                logoSrc = "fm.png"; 
-                infoRekening = "BCA a/n YULIANTI - NO REK : 0084299312";
-                infoAlamatHtml = `
-                    <p>Komplek Grand Kopo Parahyangan Blok A No.5</p>
-                    <p>Kel. Margahayu Selatan Kec. Margahayu</p>
-                    <p>Kab. Bandung 40226</p>
-                `;
-            }
-            // ==========================================
-
-            let discText = '';
-            if(inv.disc1 > 0 && inv.disc2 > 0) discText = `(${inv.disc1}% + ${inv.disc2}%)`;
-            else if(inv.disc1 > 0) discText = `(${inv.disc1}%)`;
-            
-            const nominalDisc = Math.round(inv.subtotal - inv.totalAkhir);
-            const totalAkhirBulat = Math.round(inv.totalAkhir);
-
-            // ==========================================
-            // LOGIKA PAGINATION ANTI-KEPOTONG (SMART CHUNKING)
-            // ==========================================
-            let itemsCopy = [...inv.items];
-            let pages = [];
-            let isFirstPage = true;
-
-            const PAGE1_MAX_WITH_FOOTER = 13;
-            const PAGE1_MAX_NO_FOOTER = 15;
-            const NEXT_PAGE_MAX_WITH_FOOTER = 17;
-            const NEXT_PAGE_MAX_NO_FOOTER = 19;
-
-            while (itemsCopy.length > 0) {
-                let limitWithFooter = isFirstPage ? PAGE1_MAX_WITH_FOOTER : NEXT_PAGE_MAX_WITH_FOOTER;
-                let limitNoFooter   = isFirstPage ? PAGE1_MAX_NO_FOOTER : NEXT_PAGE_MAX_NO_FOOTER;
-
-                if (itemsCopy.length <= limitWithFooter) {
-                    pages.push(itemsCopy.splice(0, itemsCopy.length));
-                } else {
-                    let take = limitNoFooter;
-                    if (itemsCopy.length > limitWithFooter && itemsCopy.length <= limitNoFooter) {
-                        take = limitWithFooter; 
-                    }
-                    pages.push(itemsCopy.splice(0, take));
-                }
-                isFirstPage = false;
-            }
-            
-            if (pages.length === 0) pages.push([]);
-
-            // ==========================================
-            // RENDER HTML PER HALAMAN
-            // ==========================================
-            let allPagesHTML = '';
-            
-            pages.forEach((pageItems, index) => {
-                const isPage1 = index === 0;
-                const isLastPage = index === pages.length - 1;
-                const pageNumber = index + 1;
-
-                // 1. HEADER (HANYA HALAMAN 1)
-                let headerHTML = '';
-                if (isPage1) {
-                    headerHTML = `
-                        <div class="flex justify-between items-start mb-2 gap-4 text-black">
-                            <div class="flex gap-4 w-[60%]">
-                                <img src="${logoSrc}" alt="LOGO" class="h-16 object-contain">
-                                <div class="text-[11px] leading-snug pt-1 font-semibold">
-                                    ${infoAlamatHtml}
-                                </div>
-                            </div>
-                            <div class="w-[40%] text-[11px] font-semibold pt-1">
-                                <table class="w-full text-black leading-[1.1]">
-                                    <tr><td class="w-16 align-top pb-0.5">Tanggal</td><td class="align-top pb-0.5">: ${inv.tanggal}</td></tr>
-                                    <tr><td class="align-top pb-0.5">No Faktur</td><td class="align-top pb-0.5">: ${inv.id}</td></tr>
-                                    <tr><td class="align-top pb-0.5">Customer</td><td class="align-top pb-0.5">: ${inv.toko}</td></tr>
-                                    <tr><td class="align-top">Alamat</td><td class="align-top whitespace-normal break-words">: ${alamatToko}</td></tr>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // 2. BODY TABEL ITEM 
-                let tbodyHTML = pageItems.map(item => {
-                    const brg = db_databarang.find(b => b.prodId === item.prodId);
-                    let baseArtikel = item.artikel || (brg ? brg.artikel : item.namaBarang || '-');
-                    let warna = item.warna || (brg ? brg.warna : '-');
-                    
-                    return `
-                        <tr class="text-black text-[11px] h-5">
-                            <td class="border border-black px-1 text-center uppercase truncate max-w-[50px]">${item.merk || '-'}</td>
-                            <td class="border border-black px-1 uppercase truncate max-w-[110px]">${baseArtikel}</td>
-                            <td class="border border-black px-1 text-center uppercase truncate max-w-[50px]">${warna}</td>
-                            <td class="border border-black text-center">${item.s1 || ''}</td>
-                            <td class="border border-black text-center">${item.s2 || ''}</td>
-                            <td class="border border-black text-center">${item.s3 || ''}</td>
-                            <td class="border border-black text-center">${item.s4 || ''}</td>
-                            <td class="border border-black text-center">${item.s5 || ''}</td>
-                            <td class="border border-black text-center">${item.s6 || ''}</td>
-                            <td class="border border-black px-1 text-center font-bold">${item.total || 0}</td>
-                            <td class="border border-black px-1 text-right whitespace-nowrap">${(item.harga || 0).toLocaleString('id-ID')}</td>
-                            <td class="border border-black px-1 text-right font-semibold whitespace-nowrap">${(item.subtotal || 0).toLocaleString('id-ID')}</td>
-                        </tr>
-                    `;
-                }).join('');
-
-                // 3. FOOTER (SUBTOTAL, DISCOUNT, TOTAL)
-                let footerHTML = '';
-                
-                if (isLastPage) {
-                    footerHTML = `
-                        <tr class="text-black text-[11px] h-5">
-                            <td colspan="11" class="border border-black px-2 text-right">Subtotal</td>
-                            <td class="border border-black px-1 text-right font-bold whitespace-nowrap">Rp ${inv.subtotal.toLocaleString('id-ID')}</td>
-                        </tr>
-                        <tr class="text-black text-[11px]">
-                            <!-- KIRI (TTD & REKENING DINAMIS) -->
-                            <td colspan="10" rowspan="3" class="align-top p-1" style="border: none; border-top: 1px solid black;">
-                                <div class="border border-black w-[75%] mx-auto text-center px-3 py-1 text-[11px] font-bold mb-2 mt-1">
-                                    ${infoRekening}
-                                </div>
-                                <div class="flex justify-between px-10 text-center text-[11px]">
-                                    <div class="w-32"><p>Tanda Terima,</p><br><br></div>
-                                    <div class="w-32 mr-12"><p>Hormat Kami,</p><br><br></div>
-                                </div>
-                            </td>
-                            <td class="border border-black px-1 py-0.5 text-center align-middle leading-tight h-5">Discount<br><span class="text-[9px]">${discText}</span></td>
-                            <td class="border border-black px-1 py-0.5 text-right align-middle font-bold whitespace-nowrap h-5">Rp ${nominalDisc.toLocaleString('id-ID')}</td>
-                        </tr>
-                        <tr class="text-black text-[11px]">
-                            <td class="border border-black px-1 py-1 text-center font-bold h-5">Total</td>
-                            <td class="border border-black px-1 py-1 text-right font-bold whitespace-nowrap h-5 text-[12px]">Rp ${totalAkhirBulat.toLocaleString('id-ID')}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="border: none;"></td>
-                        </tr>
-                    `;
-                } else {
-                    footerHTML = `
-                        <tr class="text-black text-[10px] h-5">
-                            <td colspan="12" class="border border-black px-2 text-right italic text-black font-semibold">Bersambung ke Halaman ${pageNumber + 1}...</td>
-                        </tr>
-                    `;
-                }
-
-                // 4. SUSUN HALAMAN 
-                allPagesHTML += `
-                    <div class="cetak-halaman bg-white mx-auto flex flex-col mb-4 print:mb-0" style="width: 20.6cm; min-height: 13.5cm; box-sizing: border-box; padding: 0.5cm 0.4cm 0.1cm 0.4cm;">
-                        
-                        ${headerHTML}
-
-                        <!-- TABEL UTAMA -->
-                        <table class="w-full border-collapse text-[11px] text-black" style="table-layout: fixed;">
-                            <thead>
-                                <tr class="bg-white">
-                                    <th class="border border-black p-0.5 w-[11%]" rowspan="2">Merk</th>
-                                    <th class="border border-black p-0.5 w-[20%]" rowspan="2">Artikel</th>
-                                    <th class="border border-black p-0.5 w-[10%]" rowspan="2">Warna</th>
-                                    <th class="border border-black p-0.5 w-[23%]" colspan="6">Size</th>
-                                    <th class="border border-black p-0.5 w-[9%] leading-tight" rowspan="2">Jumlah<br>(Psg)</th>
-                                    <th class="border border-black p-0.5 w-[13%] leading-tight" rowspan="2">Harga<br>Perpasang</th>
-                                    <th class="border border-black p-0.5 w-[14%]" rowspan="2">Total</th>
-                                </tr>
-                                <tr class="bg-white text-[11px]">
-                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S1</th>
-                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S2</th>
-                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S3</th>
-                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S4</th>
-                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S5</th>
-                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S6</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tbodyHTML}
-                                ${footerHTML}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            });
-
-            // ==========================================
-            // INJEKSI KE LAYAR & CSS PRINT SHARPNESS
-            // ==========================================
-            const container = document.getElementById('view-inv-detail');
-            if(!container) return;
-            
-            container.innerHTML = `
-                <style>
-                    @media print {
-                        body * { visibility: hidden; }
-                        #print-area-wrapper, #print-area-wrapper * { 
-                            visibility: visible; 
-                            color: #000000 !important; 
-                            font-family: Arial, Helvetica, sans-serif !important;
-                            text-rendering: optimizeLegibility !important;
-                        }
-                        #print-area-wrapper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
-                        @page { size: 21.5cm 14cm; margin: 0cm; }
-                        .cetak-halaman { page-break-after: always; break-after: page; border: none !important; }
-                    }
-                </style>
-
-                <div class="flex justify-between items-center mb-4 print:hidden">
-                    <button onclick="document.getElementById('view-inv-detail').classList.add('hidden'); document.getElementById('view-inv-list').classList.remove('hidden');" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-semibold transition"><i class="fa-solid fa-arrow-left mr-2"></i> Kembali</button>
-                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition shadow-md"><i class="fa-solid fa-print mr-2"></i> Cetak ke Printer</button>
-                </div>
-
-                <div id="print-area-wrapper" class="w-full bg-gray-50 pb-10 print:bg-white font-sans">
-                    ${allPagesHTML}
-                </div>
-            `;
-
-            document.getElementById('view-inv-list').classList.add('hidden');
-            document.getElementById('view-invoice-form').classList.add('hidden');
-            container.classList.remove('hidden');
-        }
-
-        function closeInvoiceDetail() { document.getElementById('view-inv-detail').classList.add('hidden'); document.getElementById('view-inv-list').classList.remove('hidden'); }
-        
         // Print Function (Browser native print)
         function printInvoice() {
             const printArea = document.getElementById('print-invoice-area').innerHTML;
@@ -5752,25 +5555,6 @@
             window.print();
             document.body.innerHTML = originalBody;
             location.reload(); // Reload untuk mengembalikan state SPA Javascript
-        }
-
-        // [RESTORE] Buka Form SO Baru
-        function openSOForm() {
-            document.getElementById('view-so-list').classList.add('hidden');
-            document.getElementById('view-so-form').classList.remove('hidden');
-            
-            const prefix = `SO${new Date().getFullYear()}${String(new Date().getMonth()+1).padStart(2,'0')}${String(new Date().getDate()).padStart(2,'0')}`;
-            let seq = 1;
-            const todaySOs = db_so.filter(p => p.id.startsWith(prefix));
-            if(todaySOs.length > 0) seq = Math.max(...todaySOs.map(p => parseInt(p.id.slice(-3)))) + 1;
-
-            document.getElementById('soFormNo').value = `${prefix}${String(seq).padStart(3,'0')}`;
-            document.getElementById('soFormTgl').value = new Date().toISOString().split('T')[0];
-            
-            document.getElementById('soInpToko').value = ''; document.getElementById('soInpAlamat').value = '';
-            document.getElementById('soInpType').value = ''; document.getElementById('soInpDisc').value = ''; document.getElementById('soInpDisc2').value = '';
-            
-            tempSOItems = []; renderSOTempItems();
         }
 
         function searchToko() {
@@ -5819,37 +5603,519 @@
                 showToast("Sales Order berhasil dihapus!", "success");
             }
         }
+        
+        function openSOForm() {
+            const modal = document.getElementById('modal-so-form');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+            
+            // Ubah judul form modal jika diperlukan atau biarkan default
+            const titleEl = document.querySelector('#modal-so-form h3');
+            if(titleEl) titleEl.innerHTML = `<i class="fa-solid fa-cart-shopping mr-2"></i> Form Sales Order`;
 
-        function closeSOForm() { document.getElementById('view-so-form').classList.add('hidden'); document.getElementById('view-so-list').classList.remove('hidden'); }
-        function closeSODetail() { document.getElementById('view-so-detail').classList.add('hidden'); document.getElementById('view-so-list').classList.remove('hidden'); }
+            const prefix = `SO${new Date().getFullYear()}${String(new Date().getMonth()+1).padStart(2,'0')}${String(new Date().getDate()).padStart(2,'0')}`;
+            let seq = 1;
+            const todaySOs = db_so.filter(p => p.id.startsWith(prefix));
+            if(todaySOs.length > 0) seq = Math.max(...todaySOs.map(p => parseInt(p.id.slice(-3)))) + 1;
 
-       // 3. KLIK TOMBOL BATAL DI FORM INVOICE
+            document.getElementById('soFormNo').value = `${prefix}${String(seq).padStart(3,'0')}`;
+            document.getElementById('soFormTgl').value = new Date().toISOString().split('T')[0];
+            
+            document.getElementById('soInpToko').value = ''; 
+            document.getElementById('soInpAlamat').value = '';
+            document.getElementById('soInpType').value = ''; 
+            document.getElementById('soInpDisc').value = ''; 
+            document.getElementById('soInpDisc2').value = '';
+            
+            tempSOItems = []; 
+            if(typeof renderSOTempItems === 'function') renderSOTempItems();
+        }
+
+        function closeSOForm() {
+            const modal = document.getElementById('modal-so-form');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        function viewSODetail(soId) {
+            const so = db_so.find(s => s.id === soId); 
+            if(!so) return;
+
+            const modal = document.getElementById('modal-so-detail');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+            
+            const btnInvoice = document.getElementById('btnProsesInvoice');
+            if(btnInvoice) btnInvoice.setAttribute('onclick', `openInvoiceForm('${so.id}')`);
+
+            document.getElementById('detSONo').innerText = so.id; 
+            document.getElementById('detSOTgl').innerText = so.tanggal;
+            document.getElementById('detSOToko').innerText = so.toko; 
+            document.getElementById('detSOAlamat').innerText = so.alamat || '-';
+            document.getElementById('detSOType').innerText = so.type || '-';
+            document.getElementById('detSODisc1').innerText = so.disc || 0; 
+            document.getElementById('detSODisc2').innerText = so.disc2 || 0;
+
+            const tbody = document.getElementById('detSOTableBody'); 
+            if(tbody) {
+                tbody.innerHTML = '';
+                (so.items || []).forEach(item => {
+                    let htmlS = [item.s1, item.s2, item.s3, item.s4, item.s5, item.s6].map(v => (v === 0 || !v) ? '' : v);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="py-2 px-2 border text-[10px] text-gray-500 uppercase">${item.merk||'-'}</td>
+                            <td class="py-2 px-2 border font-medium">${item.namaBarang}</td>
+                            <td class="py-2 px-2 border">${(item.harga || 0).toLocaleString('id-ID')}</td>
+                            <td class="py-2 px-1 border text-center">${htmlS[0]}</td>
+                            <td class="py-2 px-1 border text-center">${htmlS[1]}</td>
+                            <td class="py-2 px-1 border text-center">${htmlS[2]}</td>
+                            <td class="py-2 px-1 border text-center">${htmlS[3]}</td>
+                            <td class="py-2 px-1 border text-center">${htmlS[4]}</td>
+                            <td class="py-2 px-1 border text-center">${htmlS[5]}</td>
+                            <td class="py-2 px-2 border text-center font-bold">${item.total}</td>
+                            <td class="py-2 px-2 border text-right font-bold text-gray-700">Rp ${(item.subtotal || 0).toLocaleString('id-ID')}</td>
+                        </tr>`;
+                });
+            }
+        }
+
+        function closeSODetail() {
+            const modal = document.getElementById('modal-so-detail');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        function editSO(id) {
+            const so = db_so.find(s => s.id === id);
+            if(!so) return;
+
+            const modal = document.getElementById('modal-so-form');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+            
+            // Kembalikan data SO yang sudah ada ke dalam Form Modal
+            document.getElementById('soFormNo').value = so.id;
+            document.getElementById('soFormTgl').value = so.tanggal;
+            document.getElementById('soInpToko').value = so.toko;
+            document.getElementById('soInpAlamat').value = so.alamat || '';
+            document.getElementById('soInpType').value = so.type || '';
+            document.getElementById('soInpDisc').value = so.disc || '';
+            document.getElementById('soInpDisc2').value = so.disc2 || '';
+            
+            // Kloning daftar barangnya agar bisa diedit ulang di keranjang
+            tempSOItems = JSON.parse(JSON.stringify(so.items || []));
+            if(typeof renderSOTempItems === 'function') renderSOTempItems();
+        }
+
+        function openInvoiceForm(soId = null) {
+            try {
+                let cleanSoId = soId ? String(soId).trim().toUpperCase() : '';
+                let isFromSO = (cleanSoId !== '' && !cleanSoId.includes('EVENT') && cleanSoId !== 'MANUAL');
+                let soData = null;
+
+                if (isFromSO) {
+                    soData = db_so.find(s => String(s.id).trim().toUpperCase() === cleanSoId); 
+                    if (!soData) { alert("❌ Data SO tidak ditemukan!"); return; }
+
+                    let sentData = {}; 
+                    let relatedInvoices = db_invoice.filter(inv => {
+                        if (!inv.soId) return false;
+                        return String(inv.soId).split(',').map(s => s.trim().toUpperCase()).includes(cleanSoId);
+                    });
+
+                    relatedInvoices.forEach(inv => {
+                        inv.items.forEach(item => {
+                            let key = `${item.namaBarang || ''}${item.artikel || ''}${item.merk || ''}`.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                            if (!sentData[key]) sentData[key] = {s1:0, s2:0, s3:0, s4:0, s5:0, s6:0};
+                            for (let i = 1; i <= 6; i++) {
+                                sentData[key][`s${i}`] += (parseInt(item[`s${i}`]) || 0); 
+                            }
+                        });
+                    });
+
+                    tempInvItems = [];
+                    soData.items.forEach(soItem => {
+                        let key = `${soItem.namaBarang || ''}${soItem.artikel || ''}${soItem.merk || ''}`.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                        let sent = sentData[key] || {s1:0, s2:0, s3:0, s4:0, s5:0, s6:0};
+                        
+                        let remS1 = Math.max(0, (parseInt(soItem.s1) || 0) - sent.s1);
+                        let remS2 = Math.max(0, (parseInt(soItem.s2) || 0) - sent.s2);
+                        let remS3 = Math.max(0, (parseInt(soItem.s3) || 0) - sent.s3);
+                        let remS4 = Math.max(0, (parseInt(soItem.s4) || 0) - sent.s4);
+                        let remS5 = Math.max(0, (parseInt(soItem.s5) || 0) - sent.s5);
+                        let remS6 = Math.max(0, (parseInt(soItem.s6) || 0) - sent.s6);
+                        let totalRem = remS1 + remS2 + remS3 + remS4 + remS5 + remS6;
+
+                        if (totalRem > 0) {
+                            tempInvItems.push({
+                                ...soItem,
+                                s1: remS1, s2: remS2, s3: remS3, s4: remS4, s5: remS5, s6: remS6,
+                                total: totalRem,
+                                subtotal: totalRem * soItem.harga
+                            });
+                        }
+                    });
+
+                    if (tempInvItems.length === 0) {
+                        showToast("✅ Semua barang di SO ini sudah terkirim penuh!");
+                        return; 
+                    }
+                } else {
+                    tempInvItems = []; 
+                }
+
+                // Pindah ke tab Invoice
+                openTab('tab-invoice'); 
+
+                // [AMAN] Tutup modal detail SO jika sedang terbuka
+                const soDetailModal = document.getElementById('modal-so-detail');
+                if (soDetailModal) {
+                    soDetailModal.classList.add('opacity-0');
+                    setTimeout(() => soDetailModal.classList.add('hidden'), 300);
+                }
+
+                // [AMAN] Buka Modal Form Invoice dengan animasi mulus
+                const invModal = document.getElementById('modal-invoice-form');
+                if (invModal) {
+                    invModal.classList.remove('hidden');
+                    setTimeout(() => invModal.classList.remove('opacity-0'), 10);
+                }
+
+                const now = new Date();
+                const prefix = `INV${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+                let seq = 1;
+                const todayInvs = db_invoice.filter(p => String(p.id).startsWith(prefix));
+                if (todayInvs.length > 0) seq = Math.max(...todayInvs.map(p => parseInt(String(p.id).slice(-3)))) + 1;
+
+                if (document.getElementById('invFormNo')) document.getElementById('invFormNo').value = `${prefix}${String(seq).padStart(3, '0')}`;
+                if (document.getElementById('invFormTgl')) document.getElementById('invFormTgl').value = now.toISOString().split('T')[0];
+                if (document.getElementById('invType')) document.getElementById('invType').innerText = '-';
+                if (document.getElementById('invDisc1')) document.getElementById('invDisc1').innerText = '0'; 
+                if (document.getElementById('invDisc2')) document.getElementById('invDisc2').innerText = '0';
+                if (document.getElementById('invAlamat')) document.getElementById('invAlamat').innerText = '-';
+                if (document.getElementById('invInpPenyesuaian')) document.getElementById('invInpPenyesuaian').value = 0;
+
+                let custInput = document.getElementById('invCustomer');
+                let refInput = document.getElementById('invRefSO');
+
+                if (isFromSO && soData) {
+                    invSource = 'so';
+                    if (refInput) {
+                        refInput.value = soData.id; 
+                        refInput.readOnly = false;
+                        refInput.classList.remove('bg-gray-100');
+                        refInput.classList.add('bg-blue-50', 'border-blue-300');
+                    }
+                    
+                    if (custInput) {
+                        custInput.value = soData.toko;
+                        custInput.readOnly = true;
+                        custInput.classList.add('bg-gray-100');
+                    }
+                    if (document.getElementById('invType')) document.getElementById('invType').innerText = soData.type || '-';
+                    if (document.getElementById('invDisc1')) document.getElementById('invDisc1').innerText = soData.disc !== undefined ? soData.disc : (soData.disc1 || 0); 
+                    if (document.getElementById('invDisc2')) document.getElementById('invDisc2').innerText = soData.disc2 || 0;
+                } else {
+                    invSource = 'manual';
+                    if (refInput) {
+                        refInput.value = "MANUAL";
+                        refInput.readOnly = false;
+                        refInput.classList.remove('bg-gray-100', 'bg-blue-50', 'border-blue-300');
+                    }
+                    if (custInput) {
+                        custInput.value = '';
+                        custInput.readOnly = false;
+                        custInput.classList.remove('bg-gray-100');
+                    }
+                }
+
+                if (typeof renderInvTempItems === 'function') renderInvTempItems();
+                
+            } catch (error) {
+                console.error("ERROR FATAL BUKA INVOICE:", error);
+                alert("Gagal membuka form! Penyebab: " + error.message);
+            }
+        }
+
+        function viewInvoiceDetail(id) {
+            const inv = db_invoice.find(i => i.id === id);
+            if(!inv) return;
+
+            const cust = db_customer.find(c => c.nama === inv.toko) || {};
+            
+            // Format Alamat
+            let alamatToko = [cust.alamat].filter(Boolean).join(' - ') || '-';
+            
+            // Deteksi nomor telepon
+            const noTelp = cust.tlp || cust.telp || cust.noHp || cust.hp;
+            if (noTelp && noTelp !== "-" && noTelp !== "") {
+                alamatToko += `<br>Telp. ${noTelp}`;
+            }
+
+            // ==========================================
+            // LOGIKA KOP SURAT BUNGLON (FAJAR MAKMUR vs PORTI)
+            // ==========================================
+            let salesNota = (cust.sales || inv.sales || "").toUpperCase().trim();
+            let merkNota = (inv.items && inv.items.length > 0 ? (inv.items[0].merk || "") : "").toUpperCase().trim();
+
+            let logoSrc = "porti.png";
+            let infoRekening = "BCA a/n DAVIT BAMBANG IRAWAN - NO REK : 3791201240";
+            let infoAlamatHtml = `
+                <p>Grand Kopo Parahyangan</p>
+                <p>Blok A6 Kec. Margahayu Kab. Bandung</p>
+                <p>Telp/FAX (022)54423424</p>
+            `;
+
+            if (salesNota.includes("TAUFIK") && merkNota.includes("CLARIFELA")) {
+                logoSrc = "fm.png"; 
+                infoRekening = "BCA a/n YULIANTI - NO REK : 0084299312";
+                infoAlamatHtml = `
+                    <p>Komplek Grand Kopo Parahyangan Blok A No.5</p>
+                    <p>Kel. Margahayu Selatan Kec. Margahayu</p>
+                    <p>Kab. Bandung 40226</p>
+                `;
+            }
+            // ==========================================
+
+            let discText = '';
+            if(inv.disc1 > 0 && inv.disc2 > 0) discText = `(${inv.disc1}% + ${inv.disc2}%)`;
+            else if(inv.disc1 > 0) discText = `(${inv.disc1}%)`;
+            
+            const nominalDisc = Math.round(inv.subtotal - inv.totalAkhir);
+            const totalAkhirBulat = Math.round(inv.totalAkhir);
+
+            // ==========================================
+            // LOGIKA PAGINATION ANTI-KEPOTONG (SMART CHUNKING)
+            // ==========================================
+            let itemsCopy = [...inv.items];
+            let pages = [];
+            let isFirstPage = true;
+
+            const PAGE1_MAX_WITH_FOOTER = 10;
+            const PAGE1_MAX_NO_FOOTER = 12;
+            const NEXT_PAGE_MAX_WITH_FOOTER = 13;
+            const NEXT_PAGE_MAX_NO_FOOTER = 15;
+
+            while (itemsCopy.length > 0) {
+                let limitWithFooter = isFirstPage ? PAGE1_MAX_WITH_FOOTER : NEXT_PAGE_MAX_WITH_FOOTER;
+                let limitNoFooter   = isFirstPage ? PAGE1_MAX_NO_FOOTER : NEXT_PAGE_MAX_NO_FOOTER;
+
+                if (itemsCopy.length <= limitWithFooter) {
+                    pages.push(itemsCopy.splice(0, itemsCopy.length));
+                } else {
+                    let take = limitNoFooter;
+                    if (itemsCopy.length > limitWithFooter && itemsCopy.length <= limitNoFooter) {
+                        take = limitWithFooter; 
+                    }
+                    pages.push(itemsCopy.splice(0, take));
+                }
+                isFirstPage = false;
+            }
+            
+            if (pages.length === 0) pages.push([]);
+
+            // ==========================================
+            // RENDER HTML PER HALAMAN (UKURAN A5 LANSKAP)
+            // ==========================================
+            let allPagesHTML = '';
+            
+            pages.forEach((pageItems, index) => {
+                const isPage1 = index === 0;
+                const isLastPage = index === pages.length - 1;
+                const pageNumber = index + 1;
+
+                let headerHTML = '';
+                if (isPage1) {
+                    headerHTML = `
+                        <div class="flex justify-between items-start mb-2 gap-4 text-black">
+                            <div class="flex gap-3 w-[55%]">
+                                <img src="${logoSrc}" alt="LOGO" class="h-14 object-contain">
+                                <div class="text-[10px] leading-tight pt-1 font-semibold">
+                                    ${infoAlamatHtml}
+                                </div>
+                            </div>
+                            <div class="w-[45%] text-[10px] font-semibold pt-1">
+                                <table class="w-full text-black leading-[1.1]">
+                                    <tr><td class="w-16 align-top pb-0.5">Tanggal</td><td class="align-top pb-0.5">: ${inv.tanggal}</td></tr>
+                                    <tr><td class="align-top pb-0.5">No Faktur</td><td class="align-top pb-0.5">: ${inv.id}</td></tr>
+                                    <tr><td class="align-top pb-0.5">Customer</td><td class="align-top pb-0.5">: ${inv.toko}</td></tr>
+                                    <tr><td class="align-top">Alamat</td><td class="align-top whitespace-normal break-words">: ${alamatToko}</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                let tbodyHTML = pageItems.map(item => {
+                    const brg = db_databarang.find(b => b.prodId === item.prodId);
+                    let baseArtikel = item.artikel || (brg ? brg.artikel : item.namaBarang || '-');
+                    let warna = item.warna || (brg ? brg.warna : '-');
+                    
+                    return `
+                        <tr class="text-black text-[10px] h-4">
+                            <td class="border border-black px-1 text-center uppercase truncate max-w-[50px]">${item.merk || '-'}</td>
+                            <td class="border border-black px-1 uppercase truncate max-w-[100px]">${baseArtikel}</td>
+                            <td class="border border-black px-1 text-center uppercase truncate max-w-[50px]">${warna}</td>
+                            <td class="border border-black text-center">${item.s1 || ''}</td>
+                            <td class="border border-black text-center">${item.s2 || ''}</td>
+                            <td class="border border-black text-center">${item.s3 || ''}</td>
+                            <td class="border border-black text-center">${item.s4 || ''}</td>
+                            <td class="border border-black text-center">${item.s5 || ''}</td>
+                            <td class="border border-black text-center">${item.s6 || ''}</td>
+                            <td class="border border-black px-1 text-center font-bold">${item.total || 0}</td>
+                            <td class="border border-black px-1 text-right whitespace-nowrap">${(item.harga || 0).toLocaleString('id-ID')}</td>
+                            <td class="border border-black px-1 text-right font-semibold whitespace-nowrap">${(item.subtotal || 0).toLocaleString('id-ID')}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                let footerHTML = '';
+                if (isLastPage) {
+                    footerHTML = `
+                        <tr class="text-black text-[10px] h-4">
+                            <td colspan="11" class="border border-black px-2 text-right">Subtotal</td>
+                            <td class="border border-black px-1 text-right font-bold whitespace-nowrap">Rp ${inv.subtotal.toLocaleString('id-ID')}</td>
+                        </tr>
+                        <tr class="text-black text-[10px]">
+                            <td colspan="10" rowspan="3" class="align-top p-1" style="border: none; border-top: 1px solid black;">
+                                <div class="border border-black w-[70%] mx-auto text-center px-2 py-0.5 text-[10px] font-bold mb-1 mt-1">
+                                    ${infoRekening}
+                                </div>
+                                <div class="flex justify-between px-8 text-center text-[10px]">
+                                    <div class="w-28"><p>Tanda Terima,</p><br><br></div>
+                                    <div class="w-28 mr-8"><p>Hormat Kami,</p><br><br></div>
+                                </div>
+                            </td>
+                            <td class="border border-black px-1 py-0.5 text-center align-middle leading-tight h-4">Discount<br><span class="text-[8px]">${discText}</span></td>
+                            <td class="border border-black px-1 py-0.5 text-right align-middle font-bold whitespace-nowrap h-4">Rp ${nominalDisc.toLocaleString('id-ID')}</td>
+                        </tr>
+                        <tr class="text-black text-[10px]">
+                            <td class="border border-black px-1 py-0.5 text-center font-bold h-4">Total</td>
+                            <td class="border border-black px-1 py-0.5 text-right font-bold whitespace-nowrap h-4 text-[11px]">Rp ${totalAkhirBulat.toLocaleString('id-ID')}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: none;"></td>
+                        </tr>
+                    `;
+                } else {
+                    footerHTML = `
+                        <tr class="text-black text-[10px] h-4">
+                            <td colspan="12" class="border border-black px-2 text-right italic text-black font-semibold">Bersambung ke Halaman ${pageNumber + 1}...</td>
+                        </tr>
+                    `;
+                }
+
+                allPagesHTML += `
+                    <div class="cetak-halaman bg-white mx-auto flex flex-col mb-4 print:mb-0 shadow-md" style="width: 210mm; min-height: 148mm; box-sizing: border-box; padding: 0.4cm 0.4cm 0.2cm 0.4cm;">
+                        ${headerHTML}
+                        <table class="w-full border-collapse text-[10px] text-black" style="table-layout: fixed;">
+                            <thead>
+                                <tr class="bg-white">
+                                    <th class="border border-black p-0.5 w-[11%]" rowspan="2">Merk</th>
+                                    <th class="border border-black p-0.5 w-[20%]" rowspan="2">Artikel</th>
+                                    <th class="border border-black p-0.5 w-[10%]" rowspan="2">Warna</th>
+                                    <th class="border border-black p-0.5 w-[23%]" colspan="6">Size</th>
+                                    <th class="border border-black p-0.5 w-[9%] leading-tight" rowspan="2">Jumlah<br>(Psg)</th>
+                                    <th class="border border-black p-0.5 w-[13%] leading-tight" rowspan="2">Harga<br>Perpasang</th>
+                                    <th class="border border-black p-0.5 w-[14%]" rowspan="2">Total</th>
+                                </tr>
+                                <tr class="bg-white text-[10px]">
+                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S1</th>
+                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S2</th>
+                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S3</th>
+                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S4</th>
+                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S5</th>
+                                    <th class="border border-black w-[3.8%] py-0.5 font-bold">S6</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tbodyHTML}
+                                ${footerHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+
+            // Injeksi ke dalam Area Modal Detail Invoice dengan styling CSS Cetak A5
+            const container = document.getElementById('print-invoice-area');
+            if(container) {
+                container.innerHTML = `
+                    <style>
+                        @media print {
+                            body * { visibility: hidden; }
+                            #print-area-wrapper, #print-area-wrapper * { 
+                                visibility: visible; 
+                                color: #000000 !important; 
+                                font-family: Arial, Helvetica, sans-serif !important;
+                                text-rendering: optimizeLegibility !important;
+                            }
+                            #print-area-wrapper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
+                            @page { size: 210mm 148mm; margin: 0cm; }
+                            .cetak-halaman { page-break-after: always; break-after: page; border: none !important; box-shadow: none !important; }
+                        }
+                    </style>
+                    <div id="print-area-wrapper" class="w-full bg-slate-200 pb-6 print:bg-white font-sans flex flex-col items-center">
+                        ${allPagesHTML}
+                    </div>
+                `;
+            }
+
+            const modal = document.getElementById('modal-inv-detail');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+        }
+
+        function closeInvoiceDetail() {
+            const modal = document.getElementById('modal-inv-detail');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+        
         function closeInvoiceForm() { 
-            document.getElementById('view-invoice-form').classList.add('hidden'); 
-            document.getElementById('view-inv-list').classList.remove('hidden'); // Reset list invoice
+            const modal = document.getElementById('modal-invoice-form');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
             
             if(invSource === 'so') {
                 openTab('tab-order'); // Pulang ke tab SO
             }
         }
 
-        // 2. DIBUKA DARI TOMBOL "EDIT INVOICE"
         function editInvoice(id) {
             const inv = db_invoice.find(i => i.id === id);
             if(!inv) return;
 
-            invSource = 'invoice_list'; // Berasal dari tab yang sama (Tab Invoice)
+            invSource = 'invoice_list'; 
 
-            // Tampilkan form di Tab Invoice
-            document.getElementById('view-inv-list').classList.add('hidden');
-            document.getElementById('view-invoice-form').classList.remove('hidden');
+            // Buka Modal Form Invoice
+            const modal = document.getElementById('modal-invoice-form');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
             
             document.getElementById('invFormNo').value = inv.id;
             document.getElementById('invFormTgl').value = inv.tanggal;
             document.getElementById('invRefSO').value = inv.soId;
             
             document.getElementById('invCustomer').value = inv.toko;
-            // Buka atau Kunci field customer tergantung jenis Invoice
             if(inv.soId === "MANUAL") {
                  document.getElementById('invCustomer').removeAttribute('readonly');
                  document.getElementById('invCustomer').classList.remove('bg-gray-100');
@@ -5868,19 +6134,18 @@
             tempInvItems = JSON.parse(JSON.stringify(inv.items));
             renderInvTempItems();
         }
-        
         // Trigger render
         document.getElementById('btn-tab-order').addEventListener('click', () => { 
             document.getElementById('view-so-list').classList.remove('hidden');
-            document.getElementById('view-so-form').classList.add('hidden');
-            document.getElementById('view-so-detail').classList.add('hidden');
+            document.getElementById('modal-so-form').classList.add('hidden');
+            document.getElementById('modal-so-detail').classList.add('hidden');
             renderSOList(); 
         });
 
         document.getElementById('btn-tab-invoice').addEventListener('click', () => { 
             document.getElementById('view-inv-list').classList.remove('hidden');
-            document.getElementById('view-invoice-form').classList.add('hidden');
-            document.getElementById('view-inv-detail').classList.add('hidden');
+            document.getElementById('modal-invoice-form').classList.add('hidden');
+            document.getElementById('modal-inv-detail').classList.add('hidden');
             renderInvoiceList(); 
         });
 
@@ -9594,19 +9859,34 @@
         // FITUR KONTRA BON (TANDA TERIMA TAGIHAN)
         // ==========================================
         
-        // --- NAVIGASI LAYAR ---
         function openFormKB() {
-            document.getElementById('kb-list-view').classList.add('hidden');
-            document.getElementById('kb-form-view').classList.remove('hidden');
-            document.getElementById('kbDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('kbSearchCust').value = '';
-            document.getElementById('kbTableBody').innerHTML = `<tr><td colspan="6" class="text-center p-8 text-gray-400 italic">Ketik dan pilih toko di atas untuk memunculkan tagihan...</td></tr>`;
+            const modal = document.getElementById('modal-kb-form');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+            
+            if(document.getElementById('kbDate')) {
+                document.getElementById('kbDate').value = new Date().toISOString().split('T')[0];
+            }
+            if(document.getElementById('kbSearchCust')) {
+                document.getElementById('kbSearchCust').value = '';
+            }
+            if(document.getElementById('kbTableBody')) {
+                document.getElementById('kbTableBody').innerHTML = `<tr><td colspan="6" class="text-center p-8 text-gray-400 italic">Ketik dan pilih toko di atas untuk memunculkan tagihan...</td></tr>`;
+            }
         }
 
         function closeFormKB() {
-            document.getElementById('kb-form-view').classList.add('hidden');
-            document.getElementById('kb-list-view').classList.remove('hidden');
-            renderRiwayatKB();
+            const modal = document.getElementById('modal-kb-form');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+            
+            if(typeof renderRiwayatKB === 'function') {
+                renderRiwayatKB();
+            }
         }
 
         function renderRiwayatKB() {
@@ -9805,13 +10085,32 @@
                 if (sisa > 100) {
                     hasUnpaid = true;
                     html += `
-                        <tr class="hover:bg-blue-50 transition border-b border-gray-100">
-                            <td class="p-3 text-center"><input type="checkbox" class="kb-checkbox w-4 h-4 rounded cursor-pointer accent-blue-600" value="${inv.id}" data-tanggal="${inv.tanggal}" data-nilai="${totalTagihan}" data-potong="${Math.round(potong)}" data-bayar="${Math.round(bayar)}" data-sisa="${sisa}"></td>
-                            <td class="p-3 font-semibold text-gray-600">${inv.tanggal}</td>
-                            <td class="p-3 font-mono font-bold text-blue-700">${inv.id}</td>
-                            <td class="p-3 text-right">Rp ${totalTagihan.toLocaleString('id-ID')}</td>
-                            <td class="p-3 text-right text-emerald-600">Rp ${Math.round(terbayarTotal).toLocaleString('id-ID')}</td>
-                            <td class="p-3 text-right font-bold text-red-600">Rp ${sisa.toLocaleString('id-ID')}</td>
+                        <tr class="hover:bg-blue-50 transition border-b border-gray-100 flex flex-col md:table-row">
+                            <!-- TAMPILAN MOBILE: KARTU 1 KOLOM -->
+                            <td class="p-3 block md:hidden w-full border-b border-gray-100 last:border-b-0">
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 flex flex-col gap-2">
+                                    <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                                        <div class="flex items-center gap-2">
+                                            <input type="checkbox" class="kb-checkbox w-4 h-4 rounded cursor-pointer accent-blue-600" value="${inv.id}" data-tanggal="${inv.tanggal}" data-nilai="${totalTagihan}" data-potong="${Math.round(potong)}" data-bayar="${Math.round(bayar)}" data-sisa="${sisa}">
+                                            <span class="font-mono font-bold text-blue-700 text-xs">${inv.id}</span>
+                                        </div>
+                                        <span class="text-[10px] font-semibold text-gray-500">${inv.tanggal}</span>
+                                    </div>
+                                    <div class="text-xs space-y-1">
+                                        <div class="flex justify-between"><span class="text-gray-500">Nilai Faktur:</span> <span class="font-semibold">Rp ${totalTagihan.toLocaleString('id-ID')}</span></div>
+                                        <div class="flex justify-between"><span class="text-gray-500">Terbayar / Retur:</span> <span class="text-emerald-600 font-semibold">Rp ${Math.round(terbayarTotal).toLocaleString('id-ID')}</span></div>
+                                        <div class="flex justify-between border-t border-gray-200 pt-1 font-bold text-gray-800"><span>Sisa Tagihan:</span> <span class="text-red-600">Rp ${sisa.toLocaleString('id-ID')}</span></div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- TAMPILAN DESKTOP: BARIS TABEL BIASA -->
+                            <td class="p-3 text-center hidden md:table-cell"><input type="checkbox" class="kb-checkbox w-4 h-4 rounded cursor-pointer accent-blue-600" value="${inv.id}" data-tanggal="${inv.tanggal}" data-nilai="${totalTagihan}" data-potong="${Math.round(potong)}" data-bayar="${Math.round(bayar)}" data-sisa="${sisa}"></td>
+                            <td class="p-3 font-semibold text-gray-600 hidden md:table-cell">${inv.tanggal}</td>
+                            <td class="p-3 font-mono font-bold text-blue-700 hidden md:table-cell">${inv.id}</td>
+                            <td class="p-3 text-right hidden md:table-cell">Rp ${totalTagihan.toLocaleString('id-ID')}</td>
+                            <td class="p-3 text-right text-emerald-600 hidden md:table-cell">Rp ${Math.round(terbayarTotal).toLocaleString('id-ID')}</td>
+                            <td class="p-3 text-right font-bold text-red-600 hidden md:table-cell">Rp ${sisa.toLocaleString('id-ID')}</td>
                         </tr>
                     `;
                 }
