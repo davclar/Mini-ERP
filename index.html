@@ -2587,7 +2587,29 @@
         let tempInvItems = [];
         let tempPOItems = []; 
     
-       // ==========================================
+        // 1. Deteksi saat aplikasi dibuka kembali dari background / recent apps (PWA / Mobile)
+            document.addEventListener("visibilitychange", function() {
+                if (document.visibilityState === "visible") {
+                    // Panggil fungsi openTab ke dashboard atau fungsi refresh data
+                    if (typeof openTab === 'function') {
+                        openTab('tab-dashboard');
+                    } else {
+                        window.location.reload(); // Fallback hard reload jika openTab tidak terjangkau
+                    }
+                }
+            });
+
+            // 2. Pengaman tambahan untuk iOS Safari (BFCache / Back-Forward Cache)
+            window.addEventListener("pageshow", function(event) {
+                if (event.persisted) {
+                    // Jika halaman dimuat ulang dari memori cache Safari, paksa arahkan ke Dashboard
+                    if (typeof openTab === 'function') {
+                        openTab('tab-dashboard');
+                    }
+                }
+            });
+
+        // ==========================================
         // 1. FUNGSI AUTO-LOGIN & HAK AKSES MULTI-USER
         // ==========================================
         window.onload = function() {
