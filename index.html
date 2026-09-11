@@ -2587,27 +2587,6 @@
         let tempInvItems = [];
         let tempPOItems = []; 
     
-        // 1. Deteksi saat aplikasi dibuka kembali dari background / recent apps (PWA / Mobile)
-            document.addEventListener("visibilitychange", function() {
-                if (document.visibilityState === "visible") {
-                    // Panggil fungsi openTab ke dashboard atau fungsi refresh data
-                    if (typeof openTab === 'function') {
-                        openTab('tab-dashboard');
-                    } else {
-                        window.location.reload(); // Fallback hard reload jika openTab tidak terjangkau
-                    }
-                }
-            });
-
-            // 2. Pengaman tambahan untuk iOS Safari (BFCache / Back-Forward Cache)
-            window.addEventListener("pageshow", function(event) {
-                if (event.persisted) {
-                    // Jika halaman dimuat ulang dari memori cache Safari, paksa arahkan ke Dashboard
-                    if (typeof openTab === 'function') {
-                        openTab('tab-dashboard');
-                    }
-                }
-            });
 
         // ==========================================
         // 1. FUNGSI AUTO-LOGIN & HAK AKSES MULTI-USER
@@ -2747,6 +2726,26 @@
             }
         }
 
+        async function handleLogout() {
+            const isConfirmed = await showConfirm(
+                "Keluar Aplikasi", 
+                "Apakah Anda yakin ingin keluar dari aplikasi?", 
+                "warning"
+            );
+            
+            if (isConfirmed) {
+                // --- [BARU] Hapus memori user & role ---
+                localStorage.removeItem('davclar_isLoggedIn');
+                localStorage.removeItem('davclar_role');
+                localStorage.removeItem('davclar_user');
+                
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('appContainer').classList.add('hidden');
+                document.getElementById('password').value = ''; 
+                document.getElementById('username').value = ''; 
+            }
+        }
+
         // Fungsi Buka Tab
         function openTab(tabId) {
             const sidebar = document.getElementById('sidebar');
@@ -2846,25 +2845,27 @@
             }
         }
 
-        async function handleLogout() {
-            const isConfirmed = await showConfirm(
-                "Keluar Aplikasi", 
-                "Apakah Anda yakin ingin keluar dari aplikasi?", 
-                "warning"
-            );
-            
-            if (isConfirmed) {
-                // --- [BARU] Hapus memori user & role ---
-                localStorage.removeItem('davclar_isLoggedIn');
-                localStorage.removeItem('davclar_role');
-                localStorage.removeItem('davclar_user');
-                
-                document.getElementById('loginPage').style.display = 'flex';
-                document.getElementById('appContainer').classList.add('hidden');
-                document.getElementById('password').value = ''; 
-                document.getElementById('username').value = ''; 
-            }
-        }
+        // 1. Deteksi saat aplikasi dibuka kembali dari background / recent apps (PWA / Mobile)
+            document.addEventListener("visibilitychange", function() {
+                if (document.visibilityState === "visible") {
+                    // Panggil fungsi openTab ke dashboard atau fungsi refresh data
+                    if (typeof openTab === 'function') {
+                        openTab('tab-dashboard');
+                    } else {
+                        window.location.reload(); // Fallback hard reload jika openTab tidak terjangkau
+                    }
+                }
+            });
+
+            // 2. Pengaman tambahan untuk iOS Safari (BFCache / Back-Forward Cache)
+            window.addEventListener("pageshow", function(event) {
+                if (event.persisted) {
+                    // Jika halaman dimuat ulang dari memori cache Safari, paksa arahkan ke Dashboard
+                    if (typeof openTab === 'function') {
+                        openTab('tab-dashboard');
+                    }
+                }
+            });
 
         // ==========================================
         // DASHBOARD OVERVIEW (TERINTEGRASI FULL FILTER)
