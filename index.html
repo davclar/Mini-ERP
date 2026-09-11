@@ -467,12 +467,20 @@
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">Prod ID</th>
-                                            <th class="py-3 px-2 md:px-4">Artikel & Warna</th>
-                                            <th class="py-3 px-4 hidden md:table-cell">Merk/Kat</th>
+                                            <!-- Tampil di PC saja -->
+                                            <th class="py-3 px-4 text-left hidden md:table-cell">Prod ID</th>
+                                            
+                                            <!-- Di HP jadi judul tunggal, di PC jadi Artikel & Warna -->
+                                            <th class="py-2.5 px-3 md:px-4 text-left">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar Barang & Detail</span>
+                                                <span class="hidden md:inline">Artikel & Warna</span>
+                                            </th>
+                                            
+                                            <!-- Kolom khusus PC -->
+                                            <th class="py-3 px-4 text-left hidden md:table-cell">Merk / Kategori</th>
                                             <th id="th-hpp-barang" class="py-3 px-4 text-right hidden md:table-cell">HPP</th>
                                             <th class="py-3 px-4 text-right hidden md:table-cell">Harga Jual</th>
-                                            <th id="th-aksi-barang" class="py-3 px-2 md:px-4 text-center">Aksi</th>
+                                            <th id="th-aksi-barang" class="py-3 px-4 text-center hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="itemTableBody" class="divide-y divide-gray-100">
@@ -605,9 +613,13 @@
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">Nama Toko & Sales</th>
+                                            <!-- Di HP jadi judul tunggal, di PC jadi Nama Toko & Sales -->
+                                            <th class="py-2.5 px-3 md:px-4 text-left">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar Customer & Detail</span>
+                                                <span class="hidden md:inline">Nama Toko & Sales</span>
+                                            </th>
                                             
-                                            <!-- Sembunyi di Mobile, Tampil di PC -->
+                                            <!-- Sembunyi total di Mobile, Tampil rapi di PC -->
                                             <th class="py-3 px-4 hidden md:table-cell">Area (Kota/Region)</th>
                                             <th class="py-3 px-4 hidden md:table-cell min-w-[150px]">Alamat</th>
                                             <th class="py-3 px-4 hidden md:table-cell">No Telp</th>
@@ -617,8 +629,8 @@
                                             <th class="py-3 px-4 hidden md:table-cell text-center">Rate Sales</th>
                                             <th class="py-3 px-4 hidden lg:table-cell">Keterangan</th>
                                             
-                                            <!-- Diberi ID untuk sensor Kacamata Kuda -->
-                                            <th id="th-aksi-customer" class="py-3 px-2 md:px-4 text-center">Aksi</th>
+                                            <!-- Aksi disembunyikan di mobile karena tombolnya sudah masuk ke dalam card -->
+                                            <th id="th-aksi-customer" class="py-3 px-2 md:px-4 text-center hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="customerTableBody" class="divide-y divide-gray-100">
@@ -1977,14 +1989,18 @@
                                 <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                     <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
                                         <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
-                                            <th class="py-3 px-2 md:px-4">Username (Nama)</th>
+                                            <!-- Di HP jadi judul tunggal, di PC jadi Username (Nama) -->
+                                            <th class="py-2.5 px-3 md:px-4 text-left">
+                                                <span class="md:hidden font-bold text-gray-700">Daftar User & Detail</span>
+                                                <span class="hidden md:inline">Username (Nama)</span>
+                                            </th>
                                             
-                                            <!-- Sembunyi di Mobile karena sudah diringkas di bawah Username oleh JS -->
+                                            <!-- Sembunyi total di Mobile, Tampil rapi di PC -->
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Role (Hak Akses)</th>
                                             <th class="py-3 px-4 text-center hidden md:table-cell">Password</th>
                                             
-                                            <!-- Tambahkan ID th-aksi-user untuk sensor pengaman admin -->
-                                            <th id="th-aksi-user" class="py-3 px-2 md:px-4 text-center w-24">Aksi</th>
+                                            <!-- Aksi disembunyikan di mobile karena tombolnya sudah masuk ke dalam card -->
+                                            <th id="th-aksi-user" class="py-3 px-2 md:px-4 text-center w-24 hidden md:table-cell">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="userTableBody" class="divide-y divide-gray-100">
@@ -2401,7 +2417,7 @@
                     </div>
                     <div class="p-5 space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
+                            <div class="w-full">
                                 <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Tanggal</label>
                                 <input type="date" id="ksbDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 font-bold text-gray-700">
                             </div>
@@ -3427,20 +3443,25 @@
             const tbody = document.getElementById('itemTableBody');
             if(!tbody) return;
             
-            // --- 1. CEK HAK AKSES MODUL DATA BARANG ---
+            // --- 1. CEK HAK AKSES MODUL (UNTUK TOMBOL AKSI EDIT/DELETE) ---
             const accessBarang = (window.currentUserAccess && window.currentUserAccess['tab-databarang']) ? window.currentUserAccess['tab-databarang'] : 'READ';
             const canEdit = (accessBarang === 'FULL');
 
-            // --- 2. SEMBUNYIKAN HEADER & TOMBOL AKSI JIKA BUKAN FULL ---
+            // --- 2. CEK ROLE USER (KHUSUS UNTUK MELIHAT HPP) ---
+            const userRole = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
+            const canViewHpp = (userRole === 'ADMIN' || userRole === 'MANAGER');
+
+            // --- 3. KONTROL HEADER TABEL ---
             const thAksi = document.getElementById('th-aksi-barang');
             if (thAksi) thAksi.style.display = canEdit ? '' : 'none';
             
             const thHpp = document.getElementById('th-hpp-barang');
-            if (thHpp) thHpp.style.display = canEdit ? '' : 'none';
+            if (thHpp) thHpp.style.display = canViewHpp ? '' : 'none';
 
             const btnActionBarang = document.getElementById('btn-action-barang');
             if (btnActionBarang) btnActionBarang.style.display = canEdit ? 'flex' : 'none';
 
+            // --- 4. FILTERING & PAGING ---
             const search = document.getElementById('searchItem') ? document.getElementById('searchItem').value.toLowerCase() : '';
             const filtered = db_databarang.filter(item => {
                 const gabungan = `${item.prodId} ${item.artikelWarna} ${item.merk} ${item.kategori} ${item.hpp} ${item.hargaJual} ${item.urut}`.toLowerCase();
@@ -3460,33 +3481,41 @@
 
             tbody.innerHTML = '';
             if(paginatedData.length === 0) {
-                // colSpan dinamis menyesuaikan apakah kolom aksi tampil atau tidak
-                const colSpan = canEdit ? 6 : 4; 
+                // colSpan dinamis menyesuaikan apakah kolom aksi/hpp tampil atau tidak
+                let colSpan = 4; // Kolom dasar: ID, Artikel, Merk, Harga Jual
+                if (canViewHpp) colSpan++;
+                if (canEdit) colSpan++;
+
                 tbody.innerHTML = `<tr><td colspan="${colSpan}" class="text-center py-8 text-gray-400">Tidak ada data</td></tr>`;
                 if (typeof updatePaginationUI === 'function') updatePaginationUI('item', 0, 0, 0, 1, 1);
                 return;
             }
 
+            // --- 5. RENDER DATA BARIS ---
             paginatedData.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
                 
-                // Siapkan Kolom Khusus (HPP & Aksi) Berdasarkan Hak Akses
+                // Siapkan HTML Kosong
                 let hppPcHTML = '';
                 let hppMobileHTML = '';
                 let aksiHTML = '';
 
-                if (canEdit) {
+                // (A) JIKA ADMIN/MANAGER -> MUNCULKAN HPP
+                if (canViewHpp) {
                     hppPcHTML = `
                         <td class="py-3 px-4 text-right text-rose-500 font-semibold hidden md:table-cell align-middle text-sm">
                             Rp ${item.hpp.toLocaleString('id-ID')}
                         </td>
                     `;
-                    hppMobileHTML = `<div class="text-xs text-rose-500 font-semibold mt-1.5 border-t border-gray-100 pt-1">HPP: Rp ${item.hpp.toLocaleString('id-ID')}</div>`;
-                    
+                    hppMobileHTML = `<div class="text-[11px] text-rose-500 font-semibold border-t border-gray-100 pt-1">HPP: Rp ${item.hpp.toLocaleString('id-ID')}</div>`;
+                }
+                
+                // (B) JIKA PUNYA AKSES FULL -> MUNCULKAN TOMBOL AKSI
+                if (canEdit) {
                     aksiHTML = `
                         <td class="py-3 px-4 text-center align-top md:align-middle w-24">
-                            <div class="flex flex-col md:flex-row gap-1.5 justify-center">
+                            <div class="flex-row gap-1.5 justify-center">
                                 <button onclick="editItem('${item.prodId}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded transition">
                                     <i class="fa-solid fa-pen text-xs"></i>
                                 </button>
@@ -3499,40 +3528,75 @@
                 }
 
                 tr.innerHTML = `
-                    <!-- KOLOM 1: PROD ID -->
-                    <td class="py-3 px-4 font-mono text-sm text-blue-600 font-bold align-top md:align-middle">${item.prodId}</td>
+                    <!-- KOLOM 1: PROD ID (PC ONLY) -->
+                    <td class="py-3 px-4 font-mono text-sm text-blue-600 font-bold align-top md:align-middle hidden md:table-cell">
+                        ${item.prodId}
+                    </td>
                     
-                    <!-- KOLOM 2: ARTIKEL (Gabungan di HP) -->
-                    <td class="py-3 px-4 font-medium text-gray-900 align-top md:align-middle">
-                        <div class="text-sm whitespace-normal">${item.artikelWarna}</div>
-                        <div class="text-xs text-gray-400 font-normal">Urut: ${item.urut}</div>
+                    <!-- KOLOM UTAMA: CARD (HP) / ARTIKEL (PC) -->
+                    <td class="!p-0 md:!p-3 align-top md:align-middle w-full md:w-auto">
                         
-                        <!-- INFO MOBILE ONLY -->
-                        <div class="md:hidden mt-2">
-                            <div>
-                                <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-xs font-semibold">${item.kategori}</span>
-                                <span class="text-xs text-gray-500 ml-1">${item.merk}</span>
+                        <!-- ================= MOBILE ONLY: ULTRA COMPACT CARD ================= -->
+                        <div class="md:hidden flex flex-col w-full min-w-0">
+                            <!-- Padding diperkecil jadi p-2.5 dan gap antar baris sangat rapat -->
+                            <div class="p-2.5 flex flex-col gap-1">
+                                
+                                <!-- Baris Atas: PROD ID & AKSI -->
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-1">
+                                    <div class="font-mono font-bold text-blue-600 text-xs leading-none">${item.prodId}</div>
+                                    <div class="flex items-center shrink-0 gap-1 [&>button]:!p-1 [&>button]:!text-[11px]">
+                                        ${canEdit ? aksiHTML.replace(/<\/?td[^>]*>/g, '') : ''}
+                                    </div>
+                                </div>
+                                
+                                <!-- Baris Tengah: Artikel & Urut -->
+                                <div>
+                                    <div class="font-bold text-gray-900 text-xs whitespace-normal uppercase leading-tight">${item.artikelWarna}</div>
+                                    <div class="text-[9px] text-gray-400 leading-none mt-0.5">Urut: ${item.urut}</div>
+                                </div>
+                                
+                                <!-- Baris Bawah: Box Rincian Tipis -->
+                                <div class="bg-gray-50 p-1.5 rounded border border-gray-100 flex flex-col gap-1">
+                                    <div class="flex items-center gap-1">
+                                        <span class="bg-white border border-gray-200 text-gray-600 px-1 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide leading-none">${item.kategori}</span>
+                                        <span class="text-[10px] text-gray-500 font-bold leading-none">${item.merk}</span>
+                                    </div>
+                                    
+                                    ${hppMobileHTML}
+                                    
+                                    <!-- Garis pemisah Jual menyesuaikan ada tidaknya HPP di atasnya -->
+                                    <div class="text-[11px] text-emerald-600 font-bold ${canViewHpp ? 'pt-0.5 border-t border-gray-200/70' : ''}">
+                                        Jual: Rp ${item.hargaJual.toLocaleString('id-ID')}
+                                    </div>
+                                </div>
+                               
                             </div>
-                            ${hppMobileHTML}
-                            <div class="text-xs text-emerald-600 font-semibold ${!canEdit ? 'mt-1.5 border-t border-gray-100 pt-1' : ''}">Jual: Rp ${item.hargaJual.toLocaleString('id-ID')}</div>
+                        </div>
+
+                        <!-- ================= PC ONLY ================= -->
+                        <div class="hidden md:block">
+                            <div class="text-sm font-bold text-gray-900 whitespace-normal uppercase">${item.artikelWarna}</div>
+                            <div class="text-xs text-gray-400 font-normal mt-0.5">Urut: ${item.urut}</div>
                         </div>
                     </td>
                     
-                    <!-- KOLOM 3: MERK/KAT (Sembunyi di HP, Tampil di PC) -->
+                    <!-- KOLOM 3: MERK/KAT (PC ONLY) -->
                     <td class="py-3 px-4 hidden md:table-cell align-middle">
-                        <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-semibold">${item.kategori}</span><br>
-                        <span class="text-xs text-gray-500">${item.merk}</span>
+                        <span class="bg-gray-100 border border-gray-200 shadow-sm text-gray-600 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide">${item.kategori}</span><br>
+                        <span class="text-xs text-gray-500 mt-1.5 inline-block font-semibold">${item.merk}</span>
                     </td>
                     
+                    <!-- HPP (PC ONLY) -->
                     ${hppPcHTML}
                     
-                    <!-- KOLOM 5: HARGA JUAL (Sembunyi di HP, Tampil di PC) -->
-                    <td class="py-3 px-4 text-right text-emerald-600 font-semibold hidden md:table-cell align-middle text-sm">
+                    <!-- KOLOM 5: HARGA JUAL (PC ONLY) -->
+                    <td class="py-3 px-4 text-right text-emerald-600 font-bold hidden md:table-cell align-middle text-sm">
                         Rp ${item.hargaJual.toLocaleString('id-ID')}
                     </td>
                     
-                    ${canEdit ? aksiHTML : ''}
-                `;
+                    <!-- AKSI (PC ONLY) -->
+                    ${canEdit ? aksiHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
+                    `;
                 tbody.appendChild(tr);
             });
 
@@ -5940,7 +6004,7 @@
                 let aksiHTML = '';
                 if (canEdit) {
                     aksiHTML = `
-                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
+                        <td class="flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="editCustomer('${c.id || c.nama}')" title="Edit" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2.5 py-1.5 rounded transition"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="deleteCustomer('${c.id || c.nama}')" title="Hapus" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 px-2.5 py-1.5 rounded transition"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
@@ -5951,13 +6015,21 @@
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-100 text-sm";
 
                 tr.innerHTML = `
-                    <!-- KOLOM 1: NAMA & SALES -->
-                    <td class="!py-1.5 px-2 md:px-4 align-top">
-                        <div class="font-bold text-gray-800 text-xs md:text-sm leading-tight">${c.nama || '-'}</div>
-                        <div class="text-[10px] text-blue-600 font-semibold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${c.sales || '-'}</div>
+                    <!-- KOLOM 1: NAMA & SALES (CARD DI HP) -->
+                    <td class="!py-2 px-2 md:px-4 align-top">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-bold text-gray-900 text-xs md:text-sm leading-tight">${c.nama || '-'}</div>
+                                <div class="text-[10px] text-blue-600 font-semibold mt-0.5"><i class="fa-solid fa-user-tie mr-1"></i> ${c.sales || '-'}</div>
+                            </div>
+                            <!-- TOMBOL AKSI KHUSUS MOBILE (Pojok Kanan Atas Card) -->
+                            <div class="flex items-center shrink-0 gap-1 md:hidden [&>button]:!p-1 [&>button]:!text-[11px]">
+                                ${canEdit ? aksiHTML.replace(/<\/?td[^>]*>/g, '') : ''}
+                            </div>
+                        </div>
                         
                         <!-- MOBILE ONLY: Ringkasan 1 kolom ke bawah yang rapi & rapat -->
-                        <div class="md:hidden mt-1 pt-1 border-t border-gray-100 text-[11px] space-y-0.5 w-full min-w-0">
+                        <div class="md:hidden mt-1.5 pt-1.5 border-t border-gray-100 text-[11px] space-y-1 w-full min-w-0">
                             <div class="whitespace-normal break-words leading-tight">
                                 <strong class="text-gray-700">Alamat:</strong> <span class="text-gray-600">${alamatTampil}</span>
                             </div>
@@ -6003,8 +6075,8 @@
                     <!-- KOLOM 9: KETERANGAN (PC ONLY) -->
                     <td class="!py-1.5 px-4 text-gray-500 text-[11px] max-w-[100px] truncate hidden md:table-cell align-middle">${c.ket || '-'}</td>
                     
-                    <!-- KOLOM 10: AKSI -->
-                    ${canEdit ? aksiHTML : ''}
+                    <!-- KOLOM 10: AKSI (PC ONLY) -->
+                    ${canEdit ? aksiHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
                 `;
                 tbody.appendChild(tr);
             });
@@ -7481,7 +7553,7 @@
                 let aksiHTML = '';
                 if (canEdit) {
                     aksiHTML = `
-                        <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle gap-1 justify-center">
+                        <td class="flex-row !py-1.5 px-2 md:px-4 text-center whitespace-nowrap align-middle gap-1 justify-center">
                             <button onclick="editUser('${user.username}')" title="Edit User" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2.5 py-1.5 rounded transition shadow-sm"><i class="fa-solid fa-pen text-xs"></i></button>
                             <button onclick="deleteUser('${user.username}')" title="Hapus User" class="text-red-500 hover:text-white hover:bg-red-500 bg-red-50 px-2.5 py-1.5 rounded transition shadow-sm"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
@@ -7492,14 +7564,33 @@
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
 
                 tr.innerHTML = `
-                    <!-- KOLOM 1: USERNAME & RINGKASAN MOBILE -->
-                    <td class="!py-1.5 px-2 md:px-4 align-top md:align-middle">
-                        <div class="font-bold text-gray-800 text-xs md:text-sm leading-tight">${user.username}</div>
+                    <!-- KOLOM 1: USERNAME & CARD MOBILE -->
+                    <td class="!py-2 px-3 md:!py-1.5 md:px-4 align-top md:align-middle">
                         
-                        <!-- MOBILE ONLY: Badge dan Password diringkas ke bawah -->
-                        <div class="md:hidden mt-1 pt-1 border-t border-gray-100 flex flex-col gap-0.5 text-[11px]">
-                            <div>${badge}</div>
-                            <div class="text-gray-400 font-mono tracking-widest mt-0.5">Key: <span class="text-gray-600">${passBintang}</span></div>
+                        <!-- ================= MOBILE ONLY: CARD LAYOUT ================= -->
+                        <div class="md:hidden flex flex-col w-full min-w-0">
+                            <div class="flex flex-col gap-1.5">
+                                
+                                <!-- Baris Atas: Username & Tombol Aksi (SEJAJAR DI ATAS) -->
+                                <div class="flex justify-between items-center pb-1.5">
+                                    <div class="font-bold text-gray-900 text-xs leading-none">${user.username}</div>
+                                    <div class="flex items-center shrink-0 gap-1.5 [&>button]:!p-1.5 [&>button]:!text-xs">
+                                        ${canEdit ? aksiHTML.replace(/<\/?td[^>]*>/g, '') : ''}
+                                    </div>
+                                </div>
+                                
+                                <!-- Baris Bawah: Badge Role & Password Key -->
+                                <div class="flex justify-between items-center pt-0.5">
+                                    <div>${badge}</div>
+                                    <div class="text-[10px] text-gray-400 font-mono tracking-wider">Key: <span class="text-gray-600">${passBintang}</span></div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- ================= PC ONLY: USERNAME ================= -->
+                        <div class="hidden md:block font-bold text-gray-800 text-sm">
+                            ${user.username}
                         </div>
                     </td>
                     
@@ -7509,8 +7600,8 @@
                     <!-- KOLOM 3: PASSWORD (PC ONLY) -->
                     <td class="!py-1.5 px-4 text-center font-mono text-gray-400 tracking-widest text-xs hidden md:table-cell align-middle">${passBintang}</td>
                     
-                    <!-- KOLOM 4: AKSI -->
-                    ${canEdit ? aksiHTML : ''}
+                    <!-- KOLOM 4: AKSI (PC ONLY) -->
+                    ${canEdit ? aksiHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
                 `;
                 tbody.appendChild(tr);
             });
