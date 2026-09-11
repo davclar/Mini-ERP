@@ -2419,7 +2419,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="w-full overflow-hidden">
                                 <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Tanggal</label>
-                                <input type="date" id="ksbDate" style="width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important;" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 font-bold text-gray-700 bg-white block">
+                                <div class="relative w-full overflow-hidden border border-gray-300 rounded-lg bg-white">
+                                    <input type="date" id="ksbDate" class="w-full px-3 py-2 text-sm font-bold text-gray-700 bg-transparent focus:outline-none" style="-webkit-appearance: none; appearance: none;">
+                                </div>
                             </div>
                             <div class="w-full overflow-hidden">
                                 <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Sales</label>
