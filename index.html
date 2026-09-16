@@ -664,78 +664,94 @@
                 <!-- MODAL TAMBAH / EDIT CUSTOMER -->
                 <div id="modal-input-customer" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
                     <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeCustomerModal()"></div>
-                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-2xl transform scale-95 transition-transform duration-300">
-                        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-blue-50 rounded-t-2xl">
-                            <h3 class="text-lg font-bold text-blue-800" id="customerModalTitle"><i class="fa-solid fa-store mr-2"></i> Form Data Customer</h3>
-                            <button onclick="closeCustomerModal()" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]">
+                        
+                        <!-- Header Modal -->
+                        <div class="p-4 md:p-5 border-b border-gray-100 flex justify-between items-center bg-blue-50 rounded-t-2xl shrink-0">
+                            <h3 class="text-base md:text-lg font-bold text-blue-800" id="customerModalTitle">
+                                <i class="fa-solid fa-store mr-2"></i> Form Data Customer
+                            </h3>
+                            <button onclick="closeCustomerModal()" class="text-gray-400 hover:text-red-500 transition">
+                                <i class="fa-solid fa-xmark text-xl"></i>
+                            </button>
                         </div>
-                        <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+                        
+                        <!-- Body Form -->
+                        <div class="p-4 md:p-5 space-y-4 overflow-y-auto flex-1">
                             <input type="hidden" id="custId"> 
                             
-                            <div class="grid grid-cols-12 gap-4 mb-2">
-                                <div class="col-span-8">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nama Toko / Customer</label>
-                                    <input type="text" id="custNama" placeholder="Contoh: CAHAYA GEMILANG" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase">
+                            <div class="grid grid-cols-12 gap-3 md:gap-4 mb-2">
+                                <!-- Baris 1 -->
+                                <div class="col-span-12 md:col-span-8">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Nama Toko / Customer</label>
+                                    <input type="text" id="custNama" placeholder="Contoh: CAHAYA GEMILANG" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
-                                <div class="col-span-4">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">No. Telp</label>
-                                    <input type="text" id="custTlp" placeholder="0812..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">No. Telp</label>
+                                    <input type="text" id="custTlp" placeholder="0812..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
 
+                                <!-- Baris 2 -->
                                 <div class="col-span-12">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Alamat Lengkap</label>
-                                    <input type="text" id="custAlamat" placeholder="Jalan..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Alamat Lengkap</label>
+                                    <input type="text" id="custAlamat" placeholder="Jalan..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
 
-                                <div class="col-span-4">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Kota</label>
-                                    <input type="text" id="custKota" placeholder="BANDUNG" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase">
+                                <!-- Baris 3 -->
+                                <div class="col-span-6 sm:col-span-6 md:col-span-4">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Kota</label>
+                                    <input type="text" id="custKota" placeholder="BANDUNG" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
-                                <div class="col-span-4">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Region</label>
-                                    <input type="text" id="custRegion" placeholder="JAWA BARAT" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase">
+                                <div class="col-span-6 sm:col-span-6 md:col-span-4">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Region</label>
+                                    <input type="text" id="custRegion" placeholder="JAWA BARAT" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
-                                <div class="col-span-4">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Akun Bank</label>
-                                    <input type="text" id="custBank" placeholder="BCA..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase">
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Akun Bank</label>
+                                    <input type="text" id="custBank" placeholder="BCA..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
 
-                                <div class="col-span-4">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nama Sales</label>
-                                    <select id="custSales" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase font-bold text-gray-700 focus:ring-2 focus:ring-blue-500 bg-white"></select>
+                                <!-- Baris 4 -->
+                                <div class="col-span-6 sm:col-span-6 md:col-span-4">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Nama Sales</label>
+                                    <select id="custSales" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase font-bold text-gray-700 focus:ring-2 focus:ring-blue-500 outline-none bg-white"></select>
                                 </div>
-                                <div class="col-span-4">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Tipe Order</label>
-                                    <select id="custType" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <div class="col-span-6 sm:col-span-6 md:col-span-4">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Tipe Order</label>
+                                    <select id="custType" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
                                         <option value="PUTUS">PUTUS</option>
                                         <option value="KONSINYASI">KONSINYASI</option>
                                     </select>
                                 </div>
-                                <div class="col-span-4 grid grid-cols-2 gap-2">
+                                <div class="col-span-12 md:col-span-4 grid grid-cols-2 gap-2">
                                     <div>
-                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Disc 1 (%)</label>
-                                        <input type="number" id="custDisc1" step="any" placeholder="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                        <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Disc 1 (%)</label>
+                                        <input type="number" id="custDisc1" step="any" placeholder="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Disc 2 (%)</label>
-                                        <input type="number" id="custDisc2" step="any" placeholder="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                        <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Disc 2 (%)</label>
+                                        <input type="number" id="custDisc2" step="any" placeholder="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                                     </div>
                                 </div>
 
-                                <div class="col-span-8">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Keterangan Tambahan</label>
-                                    <input type="text" id="custKet" placeholder="..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <!-- Baris 5 -->
+                                <div class="col-span-12 md:col-span-8">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Keterangan Tambahan</label>
+                                    <input type="text" id="custKet" placeholder="..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
-                                <div class="col-span-4">
-                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Rate %</label>
-                                    <input type="number" id="custRate" step="any" placeholder="8.5" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="block text-[11px] md:text-xs font-bold text-gray-500 uppercase mb-1">Rate %</label>
+                                    <input type="number" id="custRate" step="any" placeholder="8.5" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                                 </div>
                             </div>
                         </div>
-                        <div class="p-5 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex justify-end gap-2">
-                            <button onclick="closeCustomerModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg transition">Batal</button>
-                            <button onclick="saveCustomer()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition shadow-md">Simpan Customer</button>
+                        
+                        <!-- Footer / Tombol Aksi -->
+                        <div class="p-4 md:p-5 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex flex-col-reverse sm:flex-row justify-end gap-2 md:gap-3 shrink-0">
+                            <button onclick="closeCustomerModal()" class="w-full sm:w-auto px-4 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg transition text-sm">Batal</button>
+                            <button onclick="saveCustomer()" class="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition shadow-md text-sm">Simpan Customer</button>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -6814,7 +6830,9 @@
             }
         }
 
-        // Import CSV Customer (Auto Detect KONSI & Anti Geser)
+        // ==========================================
+        // IMPORT CSV CUSTOMER (AUTO-DETECT KOLOM MATA ELANG)
+        // ==========================================
         function importCustomerCSV(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -6829,129 +6847,113 @@
                 const separator = lines[0].indexOf(';') > -1 ? ';' : ',';
 
                 function parseLine(line, sep) {
-                    let result = [];
-                    let curVal = '';
-                    let inQuotes = false;
+                    let result = []; let curVal = ''; let inQuotes = false;
                     for (let i = 0; i < line.length; i++) {
                         let char = line[i];
                         if (inQuotes) {
                             if (char === '"') {
-                                if (i < line.length - 1 && line[i + 1] === '"') {
-                                    curVal += '"'; i++; 
-                                } else {
-                                    inQuotes = false;
-                                }
-                            } else {
-                                curVal += char;
-                            }
+                                if (i < line.length - 1 && line[i + 1] === '"') { curVal += '"'; i++; } else { inQuotes = false; }
+                            } else { curVal += char; }
                         } else {
-                            if (char === '"') {
-                                inQuotes = true;
-                            } else if (char === sep) {
-                                result.push(curVal);
-                                curVal = '';
-                            } else {
-                                curVal += char;
-                            }
+                            if (char === '"') { inQuotes = true; } else if (char === sep) { result.push(curVal); curVal = ''; } else { curVal += char; }
                         }
                     }
-                    result.push(curVal);
-                    return result;
+                    result.push(curVal); return result;
                 }
 
+                // --- 1. MATA ELANG: BACA JUDUL KOLOM DI BARIS 0 ---
+                let headers = parseLine(lines[0].replace(/[\r\n]/g, ''), separator).map(h => h.trim().toUpperCase());
+                
+                // Cari Index berdasarkan Nama Judul (Fleksibel)
+                let iId = headers.findIndex(h => h === 'ID' || h === 'ID CUSTOMER');
+                let iNama = headers.findIndex(h => h.includes('NAMA') || h.includes('TOKO') || h.includes('CUSTOMER'));
+                let iKota = headers.findIndex(h => h === 'KOTA');
+                let iRegion = headers.findIndex(h => h === 'REGION');
+                let iAlamat = headers.findIndex(h => h === 'ALAMAT');
+                let iTlp = headers.findIndex(h => h.includes('TLP') || h.includes('TELEPON') || h.includes('NO'));
+                let iBank = headers.findIndex(h => h === 'BANK' || h.includes('REKENING'));
+                let iSales = headers.findIndex(h => h === 'SALES');
+                let iType = headers.findIndex(h => h === 'TYPE' || h === 'TIPE');
+                let iDisc1 = headers.findIndex(h => h === 'DISC1' || h === 'DISC' || h.includes('DISKON 1'));
+                let iDisc2 = headers.findIndex(h => h === 'DISC2' || h.includes('DISKON 2'));
+                let iRate = headers.findIndex(h => h === 'RATE' || h.includes('KOMISI'));
+                let iKet = headers.findIndex(h => h === 'KET' || h === 'KETERANGAN' || h === 'NOTE');
+
+                // Fallback (Jaga-jaga kalau judul di Excel beda, kita balikin ke default urutan export kita)
+                if(iId === -1) iId = 0; if(iNama === -1) iNama = 1; if(iKota === -1) iKota = 2;
+                if(iRegion === -1) iRegion = 3; if(iAlamat === -1) iAlamat = 4; if(iTlp === -1) iTlp = 5;
+                if(iBank === -1) iBank = 6; if(iSales === -1) iSales = 7; if(iType === -1) iType = 8;
+                if(iDisc1 === -1) iDisc1 = 9; if(iDisc2 === -1) iDisc2 = 10; if(iRate === -1) iRate = 11;
+                if(iKet === -1) iKet = 12;
+
+                // --- 2. PROSES BACA DATA (BARIS 1 SAMPAI HABIS) ---
                 for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
+                    const line = lines[i].replace(/[\r\n]/g, '');
+                    if (!line) continue; 
                     
-                    const cols = parseLine(line, separator);
-                    
-                    let idCsv = cols[0] ? cols[0].trim().toUpperCase() : ""; 
-                    let tgl = cols[1] ? cols[1].trim() : "";
-                    let toko = cols[2] ? cols[2].trim().toUpperCase() : "";
-                    let invId = cols[3] ? cols[3].trim().toUpperCase() : "";
-                    let merkCsv = cols[4] ? cols[4].trim().toUpperCase() : ""; // ASUMSI: Kolom E (Index 4) adalah Merk
-                    
-                    let qtyKonsi = cols[7] ? parseInt(cols[7].trim()) || 0 : 0;
-                    let nominal = cols[8] ? parseFloat(cols[8].replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '.').trim()) || 0 : 0;
-                    let retur = cols[9] ? parseFloat(cols[9].replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '.').trim()) || 0 : 0;
-                    let fee = cols[10] ? parseFloat(cols[10].replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '.').trim()) || 0 : 0;
-                    let ket = cols[11] ? cols[11].trim() : "";
-                    let typeCSV = cols[12] ? cols[12].trim().toUpperCase() : "";
-                    
-                    // --- BACA NO.CP DARI KOLOM R (Index 17) ---
-                    let noCP_Excel = cols[17] ? cols[17].trim().toUpperCase() : "";
+                    const cols = parseLine(line, separator); 
 
-                    if(tgl === "" || (nominal === 0 && retur === 0 && fee === 0)) continue;
+                    // Tarik data pakai index Mata Elang!
+                    let nama = cols[iNama] ? cols[iNama].trim().toUpperCase() : "";
+                    if (nama === "") continue; // Kalau nama toko kosong, lewati
 
-                    let fixInvId = invId || "TITIPAN";
+                    let idCsv = cols[iId] ? cols[iId].trim() : "";
+                    let kota = cols[iKota] ? cols[iKota].trim().toUpperCase() : "";
+                    let region = cols[iRegion] ? cols[iRegion].trim().toUpperCase() : "";
+                    let alamat = cols[iAlamat] ? cols[iAlamat].trim() : "";
+                    let tlp = cols[iTlp] ? cols[iTlp].trim() : "";
+                    let bank = cols[iBank] ? cols[iBank].trim().toUpperCase() : "";
+                    let sales = cols[iSales] ? cols[iSales].trim().toUpperCase() : "";
+                    let type = cols[iType] ? cols[iType].trim().toUpperCase() : "";
                     
-                    // Deteksi merk dari Invoice kalau kosong
-                    if (merkCsv === "" && fixInvId !== "TITIPAN") {
-                        let invData = db_invoice.find(i => i.id === fixInvId);
-                        if (invData && invData.items.length > 0) merkCsv = invData.items[0].merk || "";
+                    // Format angka
+                    let strDisc1 = cols[iDisc1] ? String(cols[iDisc1]).replace(/,/g, '.') : "0";
+                    let strDisc2 = cols[iDisc2] ? String(cols[iDisc2]).replace(/,/g, '.') : "0";
+                    let strRate  = cols[iRate] ? String(cols[iRate]).replace(/,/g, '.') : "0";
+
+                    let disc1 = parseFloat(strDisc1) || 0;
+                    let disc2 = parseFloat(strDisc2) || 0;
+                    let rate  = parseFloat(strRate) || 0;
+                    let ket = cols[iKet] ? cols[iKet].trim() : "";
+
+                    // Bikin ID baru kalau kosong
+                    if (!idCsv) {
+                        idCsv = "CUST-" + Date.now() + Math.floor(Math.random() * 100); 
                     }
 
-                    // Tipe & Customer
-                    let invType = "PUTUS";
-                    if (typeCSV.includes('KONSI')) invType = "KONSINYASI";
-                    else if (fixInvId !== "TITIPAN") {
-                        let invData = db_invoice.find(inv => inv.id === fixInvId);
-                        if(invData) invType = invData.type || "PUTUS";
-                    }
+                    const newCustomer = { id: idCsv, nama, kota, region, alamat, tlp, bank, sales, type, disc1, disc2, rate, ket };
+
+                    // CEK KEMBAR: Update kalau nama tokonya udah ada, biar nggak dobel!
+                    const existingIndex = db_customer.findIndex(c => c.id === idCsv || c.nama === nama);
                     
-                    let custData = db_customer.find(c => c.nama === toko);
-                    if(custData && custData.type && custData.type.toUpperCase().includes('KONSI')) invType = "KONSINYASI";
-
-                    let salesName = custData ? (custData.sales || "-").toUpperCase() : "-";
-                    let salesRate = custData ? (parseFloat(custData.rate) || 0) : 0;
-
-                    // --- [HUKUM KHUSUS TAUFIK & DAVCLAR SAAT IMPORT] ---
-                    if (salesName.includes('TAUFIK') && merkCsv.includes('DAVCLAR')) {
-                        salesRate = Math.max(0, salesRate - 1);
-                    }
-                    let komisiRp = (nominal * salesRate) / 100;
-                    // ---------------------------------------------------
-
-                    let finalId = idCsv !== "" ? idCsv : `${prefixId}${String(nextUrut++).padStart(3, '0')}`;
-
-                    // --- DETEKSI STATUS CAIR DARI KOLOM R ---
-                    let statusKomisi = "BELUM";
-                    let nomorCair = "-";
-                    
-                    if (noCP_Excel !== "" && noCP_Excel !== "-") {
-                        // Jika di Kolom R Excel ada tulisan CP-nya, otomatis CAIR!
-                        statusKomisi = "CAIR";
-                        nomorCair = noCP_Excel;
+                    if(existingIndex >= 0) {
+                        newCustomer.id = db_customer[existingIndex].id; // Pertahankan ID lama
+                        db_customer[existingIndex] = newCustomer;
+                        countUpdate++;
                     } else {
-                        // Kalau kosong, cek apakah di aplikasi sebelumnya udah cair
-                        let existingIndex = db_payment.findIndex(p => p.id === finalId);
-                        if(existingIndex >= 0) {
-                            statusKomisi = db_payment[existingIndex].statusCP || "BELUM";
-                            nomorCair = db_payment[existingIndex].noCP || "-";
-                        }
+                        db_customer.unshift(newCustomer); // Tambah toko baru di atas
+                        countBaru++;
                     }
-
-                    const newPayment = {
-                        id: finalId, invId: fixInvId, toko: toko, type: invType,
-                        sales: salesName, rate: salesRate, merk: merkCsv, // Masukkan merk
-                        tanggal: tgl, metode: "TRANSFER BCA", nominal: nominal,
-                        retur: retur, fee: fee, qtyKonsi: qtyKonsi, komisi: komisiRp,
-                        statusCP: statusKomisi, noCP: nomorCair, ket: ket, merk: merkPay
-                    };
-
-                    let existingIndex = db_payment.findIndex(p => p.id === finalId);
-                    if (existingIndex >= 0) { db_payment[existingIndex] = newPayment; countUpdate++; } 
-                    else { db_payment.push(newPayment); countBaru++; }
                 }
 
-                localStorage.setItem('davclar_customer', JSON.stringify(db_customer));
-                renderCustomerList();
-                showToast(`Data Customer Diperbarui!\n${countUpdate} toko diupdate tipenya.`);
+                if(countBaru > 0 || countUpdate > 0) {
+                    localStorage.setItem('davclar_customer', JSON.stringify(db_customer));
+                    
+                    // Panggil fungsi render list customer punya Bosku
+                    if(typeof renderCustomerList === 'function') renderCustomerList();
+                    if(typeof renderCustomerTable === 'function') renderCustomerTable(); 
+                    
+                    if(typeof showToast === 'function') {
+                        showToast(`✅ Import Customer Berhasil! \n${countBaru} Baru, ${countUpdate} Update.`, "success");
+                    } else {
+                        alert(`Import Customer Berhasil! \n${countBaru} Baru, ${countUpdate} Update.`);
+                    }
+                }
+                event.target.value = ''; 
             };
+            
             reader.readAsText(file);
-            event.target.value = ''; 
         }
-
         // Memicu trigger render saat tab Customer dipencet
         document.getElementById('btn-tab-customer').addEventListener('click', () => { renderCustomerList(); });
         
@@ -8414,7 +8416,7 @@
         }
 
         // ==========================================
-        // FITUR EXPORT SEMUA DATABASE KE EXCEL (FLAT & RAPI)
+        // FITUR EXPORT SEMUA DATABASE KE EXCEL (FLAT, RAPI, & STERIL)
         // ==========================================
         function exportAllToExcel() {
             let wb = XLSX.utils.book_new();
@@ -8433,7 +8435,7 @@
                 "Akun_User": db_users
             };
 
-            // 2. Blueprint Urutan Kolom Baku
+            // 2. Blueprint Urutan Kolom Baku (Saringan Ketat)
             const tableHeaders = {
                 "Data_Barang": ["prodId", "urut", "merk", "kategori", "artikel", "warna", "artikelWarna", "hpp", "hargaJual"],
                 "Customer": ["id", "nama", "kota", "region", "alamat", "tlp", "bank", "sales", "type", "disc1", "disc2", "rate", "ket"],
@@ -8447,23 +8449,23 @@
                 "Akun_User": ["username", "password", "role", "access"]
             };
 
-            // 3. Mesin Pemecah Array (Flattener)
+            // 3. Mesin Pemecah Array & Saringan Sterilisasi
             for (let sheetName in allDatabases) {
                 let data = allDatabases[sheetName];
                 let flatData = [];
+                let allowedCols = tableHeaders[sheetName]; // Ambil blueprint kolom untuk sheet ini
                 
                 if (data && data.length > 0) {
                     data.forEach(row => {
-                        
+                        let tempRows = []; // Wadah sementara sebelum disaring
+
                         // JIKA TABEL PUNYA RINCIAN BARANG (PO, SO, INVOICE)
                         if (row.items && Array.isArray(row.items) && row.items.length > 0) {
                             row.items.forEach(item => {
-                                let newRow = { ...row }; // Copy data utama (ID, Tanggal, dll)
-                                delete newRow.items; // Buang array aslinya
-                                
+                                let newRow = { ...row }; 
+                                delete newRow.items; 
                                 if (Array.isArray(newRow.sizeLabels)) newRow.sizeLabels = newRow.sizeLabels.join(', ');
 
-                                // --- [FIX] PENYELAMAT DATA LAMA (AUTO-SPLIT ARTIKEL & WARNA) ---
                                 let art = item.artikel;
                                 let wrn = item.warna;
                                 let mrk = item.merk;
@@ -8471,17 +8473,13 @@
                                 if (!art && item.namaBarang) {
                                     const brg = db_databarang.find(b => b.prodId === item.prodId);
                                     if (brg) {
-                                        art = brg.artikel;
-                                        wrn = brg.warna;
-                                        if (!mrk) mrk = brg.merk; // Tarik merk dari master kalau kosong
+                                        art = brg.artikel; wrn = brg.warna; if (!mrk) mrk = brg.merk;
                                     } else {
-                                        // Pecah manual kalau barangnya dari luar database
                                         let parts = item.namaBarang.trim().split(' ');
                                         if (parts.length > 1) {
                                             let lastWord = parts[parts.length - 1].toUpperCase();
                                             if ((lastWord === 'MUDA' || lastWord === 'TUA' || lastWord === 'ABU') && parts.length > 2) {
-                                                let w2 = parts.pop(); let w1 = parts.pop();
-                                                wrn = w1 + ' ' + w2;
+                                                let w2 = parts.pop(); let w1 = parts.pop(); wrn = w1 + ' ' + w2;
                                             } else {
                                                 wrn = parts.pop();
                                             }
@@ -8492,19 +8490,16 @@
                                     }
                                 }
 
-                                // Paksa masuk ke format baru dengan presisi
                                 newRow['item_merk'] = mrk || '';
                                 newRow['item_artikel'] = art || item.namaBarang || '';
                                 newRow['item_warna'] = (wrn && wrn !== '-') ? wrn : '';
 
-                                // Pasang sisa rincian item dengan awalan "item_"
                                 for(let k in item) {
-                                    // Abaikan field lama biar nggak dobel/nyangkut di ujung Excel
                                     if (k !== 'artikel' && k !== 'warna' && k !== 'merk' && k !== 'namaBarang') {
                                         newRow[`item_${k}`] = item[k];
                                     }
                                 }
-                                flatData.push(newRow);
+                                tempRows.push(newRow);
                             });
                         } 
                         // JIKA TABEL KONTRA BON
@@ -8515,7 +8510,7 @@
                                 for(let k in inv) {
                                     newRow[`inv_${k}`] = inv[k];
                                 }
-                                flatData.push(newRow);
+                                tempRows.push(newRow);
                             });
                         } 
                         // JIKA TABEL BIASA
@@ -8524,11 +8519,23 @@
                             if (newRow.items) delete newRow.items;
                             if (newRow.invoices) delete newRow.invoices;
                             if (Array.isArray(newRow.sizeLabels)) newRow.sizeLabels = newRow.sizeLabels.join(', ');
-                            flatData.push(newRow);
+                            tempRows.push(newRow);
                         }
+
+                        // ==========================================
+                        // PROSES STERILISASI (BUANG ZOMBIE DATA)
+                        // ==========================================
+                        tempRows.forEach(rawRow => {
+                            let cleanRow = {};
+                            allowedCols.forEach(col => {
+                                // Kalau datanya ada, masukkan. Kalau nggak ada, kasih blank ("")
+                                cleanRow[col] = rawRow[col] !== undefined ? rawRow[col] : ""; 
+                            });
+                            flatData.push(cleanRow);
+                        });
                     });
                     
-                    ws = XLSX.utils.json_to_sheet(flatData, { header: tableHeaders[sheetName] });
+                    ws = XLSX.utils.json_to_sheet(flatData, { header: allowedCols });
                 } else {
                     ws = XLSX.utils.json_to_sheet([{ "Status": "Belum ada data di tabel ini" }]);
                 }
@@ -8536,19 +8543,12 @@
                 XLSX.utils.book_append_sheet(wb, ws, sheetName);
             }
 
-            // 4. Download Otomatis File Excel-nya
             let dateStr = new Date().toISOString().split('T')[0];
             let namaFile = `Davclar_ERP_All_Database_${dateStr}.xlsx`;
             
             XLSX.writeFile(wb, namaFile);
-            
-            if (typeof showToast === "function") {
-                showToast('Export Excel Semua Data Berhasil!', 'success');
-            } else {
-                alert('Export Excel Semua Data Berhasil!');
-            }
+            if (typeof showToast === "function") showToast('Export Excel Semua Data Berhasil!', 'success');
         }
-
         // ==========================================
         // IMPORT CSV: SALES ORDER (SO) (FIXED UNDEFINED)
         // ==========================================
