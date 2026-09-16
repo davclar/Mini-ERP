@@ -782,7 +782,7 @@
                                     </label>
                                     
                                     <!-- BUAT PO -->
-                                    <button onclick="openPOForm()" class="w-full sm:w-auto flex justify-center items-center gap-1.5 bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-bold shadow-sm transition">
+                                    <button onclick="openPOForm()" class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-bold shadow-sm transition">
                                         <i class="fa-solid fa-plus"></i> <span>Buat PO</span>
                                     </button>
                                 </div>
@@ -897,14 +897,14 @@
                                     </div>
                                     
                                     <!-- Artikel (Fleksibel, tapi karena Merk & Warna dilebarkan, otomatis dia menyusut pas) -->
-                                    <div class="flex-1 min-w-[150px] relative">
+                                    <div class="flex-1 sm:flex-none min-w-[150px] relative">
                                         <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Artikel</label>
                                         <input type="text" id="poInputBarang" oninput="searchArtikelPO()" autocomplete="off" placeholder="Ketik artikel..." class="w-full px-2 py-2 border border-emerald-400 rounded-lg text-xs uppercase">
                                         <div id="poSkuDropdown" class="absolute top-14 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-40 overflow-y-auto"></div>
                                     </div>
                                     
                                     <!-- Warna (Dilebarkan porsinya di PC) -->
-                                    <div class="w-full sm:w-32 lg:w-36 shrink-0">
+                                    <div class="w-24 lg:w-36 shrink-0">
                                         <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Warna</label>
                                         <input type="text" id="poInpWarna" placeholder="Warna..." class="w-full px-2 py-2 border border-emerald-400 rounded-lg text-xs uppercase">
                                     </div>
@@ -1106,6 +1106,60 @@
 
                         </div>
 
+                    </div>
+                </div>
+
+                <!-- MODAL SPK KHUSUS -->
+                <div id="modal-spk-detail" class="fixed inset-0 z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+                    <!-- Backdrop -->
+                    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="closeSPKDetail()"></div>
+                    
+                    <!-- Konten Modal -->
+                    <div class="bg-white rounded-2xl shadow-2xl z-10 w-11/12 max-w-5xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92vh]">
+                        
+                        <!-- Header Aksi Modal (Print) -->
+                        <div class="p-4 border-b border-gray-100 bg-purple-50 rounded-t-2xl flex justify-between items-center shrink-0 print:hidden">
+                            <button onclick="closeSPKDetail()" class="text-gray-600 hover:text-purple-700 font-semibold px-3 py-1.5 bg-white border border-gray-200 rounded-lg transition flex items-center shadow-sm text-xs md:text-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button class="bg-purple-700 hover:bg-purple-900 text-white px-4 py-1.5 rounded-lg shadow-sm text-xs md:text-sm font-bold transition flex items-center" onclick="printSPKAction()">
+                                <i class="fa-solid fa-print mr-2"></i> Cetak SPK Pabrik
+                            </button>
+                        </div>
+
+                        <!-- Area Kertas Cetak -->
+                        <div class="flex-1 overflow-auto p-4 md:p-8 bg-slate-200">
+                            <style>
+                                @media print {
+                                    body * { visibility: hidden; }
+                                    #print-spk-area, #print-spk-area * { visibility: visible; color: black !important; }
+                                    
+                                    /* Matikan efek modal saat diprint */
+                                    #modal-spk-detail, #modal-spk-detail > div {
+                                        position: static !important;
+                                        transform: none !important;
+                                        display: block !important;
+                                    }
+                                    
+                                    #print-spk-area { 
+                                        position: absolute !important; 
+                                        left: 0 !important; top: 0 !important; 
+                                        width: 100% !important; margin: 0 !important; 
+                                        box-shadow: none !important; border: none !important;
+                                    }
+                                }
+                            </style>
+
+                            <!-- KERTAS A4 SPK BOSKU -->
+                            <div id="print-spk-area" class="bg-white mx-auto w-[210mm] min-h-[297mm] shadow-2xl p-8 relative font-sans text-sm box-border print:shadow-none print:m-0 print:p-0">
+                                
+                                <!-- PASTE FORMAT HTML SPK BUATAN BOSKU DI SINI -->
+                                <h1 class="text-2xl font-bold text-center mb-4">SURAT PERINTAH KERJA (SPK)</h1>
+                                <p>No PO: <span id="spk-no-po"></span></p>
+                                <!-- dst... -->
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -2306,90 +2360,108 @@
                 <!-- ========================================== -->
                 <!-- TAB: CETAK BARCODE / QR CODE & LABEL -->
                 <!-- ========================================== -->
-                <section id="tab-barcode" class="tab-content hidden-tab p-2 h-full">
-                    <div class="bg-white p-5 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0 shadow-sm rounded-t-xl">
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-qrcode text-blue-600 mr-2"></i> Cetak QR Code & Label</h2>
-                            <p class="text-xs text-gray-500 mt-1">Cetak stiker Outer Box, Hangtag, dan Sample.</p>
-                        </div>
+                <section id="tab-barcode" class="tab-content hidden-tab h-full">
+                    <div class="bg-white p-4 md:p-0 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full w-full">
                         
-                        <div class="flex items-center gap-3 w-full md:w-auto">
-                            <!-- Pilihan Format -->
-                            <select id="barcodeFormat" class="px-4 py-2 border border-blue-300 rounded-lg text-sm bg-blue-50 font-bold text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
-                                <option value="LUAR">LUAR (Box 60x40)</option>
-                                <option value="DALAM">DALAM (Hangtag 103x30)</option>
-                                <option value="SAMPLE">SAMPLE (Stiker 103x30)</option>
-                            </select>
-                            
-                            <!-- Pencarian Manual -->
-                            <div class="relative w-full md:w-64">
-                                <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400 text-sm pointer-events-none"></i>
-                                <input type="search" id="inpSearchBarcode" oninput="searchBarangBarcode()" autocomplete="off" placeholder="Cari Manual..." class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white shadow-sm">
-                                <div id="dropdownBarcode" class="absolute top-10 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-48 overflow-y-auto"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-6 bg-white rounded-b-xl border border-t-0 border-gray-200 overflow-y-auto flex-1 flex flex-col">
-                        
-                        <!-- Fitur Tarik Data PO -->
-                        <div class="mb-4 bg-indigo-50 p-3 border border-indigo-100 rounded-lg flex flex-col md:flex-row items-start md:items-center gap-3 shrink-0">
-                            <label class="font-bold text-indigo-800 text-sm whitespace-nowrap"><i class="fa-solid fa-file-import mr-1"></i> Tarik dari PO:</label>
-                            <select id="selectPOBarcode" onchange="tarikDataPODropdown(this.value)" class="w-full md:w-64 px-3 py-2 border border-indigo-300 rounded-lg text-sm bg-white font-bold text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
-                                <option value="">-- Pilih PO (Belum Print Full) --</option>
-                            </select>
-                        </div>
-
-                        <!-- Header Tabel & Input Label Manual -->
-                        <div class="flex justify-between items-end mb-2 shrink-0">
-                            <div>
-                                <div class="text-[10px] font-bold text-gray-500 uppercase mb-1"><i class="fa-solid fa-pen mr-1"></i> Label Size (Jika Input Manual)</div>
-                                <div class="flex gap-1">
-                                    <input type="text" id="bcL1" placeholder="36" class="w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
-                                    <input type="text" id="bcL2" placeholder="37" class="w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
-                                    <input type="text" id="bcL3" placeholder="38" class="w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
-                                    <input type="text" id="bcL4" placeholder="39" class="w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
-                                    <input type="text" id="bcL5" placeholder="40" class="w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
-                                    <input type="text" id="bcL6" placeholder="-" class="w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
+                        <!-- HEADER BARCODE (Padding dikecilin di HP) -->
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white pb-2 md:p-6 md:pb-0 rounded-t-xl border-gray-200 shrink-0">
+                            <!-- Kiri: Judul -->
+                            <div class="w-full md:w-auto flex items-center space-x-3 md:space-x-4">
+                                <div class="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg text-blue-600 shrink-0">
+                                    <i class="fa-solid fa-qrcode text-xl md:text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg md:text-xl font-extrabold text-gray-800 leading-tight">Cetak QR Code & Label</h3>
+                                    <p class="text-[10px] md:text-sm text-gray-500 mt-0.5">Cetak stiker Outer Box, Hangtag, dan Sample.</p>
                                 </div>
                             </div>
-                            <div class="space-x-2">
-                                <button onclick="clearBarcodeQueue()" class="bg-red-100 text-red-600 hover:bg-red-200 text-xs font-bold px-4 py-2 rounded transition"><i class="fa-solid fa-trash-can mr-1"></i> Kosongkan</button>
+
+                            <!-- Kanan: Format & Search Manual (Mengikuti gaya Action/Search Data Barang) -->
+                            <div class="w-full md:w-auto flex flex-col sm:flex-row gap-2 md:gap-3">
+                                <select id="barcodeFormat" class="w-full sm:w-auto px-4 py-2 md:py-2.5 border border-blue-300 rounded-lg text-xs md:text-sm bg-blue-50 font-bold text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition">
+                                    <option value="LUAR">LUAR (Box 60x40)</option>
+                                    <option value="DALAM">DALAM (Hangtag 103x30)</option>
+                                    <option value="SAMPLE">SAMPLE (Stiker 103x30)</option>
+                                </select>
+                                
+                                <div class="relative w-full sm:w-auto">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                                    </span>
+                                    <input type="search" id="inpSearchBarcode" oninput="searchBarangBarcode()" autocomplete="off" placeholder="Cari Manual..." class="w-full sm:w-48 pl-9 pr-3 py-2 md:py-2.5 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white">
+                                    <div id="dropdownBarcode" class="absolute top-11 left-0 bg-white border border-gray-200 shadow-xl rounded-lg w-full hidden z-50 max-h-48 overflow-y-auto"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Keranjang Cetak -->
-                        <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm flex-1 flex flex-col">
-                            <div class="overflow-y-auto flex-1 bg-white min-h-[300px]">
-                                <table class="w-full text-sm text-left whitespace-nowrap">
-                                    <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm border-b border-gray-200">
-                                        <tr class="text-gray-600 uppercase text-[10px] tracking-wider">
-                                            <th class="py-2 px-3 font-bold w-10 text-center">No</th>
-                                            <th class="py-2 px-3 font-bold">Artikel & Warna</th>
-                                            <th id="bcTh1" class="py-2 px-1 font-bold text-center w-10">36</th>
-                                            <th id="bcTh2" class="py-2 px-1 font-bold text-center w-10">37</th>
-                                            <th id="bcTh3" class="py-2 px-1 font-bold text-center w-10">38</th>
-                                            <th id="bcTh4" class="py-2 px-1 font-bold text-center w-10">39</th>
-                                            <th id="bcTh5" class="py-2 px-1 font-bold text-center w-10">40</th>
-                                            <th id="bcTh6" class="py-2 px-1 font-bold text-center w-10">-</th>
-                                            <th class="py-2 px-3 font-bold text-center text-indigo-700 w-16">Total</th>
-                                            <th class="py-2 px-2 font-bold text-center w-10">Aksi</th>
+                        <!-- AREA KONTEN (Padding dihapus di HP biar maksimal lebarnya) -->
+                        <div class="flex-1 bg-white p-0 md:p-6 overflow-hidden flex flex-col">
+                            
+                            <!-- Panel Tambahan: Tarik PO & Input Label Size Manual (Diberi padding px-4 di HP biar tidak mepet bezel) -->
+                            <div class="flex flex-col md:flex-row gap-3 mb-4 shrink-0 mt-4 md:mt-0">
+                                <!-- Fitur Tarik Data PO -->
+                                <div class="bg-indigo-50 p-3 border border-indigo-100 rounded-lg flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full md:w-1/2">
+                                    <label class="font-bold text-indigo-800 text-[11px] md:text-xs uppercase whitespace-nowrap tracking-wider"><i class="fa-solid fa-file-import mr-1"></i> Tarik dari PO:</label>
+                                    <select id="selectPOBarcode" onchange="tarikDataPODropdown(this.value)" class="w-full px-3 py-2 border border-indigo-300 rounded-lg text-xs md:text-sm bg-white font-bold text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition">
+                                        <option value="">-- Pilih PO (Belum Print Full) --</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Setup Label Size Manual & Tombol Kosongkan -->
+                                <div class="bg-gray-50 p-3 border border-gray-200 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full md:w-1/2">
+                                    <div class="w-full">
+                                        <div class="text-[10px] font-bold text-gray-500 uppercase mb-1.5 tracking-wider"><i class="fa-solid fa-pen mr-1"></i> Label Size (Bila Input Manual)</div>
+                                        <div class="flex gap-1.5 w-full lg:w-auto justify-between lg:justify-start">
+                                            <input type="text" id="bcL1" placeholder="36" class="w-8 sm:w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
+                                            <input type="text" id="bcL2" placeholder="37" class="w-8 sm:w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
+                                            <input type="text" id="bcL3" placeholder="38" class="w-8 sm:w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
+                                            <input type="text" id="bcL4" placeholder="39" class="w-8 sm:w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
+                                            <input type="text" id="bcL5" placeholder="40" class="w-8 sm:w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
+                                            <input type="text" id="bcL6" placeholder="-" class="w-8 sm:w-10 px-1 py-1 border border-indigo-300 rounded text-center text-xs font-bold bg-indigo-50" oninput="updateBCTempLabels()">
+                                        </div>
+                                    </div>
+                                    <button onclick="clearBarcodeQueue()" class="w-full sm:w-auto bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 text-[11px] md:text-xs font-bold px-3 py-2 rounded-lg transition border border-red-200 shadow-sm whitespace-nowrap mt-1 sm:mt-0 text-center">
+                                        <i class="fa-solid fa-trash-can mr-1"></i> Kosongkan
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- KERANJANG CETAK (TABEL - Sama persis dengan Data Barang) -->
+                            <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg h-[600px]">
+                                <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
+                                    <thead class="sticky top-0 bg-gray-50 z-10 shadow-sm">
+                                        <tr class="text-gray-600 uppercase text-[10px] md:text-xs tracking-wider border-b border-gray-200">
+                                            <th class="py-2.5 px-3 md:px-4 font-bold w-10 text-center">No</th>
+                                            <th class="py-2.5 px-3 md:px-4 font-bold">Artikel & Warna</th>
+                                            <th id="bcTh1" class="py-2.5 px-1 font-bold text-center w-10">36</th>
+                                            <th id="bcTh2" class="py-2.5 px-1 font-bold text-center w-10">37</th>
+                                            <th id="bcTh3" class="py-2.5 px-1 font-bold text-center w-10">38</th>
+                                            <th id="bcTh4" class="py-2.5 px-1 font-bold text-center w-10">39</th>
+                                            <th id="bcTh5" class="py-2.5 px-1 font-bold text-center w-10">40</th>
+                                            <th id="bcTh6" class="py-2.5 px-1 font-bold text-center w-10">-</th>
+                                            <th class="py-2.5 px-3 md:px-4 font-bold text-center text-indigo-700 w-16">Total</th>
+                                            <th class="py-2.5 px-3 md:px-4 font-bold text-center w-12">Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="barcodeQueueBody" class="divide-y divide-gray-100"></tbody>
+                                    <tbody id="barcodeQueueBody" class="divide-y divide-gray-100">
+                                        <!-- Data antrean render di sini -->
+                                    </tbody>
                                 </table>
                             </div>
-                        </div>
-
-                        <!-- Panel Bawah: Tombol Cetak -->
-                        <div class="mt-4 bg-blue-50 border border-blue-200 p-4 rounded-xl flex justify-between items-center shrink-0">
-                            <div>
-                                <span class="text-xs font-bold text-blue-800 uppercase tracking-wider block mb-1">Total Stiker yang akan dicetak:</span>
-                                <span id="lblTotalBarcode" class="text-2xl font-extrabold text-blue-700">0 Pcs</span>
+                            
+                            <!-- FOOTER / PANEL BAWAH (Mengikuti style Pagination Data Barang) -->
+                            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 mt-4 pt-3 px-4 md:px-0 border-t border-gray-100">
+                                <div class="text-[11px] sm:text-xs text-gray-500 text-center sm:text-left w-full sm:w-auto">
+                                    <span class="font-bold text-gray-500 uppercase tracking-wider block mb-0.5">Total Stiker:</span>
+                                    <span id="lblTotalBarcode" class="text-xl md:text-2xl font-extrabold text-blue-700">0 Pcs</span>
+                                </div>
+                                <div class="flex flex-wrap justify-center sm:justify-end gap-1 w-full sm:w-auto">
+                                    <button onclick="printBarcodeAction()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-bold shadow-sm transition flex items-center justify-center">
+                                        <i class="fa-solid fa-print text-base mr-2"></i> Print Label Sekarang
+                                    </button>
+                                </div>
                             </div>
-                            <button onclick="printBarcodeAction()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition shadow-md flex items-center text-sm">
-                                <i class="fa-solid fa-print text-lg mr-2"></i> Print Label Sekarang
-                            </button>
+
                         </div>
                     </div>
                 </section>
@@ -4024,7 +4096,9 @@
         }
 
 
-        // Fungsi Import Data Barang dari CSV (Anti Geser & Auto Upsert)
+        // ==========================================
+        // FUNGSI IMPORT CSV DATA BARANG (STANDAR BAKU)
+        // ==========================================
         function importCSV(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -4036,10 +4110,10 @@
                 let countBaru = 0;
                 let countUpdate = 0;
 
-                // Deteksi otomatis pemisah CSV
+                // Deteksi otomatis pemisah CSV (Koma atau Titik Koma)
                 const separator = rows[0].indexOf(';') > -1 ? ';' : ',';
 
-                // Mesin Parser Anti-Geser
+                // Mesin Parser Anti-Geser (Aman kalau ada koma di dalam teks)
                 function parseLine(line, sep) {
                     let result = [];
                     let curVal = '';
@@ -4071,29 +4145,33 @@
                     return result;
                 }
 
+                // Kita mulai dari baris ke-1 (baris ke-0 adalah Header)
                 for (let i = 1; i < rows.length; i++) {
                     const line = rows[i].trim();
                     if (!line) continue; 
 
-                    // Gunakan parser pintar yang baru
                     const cols = parseLine(line, separator); 
 
-                    if (cols.length >= 9) {
-                        const artikelWarna = cols[0] ? cols[0].trim() : "";
-                        const prodId = cols[1] ? cols[1].trim().toUpperCase() : "";
-                        const artikel = cols[2] ? cols[2].trim() : "";
-                        const warna = cols[3] ? cols[3].trim() : "";
+                    // Pastikan jumlah kolom mencukupi (minimal sampai kolom ke-8 / hargaJual)
+                    // Format Baku Export kita: [prodId, urut, merk, kategori, artikel, warna, artikelWarna, hpp, hargaJual]
+                    if (cols.length >= 8) {
+                        const prodId = cols[0] ? cols[0].trim().toUpperCase() : "";
+                        const urut = cols[1] ? cols[1].trim() : "";
+                        const merk = cols[2] ? cols[2].trim().toUpperCase() : "";
+                        const kategori = cols[3] ? cols[3].trim() : "";
+                        const artikel = cols[4] ? cols[4].trim().toUpperCase() : "";
+                        const warna = cols[5] ? cols[5].trim().toUpperCase() : "";
                         
-                        // Bersihkan format uang
-                        const hpp = parseInt(cols[4] ? cols[4].replace(/[^0-9]/g, '') : '0') || 0;
-                        const hargaJual = parseInt(cols[5] ? cols[5].replace(/[^0-9]/g, '') : '0') || 0;
+                        // Kolom ke-6 adalah artikelWarna, kita biarkan sistem yang generate otomatis
+                        // agar lebih aman kalau user cuma ngisi artikel dan warna saja
+                        const artikelWarna = warna && warna !== '-' ? `${artikel} ${warna}` : artikel;
                         
-                        const urut = cols[6] ? cols[6].trim() : "";
-                        const merk = cols[7] ? cols[7].trim() : "";
-                        const kategori = cols[8] ? cols[8].trim() : "";
+                        // Bersihkan format uang (Buang "Rp", titik, koma)
+                        const hpp = parseInt(cols[7] ? String(cols[7]).replace(/[^0-9]/g, '') : '0') || 0;
+                        const hargaJual = parseInt(cols[8] ? String(cols[8]).replace(/[^0-9]/g, '') : '0') || 0;
 
-                        // Tolak jika Prod ID kosong
-                        if (prodId === "") continue;
+                        // Tolak jika Prod ID atau Artikel kosong
+                        if (prodId === "" || artikel === "") continue;
 
                         const newItem = { prodId, artikelWarna, artikel, warna, hpp, hargaJual, urut, merk, kategori };
 
@@ -4102,7 +4180,7 @@
                             db_databarang[existingIndex] = newItem;
                             countUpdate++;
                         } else {
-                            db_databarang.push(newItem);
+                            db_databarang.unshift(newItem); // Tambahkan di atas
                             countBaru++;
                         }
                     }
@@ -4113,7 +4191,11 @@
                 itemCurrentPage = 1;
                 renderItemTable();
                 
-                showToast(`Upload Data Barang Selesai!\n- ${countBaru} Barang Baru Ditambahkan\n- ${countUpdate} Barang Diperbarui`);
+                if (typeof showToast === "function") {
+                    showToast(`Upload Data Barang Selesai!\n- ${countBaru} Barang Baru Ditambahkan\n- ${countUpdate} Barang Diperbarui`, 'success');
+                } else {
+                    alert(`Upload Data Barang Selesai!\n- ${countBaru} Barang Baru Ditambahkan\n- ${countUpdate} Barang Diperbarui`);
+                }
                 event.target.value = ''; // Reset tombol input
             };
             
@@ -4294,7 +4376,10 @@
                         baseArtikel = brg.artikel;
                     }
                     
-                    artikelUtama = `<span class="font-bold text-gray-800">${baseArtikel}</span> <span class="text-xs text-gray-500">(${po.items.length} wrn)</span>`;
+                    // [BARU] Potong string berdasarkan spasi, lalu ambil kata pertama saja (index 0)
+                    let artikelPendek = baseArtikel.split(' ')[0];
+                    
+                    artikelUtama = `<span class="font-bold text-gray-800">${artikelPendek}</span> <span class="text-xs text-gray-500">(${po.items.length} wrn)</span>`;
                 }
 
                 let badgeSPK = po.spkPrintedAt ? `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full inline-flex items-center"><i class="fa-solid fa-check mr-1"></i> ${po.spkPrintedAt}</span>` : `<span class="text-gray-300 text-xs italic">- Belum -</span>`;
@@ -4332,7 +4417,7 @@
                         <td class="flex flex-col md:flex-row !py-1.5 px-2 md:px-4 text-center space-x-1 whitespace-nowrap align-middle">
                             <button onclick="viewPODetail('${po.id}')" title="Lihat/Cetak" class="text-blue-600 hover:text-white hover:bg-blue-600 bg-blue-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-eye text-xs"></i></button>
                             <button onclick="editPO('${po.id}')" title="Edit PO" class="text-amber-500 hover:text-white hover:bg-amber-500 bg-amber-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="printAction('${po.id}', 'SPK')" title="Print SPK" class="text-purple-600 hover:text-white hover:bg-purple-600 bg-purple-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-file-contract text-xs"></i></button>
+                            <button onclick="viewSPKDetail('${po.id}', 'SPK')" title="Print SPK" class="text-purple-600 hover:text-white hover:bg-purple-600 bg-purple-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-file-contract text-xs"></i></button>
                             <button onclick="sendPOToBarcode('${po.id}')" title="Print Barcode" class="text-emerald-600 hover:text-white hover:bg-emerald-600 bg-emerald-50 px-2 py-1.5 rounded transition"><i class="fa-solid fa-barcode text-xs"></i></button>
                             <button onclick="deletePO('${po.id}')" title="Hapus PO" class="text-red-500 hover:bg-red-100 px-2 py-1.5 rounded transition"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
@@ -4573,6 +4658,7 @@
             // PASTIKAN FIELD INPUT BARANG KOSONG SAAT MASUK MODE EDIT
             document.getElementById('poInputBarang').value = '';
             document.getElementById('poInpMerk').value = '';
+            document.getElementById('poInpWarna').value = '';
             document.getElementById('poInpKet').value = '';
             for(let i=1; i<=6; i++) {
                 const sEl = document.getElementById(`poInpS${i}`);
@@ -4637,23 +4723,63 @@
         function editTempItem(index) {
             const item = tempPOItems[index];
             const brg = db_databarang.find(b => b.prodId === item.prodId);
-            
-            document.getElementById('poInputBarang').value = item.artikel || (brg ? brg.artikel : item.namaBarang);
+
+            // 1. Ambil data dasar
+            let art = item.artikel;
+            let wrn = item.warna;
+
+            // 2. Deteksi Data Lama / Manual (Jika belum dipisah)
+            if (!art && item.namaBarang) {
+                if (brg) {
+                    // Tarik dari master kalau ada
+                    art = brg.artikel;
+                    wrn = brg.warna;
+                } else {
+                    // MESIN PEMECAH PINTAR (SMART SPLIT)
+                    let parts = item.namaBarang.trim().split(' ');
+                    if (parts.length > 1) {
+                        let lastWord = parts[parts.length - 1].toUpperCase();
+                        
+                        // Cek apakah warna terdiri dari 2 kata (Misal: BIRU MUDA, MERAH TUA, ABU ABU)
+                        if ((lastWord === 'MUDA' || lastWord === 'TUA' || lastWord === 'ABU') && parts.length > 2) {
+                            let w2 = parts.pop(); // Tarik kata terakhir (MUDA/TUA/ABU)
+                            let w1 = parts.pop(); // Tarik kata depannya (BIRU/MERAH/ABU)
+                            wrn = w1 + ' ' + w2;  // Gabung jadi "BIRU MUDA"
+                        } else {
+                            wrn = parts.pop();    // Kalau cuma 1 kata (HITAM, PUTIH, dll)
+                        }
+                        art = parts.join(' ');    // Sisanya gabung lagi jadi artikel
+                    } else {
+                        art = item.namaBarang;
+                    }
+                }
+            }
+
+            // 3. Masukkan ke Input Form dengan Rapi
+            document.getElementById('poInputBarang').value = art || "";
             document.getElementById('poInpMerk').value = item.merk || (brg ? brg.merk : "");
-            // Sedot warna kalau ada
-            document.getElementById('poInpWarna').value = item.warna && item.warna !== '-' ? item.warna : '';
             
-            for(let i=1; i<=6; i++) document.getElementById(`poInpS${i}`).value = item[`s${i}`] || "";
+            // Masukkan warna (kalau isinya cuma strip "-", kosongkan saja)
+            document.getElementById('poInpWarna').value = (wrn && wrn !== '-') ? wrn : '';
+
+            // 4. Masukkan Size dan Keterangan
+            for(let i=1; i<=6; i++) {
+                document.getElementById(`poInpS${i}`).value = item[`s${i}`] || "";
+            }
             document.getElementById('poInpKet').value = item.ket || "";
-            
+
+            // 5. Eksekusi perpindahan
             selectedProdIdTemp = item.prodId;
             tempPOItems.splice(index, 1);
             renderTempPOItems();
             document.getElementById('poInputBarang').focus();
         }
+
+        // Penutup dropdown jika klik di luar
         document.addEventListener('click', (e) => {
             if(!e.target.closest('#poInputBarang') && !e.target.closest('#poSkuDropdown')) {
-                document.getElementById('poSkuDropdown').classList.add('hidden');
+                const dropdown = document.getElementById('poSkuDropdown');
+                if(dropdown) dropdown.classList.add('hidden');
             }
         });
 
@@ -4780,12 +4906,12 @@
             // Cek apakah ini mode Edit (PO sudah ada)
             let existingIndex = db_po.findIndex(p => p.id === formPoId);
             
-            // Amankan status print SPK/Barcode kalau sedang edit
+            /// Amankan status print SPK & Barcode (Pakai versi baru)
             let spkTime = null;
-            let bcTime = null;
+            let currentStatusBC = "Luar:- Dalam:-"; 
             if(existingIndex >= 0) {
                 spkTime = db_po[existingIndex].spkPrintedAt;
-                bcTime = db_po[existingIndex].barcodePrintedAt;
+                currentStatusBC = db_po[existingIndex].statusBarcode || "Luar:- Dalam:-";
             }
 
             const newPO = {
@@ -4796,7 +4922,7 @@
                 catatan: document.getElementById('poFormNote').value,
                 sizeLabels: szLabels,
                 spkPrintedAt: spkTime,
-                barcodePrintedAt: bcTime,
+                statusBarcode: currentStatusBC, // <-- Sekarang murni pakai statusBarcode
                 items: [...tempPOItems]
             };
 
@@ -4830,19 +4956,62 @@
             }
         }
 
-        function printAction(poId, type) {
-            let poIndex = db_po.findIndex(p => p.id === poId);
-            if(poIndex < 0) return;
-            let now = new Date();
-            let timeStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            
-            if(type === 'SPK') { db_po[poIndex].spkPrintedAt = timeStr; showToast(`SPK tercetak! (${timeStr})`); } 
-            else { db_po[poIndex].barcodePrintedAt = timeStr; showToast(`Barcode tercetak! (${timeStr})`); }
-            
-            localStorage.setItem('davclar_po', JSON.stringify(db_po));
-            renderPOList();
+        let currentSPKId = "";
+
+        // 1. Fungsi Buka Modal SPK
+        function viewSPKDetail(poId) {
+            const po = db_po.find(p => p.id === poId);
+            if(!po) return;
+
+            currentSPKId = poId; // Ingat PO mana yang lagi dibuka SPK-nya
+
+            // Buka Modal SPK
+            const modal = document.getElementById('modal-spk-detail');
+            if(modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+
+            // =======================================================
+            // TUGAS BOSKU: MAPPING DATA KE FORMAT SPK DI SINI
+            // Contoh:
+            // document.getElementById('spk-no-po').innerText = po.id;
+            // document.getElementById('spk-makloon').innerText = po.makloon;
+            // =======================================================
         }
 
+        // 2. Fungsi Tutup Modal SPK
+        function closeSPKDetail() {
+            const modal = document.getElementById('modal-spk-detail');
+            if(modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        // 3. Fungsi Cetak SPK & Auto-Save Tanggal
+        function printSPKAction() {
+            if(!currentSPKId) {
+                window.print();
+                return;
+            }
+
+            // Munculkan dialog print
+            window.print();
+            
+            // Auto-update ke Database
+            let poIndex = db_po.findIndex(p => p.id === currentSPKId);
+            if(poIndex >= 0) {
+                let now = new Date();
+                let timeStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+                
+                db_po[poIndex].spkPrintedAt = timeStr;
+                localStorage.setItem('davclar_po', JSON.stringify(db_po));
+                
+                if(typeof renderPOList === 'function') renderPOList();
+                if(typeof showToast === "function") showToast(`SPK Tercetak! (${timeStr})`, "success");
+            }
+        }
         // ==========================================
         // FITUR EXPORT PDF
         // ==========================================
@@ -8245,13 +8414,12 @@
         }
 
         // ==========================================
-        // FITUR EXPORT SEMUA DATABASE KE EXCEL MULTI-SHEET
+        // FITUR EXPORT SEMUA DATABASE KE EXCEL (FLAT & RAPI)
         // ==========================================
         function exportAllToExcel() {
-            // 1. Buat Buku Kerja (Workbook) Excel kosong
             let wb = XLSX.utils.book_new();
 
-            // 2. Kumpulkan semua database yang kita punya
+            // 1. Kumpulkan semua database
             const allDatabases = {
                 "Data_Barang": db_databarang,
                 "Customer": db_customer,
@@ -8265,33 +8433,107 @@
                 "Akun_User": db_users
             };
 
-            // 3. Looping setiap tabel untuk dijadikan Sheet di Excel
+            // 2. Blueprint Urutan Kolom Baku
+            const tableHeaders = {
+                "Data_Barang": ["prodId", "urut", "merk", "kategori", "artikel", "warna", "artikelWarna", "hpp", "hargaJual"],
+                "Customer": ["id", "nama", "kota", "region", "alamat", "tlp", "bank", "sales", "type", "disc1", "disc2", "rate", "ket"],
+                "PO_Produksi": ["id", "tanggal", "makloon", "harga", "catatan", "spkPrintedAt", "statusBarcode", "sizeLabels", "item_prodId", "item_merk", "item_artikel", "item_warna", "item_s1", "item_s2", "item_s3", "item_s4", "item_s5", "item_s6", "item_total", "item_ket"],
+                "Sales_Order": ["id", "tanggal", "toko", "alamat", "type", "disc", "disc2", "status", "item_prodId", "item_merk", "item_artikel", "item_warna", "item_harga", "item_s1", "item_s2", "item_s3", "item_s4", "item_s5", "item_s6", "item_total", "item_subtotal"],
+                "Invoice": ["id", "tanggal", "soId", "toko", "type", "disc1", "disc2", "subtotal", "penyesuaian", "totalAkhir", "item_prodId", "item_merk", "item_artikel", "item_warna", "item_harga", "item_s1", "item_s2", "item_s3", "item_s4", "item_s5", "item_s6", "item_total", "item_subtotal"],
+                "Buku_Kas": ["id", "tanggal", "toko", "invId", "merk", "metode", "nominal", "retur", "fee", "qtyKonsi", "keterangan"],
+                "Kontra_Bon": ["id", "tanggal", "toko", "totalFaktur", "totalSisa", "inv_id", "inv_tanggal", "inv_totalAkhir", "inv_sisa"],
+                "Kasbon_Sales": ["id", "tanggal", "sales", "tipe", "nominal"],
+                "Riwayat_Komisi_CP": ["id", "tanggal", "sales", "nominal", "note"],
+                "Akun_User": ["username", "password", "role", "access"]
+            };
+
+            // 3. Mesin Pemecah Array (Flattener)
             for (let sheetName in allDatabases) {
                 let data = allDatabases[sheetName];
+                let flatData = [];
                 
                 if (data && data.length > 0) {
-                    // Karena Excel bingung baca data "anak" (seperti array 'items' di dalam PO/Invoice), 
-                    // kita harus ubah objek anak itu jadi teks (string) biar gak error '[object Object]'
-                    let flatData = data.map(row => {
-                        let flatRow = {};
-                        for (let key in row) {
-                            if (typeof row[key] === 'object' && row[key] !== null) {
-                                flatRow[key] = JSON.stringify(row[key]); // Ubah array item jadi teks
-                            } else {
-                                flatRow[key] = row[key];
-                            }
+                    data.forEach(row => {
+                        
+                        // JIKA TABEL PUNYA RINCIAN BARANG (PO, SO, INVOICE)
+                        if (row.items && Array.isArray(row.items) && row.items.length > 0) {
+                            row.items.forEach(item => {
+                                let newRow = { ...row }; // Copy data utama (ID, Tanggal, dll)
+                                delete newRow.items; // Buang array aslinya
+                                
+                                if (Array.isArray(newRow.sizeLabels)) newRow.sizeLabels = newRow.sizeLabels.join(', ');
+
+                                // --- [FIX] PENYELAMAT DATA LAMA (AUTO-SPLIT ARTIKEL & WARNA) ---
+                                let art = item.artikel;
+                                let wrn = item.warna;
+                                let mrk = item.merk;
+
+                                if (!art && item.namaBarang) {
+                                    const brg = db_databarang.find(b => b.prodId === item.prodId);
+                                    if (brg) {
+                                        art = brg.artikel;
+                                        wrn = brg.warna;
+                                        if (!mrk) mrk = brg.merk; // Tarik merk dari master kalau kosong
+                                    } else {
+                                        // Pecah manual kalau barangnya dari luar database
+                                        let parts = item.namaBarang.trim().split(' ');
+                                        if (parts.length > 1) {
+                                            let lastWord = parts[parts.length - 1].toUpperCase();
+                                            if ((lastWord === 'MUDA' || lastWord === 'TUA' || lastWord === 'ABU') && parts.length > 2) {
+                                                let w2 = parts.pop(); let w1 = parts.pop();
+                                                wrn = w1 + ' ' + w2;
+                                            } else {
+                                                wrn = parts.pop();
+                                            }
+                                            art = parts.join(' ');
+                                        } else {
+                                            art = item.namaBarang;
+                                        }
+                                    }
+                                }
+
+                                // Paksa masuk ke format baru dengan presisi
+                                newRow['item_merk'] = mrk || '';
+                                newRow['item_artikel'] = art || item.namaBarang || '';
+                                newRow['item_warna'] = (wrn && wrn !== '-') ? wrn : '';
+
+                                // Pasang sisa rincian item dengan awalan "item_"
+                                for(let k in item) {
+                                    // Abaikan field lama biar nggak dobel/nyangkut di ujung Excel
+                                    if (k !== 'artikel' && k !== 'warna' && k !== 'merk' && k !== 'namaBarang') {
+                                        newRow[`item_${k}`] = item[k];
+                                    }
+                                }
+                                flatData.push(newRow);
+                            });
+                        } 
+                        // JIKA TABEL KONTRA BON
+                        else if (row.invoices && Array.isArray(row.invoices) && row.invoices.length > 0) {
+                            row.invoices.forEach(inv => {
+                                let newRow = { ...row };
+                                delete newRow.invoices;
+                                for(let k in inv) {
+                                    newRow[`inv_${k}`] = inv[k];
+                                }
+                                flatData.push(newRow);
+                            });
+                        } 
+                        // JIKA TABEL BIASA
+                        else {
+                            let newRow = { ...row };
+                            if (newRow.items) delete newRow.items;
+                            if (newRow.invoices) delete newRow.invoices;
+                            if (Array.isArray(newRow.sizeLabels)) newRow.sizeLabels = newRow.sizeLabels.join(', ');
+                            flatData.push(newRow);
                         }
-                        return flatRow;
                     });
                     
-                    // Buat Sheet dari data yang sudah di-flat-kan
-                    let ws = XLSX.utils.json_to_sheet(flatData);
-                    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                    ws = XLSX.utils.json_to_sheet(flatData, { header: tableHeaders[sheetName] });
                 } else {
-                    // Kalau tabelnya kosong, kasih satu baris info biar Sheet-nya tetap ada
-                    let ws = XLSX.utils.json_to_sheet([{ "Status": "Belum ada data di tabel ini" }]);
-                    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                    ws = XLSX.utils.json_to_sheet([{ "Status": "Belum ada data di tabel ini" }]);
                 }
+                
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
             }
 
             // 4. Download Otomatis File Excel-nya
