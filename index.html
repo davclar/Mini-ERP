@@ -13,6 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Mesin Pembuat File Excel (SheetJS) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -199,6 +201,9 @@
                 <!-- DATABASE / OFFLINE BACKUP -->
                 <div id="menu-database">
                     <p class="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6">Database</p>
+                    <button onclick="exportAllToExcel()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-blue-400 hover:bg-blue-500 hover:text-white transition text-left text-sm mb-1">
+                        <i class="fa-solid fa-file-excel w-5 text-center shrink-0"></i> <span>Export All ke Excel</span>
+                    </button>
                     <button onclick="backupDatabase()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-emerald-400 hover:bg-emerald-500 hover:text-white transition text-left text-sm">
                         <i class="fa-solid fa-download w-5 text-center shrink-0"></i> <span>Backup Data (JSON)</span>
                     </button>
@@ -3092,27 +3097,26 @@
             }
         }
 
-        // 1. Deteksi saat aplikasi dibuka kembali dari background / recent apps (PWA / Mobile)
-            document.addEventListener("visibilitychange", function() {
-                if (document.visibilityState === "visible") {
-                    // Panggil fungsi openTab ke dashboard atau fungsi refresh data
-                    if (typeof openTab === 'function') {
-                        openTab('tab-dashboard');
-                    } else {
-                        window.location.reload(); // Fallback hard reload jika openTab tidak terjangkau
-                    }
+        // 1. Deteksi saat aplikasi dibuka kembali dari background (Bangunkan Firebase saja, JANGAN pindah tab)
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === "visible") {
+                console.log("Aplikasi disorot kembali, mereset koneksi server...");
+                if (typeof firebase !== 'undefined') {
+                    firebase.database().goOffline();
+                    setTimeout(() => firebase.database().goOnline(), 1000);
                 }
-            });
+            }
+        });
 
-            // 2. Pengaman tambahan untuk iOS Safari (BFCache / Back-Forward Cache)
-            window.addEventListener("pageshow", function(event) {
-                if (event.persisted) {
-                    // Jika halaman dimuat ulang dari memori cache Safari, paksa arahkan ke Dashboard
-                    if (typeof openTab === 'function') {
-                        openTab('tab-dashboard');
-                    }
+        // 2. Pengaman tambahan untuk iOS Safari (BFCache)
+        window.addEventListener("pageshow", function(event) {
+            if (event.persisted) {
+                if (typeof firebase !== 'undefined') {
+                    firebase.database().goOffline();
+                    setTimeout(() => firebase.database().goOnline(), 1000);
                 }
-            });
+            }
+        });
 
         // ==========================================
         // DASHBOARD OVERVIEW (TERINTEGRASI FULL FILTER)
@@ -8222,6 +8226,69 @@
             };
             
             reader.readAsText(file);
+        }
+
+        // ==========================================
+        // FITUR EXPORT SEMUA DATABASE KE EXCEL MULTI-SHEET
+        // ==========================================
+        function exportAllToExcel() {
+            // 1. Buat Buku Kerja (Workbook) Excel kosong
+            let wb = XLSX.utils.book_new();
+
+            // 2. Kumpulkan semua database yang kita punya
+            const allDatabases = {
+                "Data_Barang": db_databarang,
+                "Customer": db_customer,
+                "PO_Produksi": db_po,
+                "Sales_Order": db_so,
+                "Invoice": db_invoice,
+                "Buku_Kas": db_payment,
+                "Kontra_Bon": db_kontrabon,
+                "Kasbon_Sales": db_kasbon,
+                "Riwayat_Komisi_CP": db_sales_cp,
+                "Akun_User": db_users
+            };
+
+            // 3. Looping setiap tabel untuk dijadikan Sheet di Excel
+            for (let sheetName in allDatabases) {
+                let data = allDatabases[sheetName];
+                
+                if (data && data.length > 0) {
+                    // Karena Excel bingung baca data "anak" (seperti array 'items' di dalam PO/Invoice), 
+                    // kita harus ubah objek anak itu jadi teks (string) biar gak error '[object Object]'
+                    let flatData = data.map(row => {
+                        let flatRow = {};
+                        for (let key in row) {
+                            if (typeof row[key] === 'object' && row[key] !== null) {
+                                flatRow[key] = JSON.stringify(row[key]); // Ubah array item jadi teks
+                            } else {
+                                flatRow[key] = row[key];
+                            }
+                        }
+                        return flatRow;
+                    });
+                    
+                    // Buat Sheet dari data yang sudah di-flat-kan
+                    let ws = XLSX.utils.json_to_sheet(flatData);
+                    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                } else {
+                    // Kalau tabelnya kosong, kasih satu baris info biar Sheet-nya tetap ada
+                    let ws = XLSX.utils.json_to_sheet([{ "Status": "Belum ada data di tabel ini" }]);
+                    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                }
+            }
+
+            // 4. Download Otomatis File Excel-nya
+            let dateStr = new Date().toISOString().split('T')[0];
+            let namaFile = `Davclar_ERP_All_Database_${dateStr}.xlsx`;
+            
+            XLSX.writeFile(wb, namaFile);
+            
+            if (typeof showToast === "function") {
+                showToast('Export Excel Semua Data Berhasil!', 'success');
+            } else {
+                alert('Export Excel Semua Data Berhasil!');
+            }
         }
 
         // ==========================================
