@@ -2800,44 +2800,22 @@
     <!-- JAVASCRIPT -->
     <script>
         // =================================================================
-        // 1. DEKLARASI SEMUA VARIABEL GLOBAL (VAKSIN ANTI-CRASH)
+        // 1. DEKLARASI SEMUA VARIABEL GLOBAL (HARUS PALING ATAS!)
         // =================================================================
-        function getSafeArray(key) {
-            try {
-                let parsed = JSON.parse(localStorage.getItem(key) || '[]');
-                if (!Array.isArray(parsed)) parsed = Object.values(parsed);
-                return parsed.filter(item => item && typeof item === 'object');
-            } catch (e) { return []; }
-        }
-
-        var db_databarang = getSafeArray('davclar_barang');
-        var db_customer   = getSafeArray('davclar_customer');
-        var db_po         = getSafeArray('davclar_po');
-        var db_so         = getSafeArray('davclar_so');
-        var db_invoice    = getSafeArray('davclar_invoice');
-        var db_payment    = getSafeArray('davclar_payment');
-        var db_kontrabon  = getSafeArray('davclar_kontrabon');
-        var db_sales_cp   = getSafeArray('davclar_sales_cp');
-        var db_kasbon     = getSafeArray('davclar_kasbon');
-        var db_users      = getSafeArray('davclar_users');
-
-        // =================================================================
-        // 🛡️ SATPAM PROXY GLOBAL UNTUK DB_USERS (ANTI-OBJECT SEUMUR HIDUP) 🛡️
-        // =================================================================
-        let _internal_db_users = getSafeArray('davclar_users');
-
-        // Bungkus db_users dengan Proxy agar tidak bisa diisi Object mentah oleh kodingan manapun
-        Object.defineProperty(window, 'db_users', {
-            get: function() { return _internal_db_users; },
-            set: function(newValue) {
-                if (!Array.isArray(newValue)) {
-                    // Kalau ada kodingan lain yang megang Object, paksa jadi Array!
-                    newValue = Object.values(newValue || {}).filter(item => item && typeof item === 'object');
-                }
-                _internal_db_users = newValue;
-            },
-            configurable: true
-        });
+        let db_databarang = JSON.parse(localStorage.getItem('davclar_barang') || '[]');
+        let db_customer = JSON.parse(localStorage.getItem('davclar_customer') || '[]');
+        let db_po = JSON.parse(localStorage.getItem('davclar_po') || '[]');
+        let db_so = JSON.parse(localStorage.getItem('davclar_so') || '[]');
+        let db_invoice = JSON.parse(localStorage.getItem('davclar_invoice') || '[]');
+        let db_payment = JSON.parse(localStorage.getItem('davclar_payment') || '[]');
+        let db_kontrabon = JSON.parse(localStorage.getItem('davclar_kontrabon') || '[]');
+        let db_sales_cp = JSON.parse(localStorage.getItem('davclar_sales_cp') || '[]');
+        let db_kasbon = JSON.parse(localStorage.getItem('davclar_kasbon') || '[]');
+        let db_users = JSON.parse(localStorage.getItem('davclar_users') || '[]');
+        // Bikin akun Admin bawaan / default kalau database user masih kosong
+        //if(db_users.length === 0) {
+        //    db_users.push({ username: 'ADMIN', password: '1234', role: 'ADMIN' });
+        //}
 
         // ==========================================
         // FITUR MOBILE RESPONSIVE (SIDEBAR TOGGLE)
@@ -2845,180 +2823,126 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
+            
             if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden');
+                // Buka Sidebar
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
             } else {
-                sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden');
+                // Tutup Sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
             }
         }
 
         // =================================================================
-        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (V4.2 BULLETPROOF) 🔥
+        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (ANTI BOCOR V3) 🔥
         // =================================================================
+
+        // 1. Kita simpan fungsi asli LocalStorage ke dalam memori
         window.originalSetItem = localStorage.setItem;
-        console.log("===== KODINGAN VERSI ANTI-CRASH UDAH MASUK BOSKU =====");
 
-        if (!localStorage.getItem('davclar_migrasi_v4_1')) {
-            const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
-            validKeys.forEach(k => {
-                let arr = JSON.parse(localStorage.getItem(k) || '[]');
-                if(arr.length > 0) {
-                    let payload = {};
-                    arr.forEach(item => {
-                        if(item && typeof item === 'object') {
-                            let id = item.id || item.prodId || item.username;
-                            if(id) {
-                                let safeId = String(id).replace(/[\.\#\$\/\[\]]/g, '_');
-                                payload[safeId] = item;
-                            }
-                        }
-                    });
-                    if(window.firebaseDB) window.firebaseDB.ref(k).set(payload);
-                }
-            });
-            localStorage.setItem('davclar_migrasi_v4_1', 'SUKSES');
-            console.log("MIGRASI V4.1 SELESAI: Database pakai Sistem Laci!");
-        }
-
-        // --- 1. MESIN ANTREAN OFFLINE ---
-        function pushToFirebaseQueue(action, path, data) {
-            let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
-            q.push({ action, path, data, timestamp: Date.now() });
-            window.originalSetItem.call(localStorage, 'davclar_offline_queue', JSON.stringify(q));
-            processFirebaseQueue();
-        }
-
-        let isProcessingQueue = false;
-        function processFirebaseQueue() {
-            if(!window.firebaseDB || isProcessingQueue) return;
-            let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
-            if(q.length === 0) return;
-
-            isProcessingQueue = true;
-            let task = q[0];
-
-            let dbRef = window.firebaseDB.ref(task.path);
-            let request = (task.action === 'set') ? dbRef.set(task.data) : dbRef.remove();
-
-            request.then(() => {
-                let currentQ = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
-                currentQ.shift(); 
-                window.originalSetItem.call(localStorage, 'davclar_offline_queue', JSON.stringify(currentQ));
-                isProcessingQueue = false;
-                processFirebaseQueue(); 
-            }).catch(err => {
-                console.warn(`[SYNC TERTUNDA] Menunggu sinyal online...`);
-                isProcessingQueue = false;
-            });
-        }
-        setTimeout(processFirebaseQueue, 2000); 
-
-        // --- 2. DIFFING ENGINE (CEGAT LOCALSTORAGE) ---
+        // 2. Timpa fungsi aslinya dengan Sistem Antrean (Queue)
         localStorage.setItem = function(key, value) {
-            const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
+            // Tetap simpan ke browser HP/Laptop (Aman walau offline)
+            window.originalSetItem.apply(this, arguments);
 
-            if (validKeys.includes(key)) {
-                let oldString = localStorage.getItem(key);
-                let oldArray = oldString ? JSON.parse(oldString) : [];
-                let newArray = JSON.parse(value);
-
-                window.originalSetItem.apply(this, arguments);
-                if (!window.firebaseDB) return;
-
-                function getUniqueId(obj) { return obj.id || obj.prodId || obj.username || null; }
-                function getSafeKey(id) { return String(id).replace(/[\.\#\$\/\[\]]/g, '_'); }
-
-                let oldMap = new Map();
-                if(Array.isArray(oldArray)) oldArray.forEach(item => { if(item) { let id = getUniqueId(item); if(id) oldMap.set(id, item); } });
-
-                let newMap = new Map();
-                if(Array.isArray(newArray)) newArray.forEach(item => { if(item) { let id = getUniqueId(item); if(id) newMap.set(id, item); } });
-
-                if(Array.isArray(newArray)) {
-                    newArray.forEach(item => {
-                        if(!item) return;
-                        let id = getUniqueId(item);
-                        if(id) {
-                            let oldItem = oldMap.get(id);
-                            if(JSON.stringify(oldItem) !== JSON.stringify(item)) {
-                                pushToFirebaseQueue('set', key + '/' + getSafeKey(id), item);
-                            }
-                        }
-                    });
+            const ignoredKeys = ['davclar_activeTab', 'davclar_user', 'davclar_role', 'davclar_isLoggedIn', 'davclar_unsynced_keys'];
+            
+            if (key.startsWith('davclar_') && window.firebaseDB && !ignoredKeys.includes(key)) {
+                
+                // A. Masukkan key tabel ini ke daftar "Antrean Belum Sinkron"
+                let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                if (!pendingKeys.includes(key)) {
+                    pendingKeys.push(key);
+                    window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pendingKeys));
                 }
 
-                if(Array.isArray(oldArray)) {
-                    oldArray.forEach(item => {
-                        if(!item) return;
-                        let id = getUniqueId(item);
-                        if(id && !newMap.has(id)) {
-                            pushToFirebaseQueue('remove', key + '/' + getSafeKey(id), null);
-                        }
+                // B. Coba tembak datanya ke Firebase Server secara Real-Time!
+                window.firebaseDB.ref(key).set(JSON.parse(value))
+                    .then(() => {
+                        // C. Jika sukses tembus server, hapus dari daftar antrean
+                        let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                        currentPending = currentPending.filter(k => k !== key);
+                        window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
+                        console.log(`[SYNC BERHASIL] ${key} aman di server!`);
+                    })
+                    .catch(err => {
+                        console.warn(`[SYNC TERTUNDA] ${key} tersimpan di HP, menunggu sinyal internet...`, err);
                     });
-                }
-            } else {
-                window.originalSetItem.apply(this, arguments);
             }
         };
 
-        // --- 3. MESIN PENERIMA DATA DARI SERVER (ANTI CRASH V4.2) ---
+        // 3. Mesin Penerima Data Real-Time & Auto-Recovery
         const dbKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
 
         if (window.firebaseDB) {
-            dbKeys.forEach(key => {
-                window.firebaseDB.ref(key).on('value', (snapshot) => {
-                    let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
-                    let isProcessingThisTable = q.some(task => task.path.startsWith(key + '/'));
-                    
-                    if (isProcessingThisTable) return; 
-
-                    const data = snapshot.val();
-                    let dataArray = [];
-
-                    if (data) {
-                        // KUNCI AMAN: Server merespon Laci, kita sulap jadi Array secara paksa!
-                        let rawArray = Array.isArray(data) ? data : Object.values(data);
-                        dataArray = rawArray.filter(item => item && typeof item === 'object');
-                        
-                        dataArray.sort((a, b) => {
-                            let idA = String(a.id || a.prodId || a.username || "");
-                            let idB = String(b.id || b.prodId || b.username || "");
-                            return idB.localeCompare(idA); 
+            
+            // --- [FITUR BARU] RECOVERY DATA NYANGKUT SAAT APLIKASI DIBUKA ---
+            let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+            if (pendingKeys.length > 0) {
+                console.log("Mendeteksi data offline yang belum terkirim:", pendingKeys);
+                pendingKeys.forEach(key => {
+                    let localData = localStorage.getItem(key);
+                    if (localData) {
+                        // Push paksa ke Firebase sebelum aplikasi mulai bekerja
+                        window.firebaseDB.ref(key).set(JSON.parse(localData)).then(() => {
+                            let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                            currentPending = currentPending.filter(k => k !== key);
+                            window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
+                            console.log(`[RECOVERY BERHASIL] ${key} berhasil diselamatkan ke server!`);
                         });
                     }
+                });
+            }
 
-                    // MASUKKAN KE VARIABEL GLOBAL DENGAN AMAN
-                    if(key === 'davclar_barang') db_databarang = dataArray;
-                    else if(key === 'davclar_customer') db_customer = dataArray;
-                    else if(key === 'davclar_po') db_po = dataArray;
-                    else if(key === 'davclar_so') db_so = dataArray;
-                    else if(key === 'davclar_invoice') db_invoice = dataArray;
-                    else if(key === 'davclar_payment') db_payment = dataArray;
-                    else if(key === 'davclar_kontrabon') db_kontrabon = dataArray;
-                    else if(key === 'davclar_sales_cp') db_sales_cp = dataArray;
-                    else if(key === 'davclar_kasbon') db_kasbon = dataArray;
-                    else if(key === 'davclar_users') db_users = dataArray;
+            // --- Pemanatauan Data Real-time (Dengan Proteksi Kunci Timpa) ---
+            dbKeys.forEach(key => {
+                window.firebaseDB.ref(key).on('value', (snapshot) => {
                     
-                    // SIMPAN KE LOKAL (PASTIKAN WUJUDNYA ARRAY!)
-                    window.originalSetItem.call(localStorage, key, JSON.stringify(dataArray));
+                    // [KUNCI SAKTI]: Cek apakah HP Bosku sedang berusaha push data tabel ini?
+                    let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                    if (currentPending.includes(key)) {
+                        // Jika YA, tolak data lama dari server! Jangan biarkan data baru di HP terhapus.
+                        console.log(`[SYNC-LOCK] Abaikan tarikan data server untuk ${key}. Data di HP lebih baru!`);
+                        return; 
+                    }
 
-                    // REFRESH UI SESUAI TAB AKTIF
-                    const activeTab = localStorage.getItem('davclar_activeTab');
-                    if(activeTab === 'tab-dashboard' && typeof renderDashboard === 'function') renderDashboard();
-                    else if(key === 'davclar_barang' && activeTab === 'tab-databarang' && typeof renderItemTable === 'function') renderItemTable();
-                    else if(key === 'davclar_customer' && activeTab === 'tab-customer' && typeof renderCustomerList === 'function') renderCustomerList();
-                    else if(key === 'davclar_po' && activeTab === 'tab-production' && typeof renderPOList === 'function') renderPOList();
-                    else if(key === 'davclar_so' && activeTab === 'tab-order' && typeof renderSOList === 'function') renderSOList();
-                    else if(key === 'davclar_invoice' && activeTab === 'tab-invoice' && typeof renderInvoiceList === 'function') renderInvoiceList();
-                    else if(key === 'davclar_payment' && activeTab === 'tab-payment' && typeof renderPaymentList === 'function') renderPaymentList();
-                    else if(key === 'davclar_komisi' && activeTab === 'tab-komisi' && typeof renderKomisi === 'function') renderKomisi();
-                    else if(key === 'davclar_users' && activeTab === 'tab-usersetting' && typeof renderUserTable === 'function') renderUserTable();
-                    else if(key === 'davclar_users' && activeTab === 'tab-salesledger' && typeof renderSalesLedger === 'function') renderSalesLedger();
+                    const data = snapshot.val();
+                    if (data) {
+                        // Update variabel global
+                        if(key === 'davclar_barang') db_databarang = data;
+                        if(key === 'davclar_customer') db_customer = data;
+                        if(key === 'davclar_po') db_po = data;
+                        if(key === 'davclar_so') db_so = data;
+                        if(key === 'davclar_invoice') db_invoice = data;
+                        if(key === 'davclar_payment') db_payment = data;
+                        if(key === 'davclar_kontrabon') db_kontrabon = data;
+                        if(key === 'davclar_sales_cp') db_sales_cp = data;
+                        if(key === 'davclar_kasbon') db_kasbon = data;
+                        if(key === 'davclar_users') db_users = data;
+                        
+                        // Simpan diam-diam ke local tanpa memicu upload ulang ke Firebase
+                        window.originalSetItem.call(localStorage, key, JSON.stringify(data));
+
+                        // Auto-Refresh UI jika tab sedang dibuka
+                        const activeTab = localStorage.getItem('davclar_activeTab');
+                        if(activeTab === 'tab-dashboard' && typeof renderDashboard === 'function') renderDashboard();
+                        if(key === 'davclar_barang' && activeTab === 'tab-databarang' && typeof renderItemTable === 'function') renderItemTable();
+                        if(key === 'davclar_customer' && activeTab === 'tab-customer' && typeof renderCustomerList === 'function') renderCustomerList();
+                        if(key === 'davclar_po' && activeTab === 'tab-production' && typeof renderPOList === 'function') renderPOList();
+                        if(key === 'davclar_so' && activeTab === 'tab-order' && typeof renderSOList === 'function') renderSOList();
+                        if(key === 'davclar_invoice' && activeTab === 'tab-invoice' && typeof renderInvoiceList === 'function') renderInvoiceList();
+                        if(key === 'davclar_payment' && activeTab === 'tab-payment' && typeof renderPaymentList === 'function') renderPaymentList();
+                        if(key === 'davclar_komisi' && activeTab === 'tab-komisi' && typeof renderKomisi === 'function') renderKomisi();
+                        if(key === 'davclar_users' && activeTab === 'tab-usersetting' && typeof renderUserTable === 'function') renderUserTable();
+                        if(key === 'davclar_users' && activeTab === 'tab-salesledger' && typeof renderSalesLedger === 'function') renderSalesLedger();
+                    }
                 });
             });
         }
 
-        var soCurrentPage = 1,
+        var soCurrentPage = 1, 
         invCurrentPage = 1, 
         poCurrentPage = 1, 
         itemCurrentPage = 1, 
@@ -3149,156 +3073,48 @@
             updateGlobalDropdowns();
         }
 
-        // ==========================================
-        // FUNGSI LOGIN (BULLETPROOF & ANTI-CRASH V4.2)
-        // ==========================================
-        async function handleLogin(e) {
+        function handleLogin(e) {
             e.preventDefault();
-            
-            // 1. [PENGAMAN UTAMA] Paksa db_users jadi Array murni detik ini juga!
-            if (!Array.isArray(db_users)) {
-                db_users = Object.values(db_users || {}).filter(item => item && typeof item === 'object');
-            }
-
             const u = document.getElementById('username').value.trim().toUpperCase();
             const p = document.getElementById('password').value;
-            const btnSubmit = e.target.querySelector('button[type="submit"]');
 
-            // 2. Cari user di memori lokal (Aman dari error .find)
-            let foundUser = db_users.find(user => user && user.username === u && user.password === p);
+            // CARI USER DI DATABASE
+            const foundUser = db_users.find(user => user.username === u && user.password === p);
 
-            // 3. Jika di memori lokal kosong, nanya langsung ke Server Firebase
-            if (!foundUser && window.firebaseDB) {
-                let originalText = btnSubmit.innerText;
-                btnSubmit.innerText = "Mengecek Server...";
-                btnSubmit.disabled = true;
-
-                try {
-                    const snap = await window.firebaseDB.ref('davclar_users').once('value');
-                    const data = snap.val();
-                    
-                    if (data) {
-                        let dataArray = Array.isArray(data) ? data : Object.values(data);
-                        db_users = dataArray.filter(item => item && typeof item === 'object'); 
-                        
-                        localStorage.setItem('davclar_users', JSON.stringify(db_users)); 
-                        foundUser = db_users.find(user => user && user.username === u && user.password === p);
-                    }
-                } catch (err) {
-                    console.error("Gagal sinkron data user dari server", err);
-                }
-
-                btnSubmit.innerText = originalText;
-                btnSubmit.disabled = false;
-            }
-
-            // 4. Eksekusi Login & Masuk Dashboard
             if (foundUser) {
                 localStorage.setItem('davclar_isLoggedIn', 'true');
-                localStorage.setItem('davclar_role', foundUser.role || 'USER');
-                localStorage.setItem('davclar_user', foundUser.username); 
-                localStorage.setItem('davclar_last_activity', Date.now().toString()); 
+                localStorage.setItem('davclar_role', foundUser.role);
+                localStorage.setItem('davclar_user', foundUser.username); // Simpan nama
 
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('appContainer').classList.remove('hidden');
-                
-                if(typeof applyRoleAccess === 'function') applyRoleAccess();
-                if(typeof openTab === 'function') openTab('tab-dashboard');
+                applyRoleAccess();
+                openTab('tab-dashboard');
             } else {
-                if(typeof showToast === "function") {
-                    showToast('Username atau Password salah!', 'error');
-                } else {
-                    alert('Username atau Password salah!');
-                }
+                if(typeof showToast === "function") showToast('Username atau Password salah!', 'error');
+                else alert('Username atau Password salah!');
             }
-        }
-
-        // =================================================================
-        // 🔥 FITUR AUTO-LOGOUT & PEMBERSIH CACHE (ANTI-NYANGKUT) 🔥
-        // =================================================================
-        const BATAS_WAKTU_JAM = 4; // Atur berapa jam diam sampai otomatis logout (Contoh: 4 Jam)
-
-        function bersihkanSemuaCacheData() {
-            // 1. Hapus identitas user
-            localStorage.removeItem('davclar_isLoggedIn');
-            localStorage.removeItem('davclar_role');
-            localStorage.removeItem('davclar_user');
-            localStorage.removeItem('davclar_last_activity');
-            
-            // 2. Hancurkan semua data cache lokal agar pas login sedot ulang dari nol
-            const keysAmanDihapus = [
-                'davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 
-                'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 
-                'davclar_sales_cp', 'davclar_kasbon', 'davclar_users', 
-                'davclar_unsynced_keys', 'davclar_offline_queue'
-            ];
-            
-            keysAmanDihapus.forEach(k => {
-                if (window.originalSetItem) {
-                    localStorage.removeItem(k);
-                }
-            });
-
-            // 3. Kosongkan variabel global di memori saat ini
-            db_databarang = []; db_customer = []; db_po = []; db_so = []; 
-            db_invoice = []; db_payment = []; db_kontrabon = []; db_sales_cp = []; 
-            db_kasbon = []; db_users = [];
         }
 
         async function handleLogout() {
             const isConfirmed = await showConfirm(
                 "Keluar Aplikasi", 
-                "Apakah Anda yakin ingin keluar? Cache memori akan dibersihkan.", 
+                "Apakah Anda yakin ingin keluar dari aplikasi?", 
                 "warning"
             );
             
             if (isConfirmed) {
-                bersihkanSemuaCacheData(); // <--- Sapu bersih cache!
-                window.location.reload(); // Refresh paksa halaman
-            }
-        }
-
-        // --- SISTEM DETEKSI DIAM (IDLE TIMEOUT) ---
-        function periksaSesiKedaluwarsa() {
-            if (localStorage.getItem('davclar_isLoggedIn') === 'true') {
-                const aktivitasTerakhir = localStorage.getItem('davclar_last_activity');
-                const waktuSekarang = Date.now();
+                // --- [BARU] Hapus memori user & role ---
+                localStorage.removeItem('davclar_isLoggedIn');
+                localStorage.removeItem('davclar_role');
+                localStorage.removeItem('davclar_user');
                 
-                if (aktivitasTerakhir) {
-                    const selisihJam = (waktuSekarang - parseInt(aktivitasTerakhir)) / (1000 * 60 * 60);
-                    if (selisihJam >= BATAS_WAKTU_JAM) {
-                        console.log("Sesi berakhir karena tidak ada aktivitas.");
-                        
-                        bersihkanSemuaCacheData(); // Hapus cache paksa
-                        
-                        alert(`Sesi Anda telah berakhir karena tidak aktif selama ${BATAS_WAKTU_JAM} jam. Silakan login kembali.`);
-                        window.location.reload(); // Tendang ke halaman login
-                        return;
-                    }
-                }
-                // Jika masih aman, update catatan waktu aktivitas terakhir
-                localStorage.setItem('davclar_last_activity', waktuSekarang.toString());
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('appContainer').classList.add('hidden');
+                document.getElementById('password').value = ''; 
+                document.getElementById('username').value = ''; 
             }
         }
-
-        // --- DETEKTOR GERAKAN (MOUSE/SENTUHAN) ---
-        function resetTimerAktivitas() {
-            if (localStorage.getItem('davclar_isLoggedIn') === 'true') {
-                localStorage.setItem('davclar_last_activity', Date.now().toString());
-            }
-        }
-
-        // Pasang radar pendeteksi aktivitas (Klik, Sentuh Layar, Ngetik, Scroll)
-        document.addEventListener('click', resetTimerAktivitas);
-        document.addEventListener('keypress', resetTimerAktivitas);
-        document.addEventListener('touchstart', resetTimerAktivitas); // Khusus layar sentuh HP
-        document.addEventListener('scroll', resetTimerAktivitas);
-
-        // Cek kedaluwarsa saat aplikasi baru dibuka
-        window.addEventListener('load', periksaSesiKedaluwarsa);
-        
-        // Cek kedaluwarsa diam-diam setiap 5 menit di balik layar
-        setInterval(periksaSesiKedaluwarsa, 5 * 60 * 1000);
 
         // Fungsi Buka Tab
         function openTab(tabId) {
@@ -8099,8 +7915,10 @@
         }
 
         // ==========================================
-        // FITUR USER MANAGEMENT & HAK AKSES (AMAN DARI OBJECT)
+        // FITUR USER MANAGEMENT & HAK AKSES
         // ==========================================
+        
+        // 1. TAMBAH PROPERTI "GROUP" BIAR BISA DIBIKIN SUB-MENU DI MODAL
         const appMenus = [
             { id: 'tab-dashboard', label: 'Dashboard', group: 'MENU UTAMA' },
             { id: 'tab-databarang', label: 'Data Barang', group: 'MASTER DATA' },
@@ -8121,41 +7939,32 @@
             { id: 'menu-database', label: 'Backup Data (JSON)', group: 'DATABASE' }
         ];
 
-        // [KUNCI UTAMA]: Paksa ubah jadi Array dulu kalau bentuknya Object/Laci
-        if (!Array.isArray(db_users)) {
-            db_users = Object.values(db_users || {}).filter(item => item && typeof item === 'object');
-        }
-
         // Format ulang db_users agar mendukung object 'access'
-        if (db_users.length === 0) {
-            let adminAcc = {}; 
-            appMenus.forEach(m => adminAcc[m.id] = 'FULL');
+        if(db_users.length === 0) {
+            let adminAcc = {}; appMenus.forEach(m => adminAcc[m.id] = 'FULL');
             db_users.push({ username: 'ADMIN', password: '1234', access: adminAcc });
-            localStorage.setItem('davclar_users', JSON.stringify(db_users));
+            //localStorage.setItem('davclar_users', JSON.stringify(db_users));
         } else {
             let diubah = false;
             db_users.forEach(u => {
-                if (u && !u.access) {
+                if(!u.access) {
                     u.access = {};
                     appMenus.forEach(m => u.access[m.id] = (u.role === 'ADMIN' ? 'FULL' : 'READ'));
                     diubah = true;
                 }
             });
-            if (diubah) localStorage.setItem('davclar_users', JSON.stringify(db_users));
+            if(diubah) localStorage.setItem('davclar_users', JSON.stringify(db_users));
         }
 
         // --- SENTRALISASI NAMA SALES (GLOBAL OPTIONS) ---
         function getSalesOptionsHtml(selectedValue = '') {
             let salesSet = new Set();
-            let safeUsers = Array.isArray(db_users) ? db_users : Object.values(db_users || {});
-            let safeCust = Array.isArray(db_customer) ? db_customer : Object.values(db_customer || {});
-
-            safeUsers.forEach(u => { if(u && u.username !== 'ADMIN') salesSet.add(u.username); });
-            safeCust.forEach(c => { if(c && c.sales) salesSet.add(c.sales.toUpperCase()); });
+            db_users.forEach(u => { if(u.username !== 'ADMIN') salesSet.add(u.username) });
+            db_customer.forEach(c => { if(c.sales) salesSet.add(c.sales.toUpperCase()) });
 
             let html = `<option value="">-- PILIH NAMA --</option>`;
             Array.from(salesSet).sort().forEach(s => {
-                let isSel = (s === String(selectedValue).toUpperCase()) ? 'selected' : '';
+                let isSel = (s === selectedValue.toUpperCase()) ? 'selected' : '';
                 html += `<option value="${s}" ${isSel}>${s}</option>`;
             });
             return html;
@@ -8320,14 +8129,11 @@
             const tbody = document.getElementById('userTableBody');
             if(!tbody) return;
             
-            // [PENGAMAN 2] Paksa db_users jadi Array jika mendadak berubah jadi Object di tengah jalan
-            if (!Array.isArray(db_users)) {
-                db_users = Object.values(db_users || {}).filter(item => item && typeof item === 'object');
-            }
-
+            // --- 1. CEK HAK AKSES MODUL USER MANAGEMENT ---
             const accessUser = (window.currentUserAccess && window.currentUserAccess['tab-usersetting']) ? window.currentUserAccess['tab-usersetting'] : 'READ';
             const canEdit = (accessUser === 'FULL');
 
+            // Pengaman ekstra: Sembunyikan header aksi JIKA HANYA AKSES LIHAT
             const thAksiUser = document.getElementById('th-aksi-user');
             if (thAksiUser) thAksiUser.style.display = canEdit ? '' : 'none';
 
@@ -8339,16 +8145,15 @@
                 return;
             }
 
-            // Urutkan dengan aman
-            db_users.sort((a, b) => {
-                let cFullA = Object.values((a && a.access) || {}).filter(v => v === 'FULL').length;
-                let cFullB = Object.values((b && b.access) || {}).filter(v => v === 'FULL').length;
+            // Urutkan: Admin (Full Access terbanyak) di atas
+            db_users.sort((a,b) => {
+                let cFullA = Object.values(a.access || {}).filter(v => v === 'FULL').length;
+                let cFullB = Object.values(b.access || {}).filter(v => v === 'FULL').length;
                 return cFullB - cFullA;
             });
 
             db_users.forEach(user => {
-                if(!user) return;
-                let passBintang = '*'.repeat(String(user.password || '').length);
+                let passBintang = '*'.repeat(user.password.length);
                 let countAccess = Object.values(user.access || {}).filter(v => v !== 'NONE').length;
                 let countFull = Object.values(user.access || {}).filter(v => v === 'FULL').length;
                 
@@ -8356,6 +8161,7 @@
                     ? `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-[9px] font-bold inline-block"><i class="fa-solid fa-user-shield mr-1"></i> ADMIN</span>`
                     : `<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-[9px] font-bold inline-block"><i class="fa-solid fa-user-tie mr-1"></i> AKSES: ${countAccess} MENU</span>`;
 
+                // --- 2. KONTROL TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
                 if (canEdit) {
                     aksiHTML = `
@@ -8370,27 +8176,43 @@
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
 
                 tr.innerHTML = `
+                    <!-- KOLOM 1: USERNAME & CARD MOBILE -->
                     <td class="!py-2 px-3 md:!py-1.5 md:px-4 align-top md:align-middle">
+                        
+                        <!-- ================= MOBILE ONLY: CARD LAYOUT ================= -->
                         <div class="md:hidden flex flex-col w-full min-w-0">
                             <div class="flex flex-col gap-1.5">
+                                
+                                <!-- Baris Atas: Username & Tombol Aksi (SEJAJAR DI ATAS) -->
                                 <div class="flex justify-between items-center pb-1.5">
                                     <div class="font-bold text-gray-900 text-xs leading-none">${user.username}</div>
                                     <div class="flex items-center shrink-0 gap-1.5 [&>button]:!p-1.5 [&>button]:!text-xs">
                                         ${canEdit ? aksiHTML.replace(/<\/?td[^>]*>/g, '') : ''}
                                     </div>
                                 </div>
+                                
+                                <!-- Baris Bawah: Badge Role & Password Key -->
                                 <div class="flex justify-between items-center pt-0.5">
                                     <div>${badge}</div>
                                     <div class="text-[10px] text-gray-400 font-mono tracking-wider">Key: <span class="text-gray-600">${passBintang}</span></div>
                                 </div>
+
                             </div>
                         </div>
+
+                        <!-- ================= PC ONLY: USERNAME ================= -->
                         <div class="hidden md:block font-bold text-gray-800 text-sm">
                             ${user.username}
                         </div>
                     </td>
+                    
+                    <!-- KOLOM 2: ROLE/AKSES (PC ONLY) -->
                     <td class="!py-1.5 px-4 text-center hidden md:table-cell align-middle">${badge}</td>
+                    
+                    <!-- KOLOM 3: PASSWORD (PC ONLY) -->
                     <td class="!py-1.5 px-4 text-center font-mono text-gray-400 tracking-widest text-xs hidden md:table-cell align-middle">${passBintang}</td>
+                    
+                    <!-- KOLOM 4: AKSI (PC ONLY) -->
                     ${canEdit ? aksiHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
                 `;
                 tbody.appendChild(tr);
