@@ -2800,22 +2800,34 @@
     <!-- JAVASCRIPT -->
     <script>
         // =================================================================
-        // 1. DEKLARASI SEMUA VARIABEL GLOBAL (HARUS PALING ATAS!)
+        // 1. DEKLARASI SEMUA VARIABEL GLOBAL (ANTI-OBJECT CRASH)
         // =================================================================
-        let db_databarang = JSON.parse(localStorage.getItem('davclar_barang') || '[]');
-        let db_customer = JSON.parse(localStorage.getItem('davclar_customer') || '[]');
-        let db_po = JSON.parse(localStorage.getItem('davclar_po') || '[]');
-        let db_so = JSON.parse(localStorage.getItem('davclar_so') || '[]');
-        let db_invoice = JSON.parse(localStorage.getItem('davclar_invoice') || '[]');
-        let db_payment = JSON.parse(localStorage.getItem('davclar_payment') || '[]');
-        let db_kontrabon = JSON.parse(localStorage.getItem('davclar_kontrabon') || '[]');
-        let db_sales_cp = JSON.parse(localStorage.getItem('davclar_sales_cp') || '[]');
-        let db_kasbon = JSON.parse(localStorage.getItem('davclar_kasbon') || '[]');
-        let db_users = JSON.parse(localStorage.getItem('davclar_users') || '[]');
-        // Bikin akun Admin bawaan / default kalau database user masih kosong
-        //if(db_users.length === 0) {
-        //    db_users.push({ username: 'ADMIN', password: '1234', role: 'ADMIN' });
-        //}
+        
+        // Mesin Pemaksa Array: Mencegah crash jika data di memori nyangkut jadi Object
+        function getSafeArray(key) {
+            try {
+                let parsed = JSON.parse(localStorage.getItem(key) || '[]');
+                // Jika bentuknya Object (Laci), paksa jejerkan jadi Array
+                if (!Array.isArray(parsed)) {
+                    parsed = Object.values(parsed);
+                }
+                // Saring agar tidak ada data null atau kosong yang ikut masuk
+                return parsed.filter(item => item && typeof item === 'object');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        let db_databarang = getSafeArray('davclar_barang');
+        let db_customer   = getSafeArray('davclar_customer');
+        let db_po         = getSafeArray('davclar_po');
+        let db_so         = getSafeArray('davclar_so');
+        let db_invoice    = getSafeArray('davclar_invoice');
+        let db_payment    = getSafeArray('davclar_payment');
+        let db_kontrabon  = getSafeArray('davclar_kontrabon');
+        let db_sales_cp   = getSafeArray('davclar_sales_cp');
+        let db_kasbon     = getSafeArray('davclar_kasbon');
+        let db_users      = getSafeArray('davclar_users');
 
         // ==========================================
         // FITUR MOBILE RESPONSIVE (SIDEBAR TOGGLE)
