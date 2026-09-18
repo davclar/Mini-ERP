@@ -5380,7 +5380,6 @@
             document.getElementById('soGrandTotal').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
         }
 
-        // [UPDATED] Simpan SO (Bisa Tambah Baru atau Update yang Lama)
         function saveSO() {
             if(tempSOItems.length === 0) return showToast('Order kosong!');
             
@@ -5408,7 +5407,35 @@
                 db_so.unshift(newSO); 
             }
             
-            localStorage.setItem('davclar_so', JSON.stringify(db_so));
+            // =========================================================================
+            // 🛡️ PENGAMAN UTAMA HP: DAFTARKAN KE ANTREAN AGAR TIDAK DITIMPA SERVER
+            // =========================================================================
+            const storageKey = 'davclar_so';
+            
+            // 1. Ambil daftar antrean kunci yang belum sinkron
+            let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+            if (!pendingKeys.includes(storageKey)) {
+                pendingKeys.push(storageKey);
+                window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pendingKeys));
+            }
+
+            // 2. Simpan data baru ke LocalStorage (memicu mekanisme setItem custom kita)
+            localStorage.setItem(storageKey, JSON.stringify(db_so));
+
+            // 3. Tembak langsung ke Firebase untuk memastikan data HP mendarat duluan
+            if (window.firebaseDB) {
+                window.firebaseDB.ref(storageKey).set(db_so).then(() => {
+                    // Jika sukses tembus, lepaskan kunci antreannya
+                    let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                    currentPending = currentPending.filter(k => k !== storageKey);
+                    window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
+                    console.log("[SYNC SO] Data HP sukses dikunci dan dikirim ke server!");
+                }).catch(err => {
+                    console.warn("[SYNC SO TERTUNDA] Gagal konek server, tapi data aman di HP:", err);
+                });
+            }
+            // =========================================================================
+
             showToast('Sales Order Berhasil Disimpan!'); 
             closeSOForm(); 
             renderSOList();
