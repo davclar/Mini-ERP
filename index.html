@@ -2908,13 +2908,15 @@
             dbKeys.forEach(key => {
                 window.firebaseDB.ref(key).on('value', (snapshot) => {
                     
-                    // [KUNCI SAKTI]: Cek apakah HP Bosku sedang berusaha push data tabel ini?
-                    let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                    // =================================================================
+                    // 🛡️ PERISAI KEBAL HP: JANGAN PERNAH TIMPA DATA KALAU HP LAGI CRUD!
+                    // =================================================================
+                    let currentPending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
                     if (currentPending.includes(key)) {
-                        // Jika YA, tolak data lama dari server! Jangan biarkan data baru di HP terhapus.
-                        console.log(`[SYNC-LOCK] Abaikan tarikan data server untuk ${key}. Data di HP lebih baru!`);
-                        return; 
+                        console.log(`[SYNC-LOCK AKTIF] Server dilarang menimpa ${key} karena HP sedang pegang kendali!`);
+                        return; // Batalkan penarikan data dari server!
                     }
+                    // =================================================================
 
                     const data = snapshot.val();
                     if (data) {
