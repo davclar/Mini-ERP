@@ -2843,84 +2843,61 @@
         // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (ANTI BOCOR V3) 🔥
         // =================================================================
 
-        // 1. Kita simpan fungsi asli LocalStorage ke dalam memori
+        // 1. Simpan fungsi asli LocalStorage
         window.originalSetItem = localStorage.setItem;
 
-        // 2. Timpa fungsi aslinya dengan Sistem Antrean (Queue) & Pengaman Anti-Mental HP
+        // 2. Timpa setItem dengan pengaman parameter lengkap
         localStorage.setItem = function(key, value) {
             const ignoredKeys = ['davclar_activeTab', 'davclar_user', 'davclar_role', 'davclar_isLoggedIn', 'davclar_unsynced_keys'];
             
-            // A. PASANG KUNCI ANTRIAN DI AWAL SEBELUM DISIMPAN (Agar listener server langsung ngeh)
             if (key.startsWith('davclar_') && window.firebaseDB && !ignoredKeys.includes(key)) {
-                let pendingKeys = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
-                if (!pendingKeys.includes(key)) {
-                    pendingKeys.push(key);
-                    window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pendingKeys));
-                }
+                try {
+                    let pending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', localStorage.getItem('davclar_unsynced_keys') || '[]') || '[]');
+                    if (!Array.isArray(pending)) pending = [];
+                    if (!pending.includes(key)) {
+                        pending.push(key);
+                        window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pending));
+                    }
+                } catch(e) {}
             }
 
-            // Tetap simpan ke browser HP/Laptop (Aman walau offline)
+            // Eksekusi penyimpanan asli dengan 2 argumen aman
             window.originalSetItem.apply(this, arguments);
 
             if (key.startsWith('davclar_') && window.firebaseDB && !ignoredKeys.includes(key)) {
-                
-                // B. Coba tembak datanya ke Firebase Server secara Real-Time!
-                window.firebaseDB.ref(key).set(JSON.parse(value))
-                    .then(() => {
-                        // C. Beri jeda 500ms sebelum melepas antrean agar HP tidak kaget ditarik data lama
-                        setTimeout(() => {
-                            let currentPending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
-                            currentPending = currentPending.filter(k => k !== key);
-                            window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
-                            console.log(`[SYNC BERHASIL] ${key} aman di server!`);
-                        }, 500);
-                    })
-                    .catch(err => {
-                        console.warn(`[SYNC TERTUNDA] ${key} tersimpan di HP, menunggu sinyal internet...`, err);
-                    });
+                let valToSet;
+                try { valToSet = JSON.parse(value); } catch(e) { valToSet = value; }
+
+                window.firebaseDB.ref(key).set(valToSet).then(() => {
+                    setTimeout(() => {
+                        try {
+                            let pending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', localStorage.getItem('davclar_unsynced_keys') || '[]') || '[]');
+                            if (Array.isArray(pending)) {
+                                pending = pending.filter(k => k !== key);
+                                window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pending));
+                            }
+                        } catch(e) {}
+                    }, 500);
+                }).catch(err => console.warn("Sync tertunda:", err));
             }
         };
 
-        // 3. Mesin Penerima Data Real-Time & Auto-Recovery
+        // 3. Definisikan dbKeys & Listener Firebase
         const dbKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
 
         if (window.firebaseDB) {
-            
-            // --- [FITUR BARU] RECOVERY DATA NYANGKUT SAAT APLIKASI DIBUKA ---
-            let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-            if (pendingKeys.length > 0) {
-                console.log("Mendeteksi data offline yang belum terkirim:", pendingKeys);
-                pendingKeys.forEach(key => {
-                    let localData = localStorage.getItem(key);
-                    if (localData) {
-                        // Push paksa ke Firebase sebelum aplikasi mulai bekerja
-                        window.firebaseDB.ref(key).set(JSON.parse(localData)).then(() => {
-                            let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-                            currentPending = currentPending.filter(k => k !== key);
-                            window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
-                            console.log(`[RECOVERY BERHASIL] ${key} berhasil diselamatkan ke server!`);
-                        });
-                    }
-                });
-            }
-
-            // --- Pemanatauan Data Real-time (Dengan Proteksi Kunci Timpa) ---
             dbKeys.forEach(key => {
                 window.firebaseDB.ref(key).on('value', (snapshot) => {
-                    
-                    // =================================================================
-                    // 🛡️ PERISAI KEBAL HP: JANGAN PERNAH TIMPA DATA KALAU HP LAGI CRUD!
-                    // =================================================================
-                    let currentPending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
-                    if (currentPending.includes(key)) {
-                        console.log(`[SYNC-LOCK AKTIF] Server dilarang menimpa ${key} karena HP sedang pegang kendali!`);
-                        return; // Batalkan penarikan data dari server!
-                    }
-                    // =================================================================
+                    let pending = [];
+                    try {
+                        pending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                    } catch(e) {}
+
+                    // Jika HP sedang melakukan edit/save, abaikan tarikan server
+                    if (Array.isArray(pending) && pending.includes(key)) return;
 
                     const data = snapshot.val();
                     if (data) {
-                        // Update variabel global
                         if(key === 'davclar_barang') db_databarang = data;
                         if(key === 'davclar_customer') db_customer = data;
                         if(key === 'davclar_po') db_po = data;
@@ -2932,21 +2909,7 @@
                         if(key === 'davclar_kasbon') db_kasbon = data;
                         if(key === 'davclar_users') db_users = data;
                         
-                        // Simpan diam-diam ke local tanpa memicu upload ulang ke Firebase
                         window.originalSetItem.call(localStorage, key, JSON.stringify(data));
-
-                        // Auto-Refresh UI jika tab sedang dibuka
-                        const activeTab = localStorage.getItem('davclar_activeTab');
-                        if(activeTab === 'tab-dashboard' && typeof renderDashboard === 'function') renderDashboard();
-                        if(key === 'davclar_barang' && activeTab === 'tab-databarang' && typeof renderItemTable === 'function') renderItemTable();
-                        if(key === 'davclar_customer' && activeTab === 'tab-customer' && typeof renderCustomerList === 'function') renderCustomerList();
-                        if(key === 'davclar_po' && activeTab === 'tab-production' && typeof renderPOList === 'function') renderPOList();
-                        if(key === 'davclar_so' && activeTab === 'tab-order' && typeof renderSOList === 'function') renderSOList();
-                        if(key === 'davclar_invoice' && activeTab === 'tab-invoice' && typeof renderInvoiceList === 'function') renderInvoiceList();
-                        if(key === 'davclar_payment' && activeTab === 'tab-payment' && typeof renderPaymentList === 'function') renderPaymentList();
-                        if(key === 'davclar_komisi' && activeTab === 'tab-komisi' && typeof renderKomisi === 'function') renderKomisi();
-                        if(key === 'davclar_users' && activeTab === 'tab-usersetting' && typeof renderUserTable === 'function') renderUserTable();
-                        if(key === 'davclar_users' && activeTab === 'tab-salesledger' && typeof renderSalesLedger === 'function') renderSalesLedger();
                     }
                 });
             });
@@ -5410,28 +5373,8 @@
                 db_so.unshift(newSO); 
             }
             
-            // 1. Simpan ke LocalStorage HP
-            window.originalSetItem.call(localStorage, 'davclar_so', JSON.stringify(db_so));
-
-            // 2. [JALUR TOL KILAT]: Paksa langsung tembak ke Firebase dan KUNCI antreannya
-            let pendingKeys = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
-            if (!pendingKeys.includes('davclar_so')) {
-                pendingKeys.push('davclar_so');
-                window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pendingKeys));
-            }
-
-            if (window.firebaseDB) {
-                window.firebaseDB.ref('davclar_so').set(db_so).then(() => {
-                    setTimeout(() => {
-                        let cur = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
-                        cur = cur.filter(k => k !== 'davclar_so');
-                        window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(cur));
-                        console.log("[SO TEMBUS] Data HP sukses mendarat permanen di server!");
-                    }, 1000);
-                }).catch(err => {
-                    console.warn("Gagal kirim ke server, data aman di HP:", err);
-                });
-            }
+            // Simpan standar, biarkan mesin global yang nembak ke server secara otomatis
+            localStorage.setItem('davclar_so', JSON.stringify(db_so));
 
             showToast('Sales Order Berhasil Disimpan!'); 
             closeSOForm(); 
