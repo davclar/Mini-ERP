@@ -2800,7 +2800,7 @@
     <!-- JAVASCRIPT -->
     <script>
         // =================================================================
-        // 1. DEKLARASI SEMUA VARIABEL GLOBAL (ANTI-OBJECT CRASH)
+        // 1. DEKLARASI SEMUA VARIABEL GLOBAL (VAKSIN ANTI-CRASH)
         // =================================================================
         function getSafeArray(key) {
             try {
@@ -2810,16 +2810,16 @@
             } catch (e) { return []; }
         }
 
-        let db_databarang = getSafeArray('davclar_barang');
-        let db_customer   = getSafeArray('davclar_customer');
-        let db_po         = getSafeArray('davclar_po');
-        let db_so         = getSafeArray('davclar_so');
-        let db_invoice    = getSafeArray('davclar_invoice');
-        let db_payment    = getSafeArray('davclar_payment');
-        let db_kontrabon  = getSafeArray('davclar_kontrabon');
-        let db_sales_cp   = getSafeArray('davclar_sales_cp');
-        let db_kasbon     = getSafeArray('davclar_kasbon');
-        let db_users      = getSafeArray('davclar_users');
+        var db_databarang = getSafeArray('davclar_barang');
+        var db_customer   = getSafeArray('davclar_customer');
+        var db_po         = getSafeArray('davclar_po');
+        var db_so         = getSafeArray('davclar_so');
+        var db_invoice    = getSafeArray('davclar_invoice');
+        var db_payment    = getSafeArray('davclar_payment');
+        var db_kontrabon  = getSafeArray('davclar_kontrabon');
+        var db_sales_cp   = getSafeArray('davclar_sales_cp');
+        var db_kasbon     = getSafeArray('davclar_kasbon');
+        var db_users      = getSafeArray('davclar_users');
 
         // ==========================================
         // FITUR MOBILE RESPONSIVE (SIDEBAR TOGGLE)
