@@ -2821,6 +2821,24 @@
         var db_kasbon     = getSafeArray('davclar_kasbon');
         var db_users      = getSafeArray('davclar_users');
 
+        // =================================================================
+        // 🛡️ SATPAM PROXY GLOBAL UNTUK DB_USERS (ANTI-OBJECT SEUMUR HIDUP) 🛡️
+        // =================================================================
+        let _internal_db_users = getSafeArray('davclar_users');
+
+        // Bungkus db_users dengan Proxy agar tidak bisa diisi Object mentah oleh kodingan manapun
+        Object.defineProperty(window, 'db_users', {
+            get: function() { return _internal_db_users; },
+            set: function(newValue) {
+                if (!Array.isArray(newValue)) {
+                    // Kalau ada kodingan lain yang megang Object, paksa jadi Array!
+                    newValue = Object.values(newValue || {}).filter(item => item && typeof item === 'object');
+                }
+                _internal_db_users = newValue;
+            },
+            configurable: true
+        });
+
         // ==========================================
         // FITUR MOBILE RESPONSIVE (SIDEBAR TOGGLE)
         // ==========================================
@@ -3194,7 +3212,7 @@
                 }
             }
         }
-        
+
         // =================================================================
         // 🔥 FITUR AUTO-LOGOUT & PEMBERSIH CACHE (ANTI-NYANGKUT) 🔥
         // =================================================================
@@ -8109,20 +8127,21 @@
         }
 
         // Format ulang db_users agar mendukung object 'access'
-        if(db_users.length === 0) {
-            let adminAcc = {}; appMenus.forEach(m => adminAcc[m.id] = 'FULL');
+        if (db_users.length === 0) {
+            let adminAcc = {}; 
+            appMenus.forEach(m => adminAcc[m.id] = 'FULL');
             db_users.push({ username: 'ADMIN', password: '1234', access: adminAcc });
             localStorage.setItem('davclar_users', JSON.stringify(db_users));
         } else {
             let diubah = false;
             db_users.forEach(u => {
-                if(u && !u.access) {
+                if (u && !u.access) {
                     u.access = {};
                     appMenus.forEach(m => u.access[m.id] = (u.role === 'ADMIN' ? 'FULL' : 'READ'));
                     diubah = true;
                 }
             });
-            if(diubah) localStorage.setItem('davclar_users', JSON.stringify(db_users));
+            if (diubah) localStorage.setItem('davclar_users', JSON.stringify(db_users));
         }
 
         // --- SENTRALISASI NAMA SALES (GLOBAL OPTIONS) ---
