@@ -8081,10 +8081,8 @@
         }
 
         // ==========================================
-        // FITUR USER MANAGEMENT & HAK AKSES
+        // FITUR USER MANAGEMENT & HAK AKSES (AMAN DARI OBJECT)
         // ==========================================
-        
-        // 1. TAMBAH PROPERTI "GROUP" BIAR BISA DIBIKIN SUB-MENU DI MODAL
         const appMenus = [
             { id: 'tab-dashboard', label: 'Dashboard', group: 'MENU UTAMA' },
             { id: 'tab-databarang', label: 'Data Barang', group: 'MASTER DATA' },
@@ -8105,15 +8103,19 @@
             { id: 'menu-database', label: 'Backup Data (JSON)', group: 'DATABASE' }
         ];
 
+        // [PENGAMAN 1] Pastikan db_users wujudnya Array murni sebelum di-loop
+        if (!Array.isArray(db_users)) {
+            db_users = Object.values(db_users || {}).filter(item => item && typeof item === 'object');
+        }
+
         // Format ulang db_users agar mendukung object 'access'
         if(db_users.length === 0) {
             let adminAcc = {}; appMenus.forEach(m => adminAcc[m.id] = 'FULL');
             db_users.push({ username: 'ADMIN', password: '1234', access: adminAcc });
-            //localStorage.setItem('davclar_users', JSON.stringify(db_users));
         } else {
             let diubah = false;
             db_users.forEach(u => {
-                if(!u.access) {
+                if(u && !u.access) {
                     u.access = {};
                     appMenus.forEach(m => u.access[m.id] = (u.role === 'ADMIN' ? 'FULL' : 'READ'));
                     diubah = true;
@@ -8125,12 +8127,15 @@
         // --- SENTRALISASI NAMA SALES (GLOBAL OPTIONS) ---
         function getSalesOptionsHtml(selectedValue = '') {
             let salesSet = new Set();
-            db_users.forEach(u => { if(u.username !== 'ADMIN') salesSet.add(u.username) });
-            db_customer.forEach(c => { if(c.sales) salesSet.add(c.sales.toUpperCase()) });
+            let safeUsers = Array.isArray(db_users) ? db_users : Object.values(db_users || {});
+            let safeCust = Array.isArray(db_customer) ? db_customer : Object.values(db_customer || {});
+
+            safeUsers.forEach(u => { if(u && u.username !== 'ADMIN') salesSet.add(u.username); });
+            safeCust.forEach(c => { if(c && c.sales) salesSet.add(c.sales.toUpperCase()); });
 
             let html = `<option value="">-- PILIH NAMA --</option>`;
             Array.from(salesSet).sort().forEach(s => {
-                let isSel = (s === selectedValue.toUpperCase()) ? 'selected' : '';
+                let isSel = (s === String(selectedValue).toUpperCase()) ? 'selected' : '';
                 html += `<option value="${s}" ${isSel}>${s}</option>`;
             });
             return html;
@@ -8295,11 +8300,14 @@
             const tbody = document.getElementById('userTableBody');
             if(!tbody) return;
             
-            // --- 1. CEK HAK AKSES MODUL USER MANAGEMENT ---
+            // [PENGAMAN 2] Paksa db_users jadi Array jika mendadak berubah jadi Object di tengah jalan
+            if (!Array.isArray(db_users)) {
+                db_users = Object.values(db_users || {}).filter(item => item && typeof item === 'object');
+            }
+
             const accessUser = (window.currentUserAccess && window.currentUserAccess['tab-usersetting']) ? window.currentUserAccess['tab-usersetting'] : 'READ';
             const canEdit = (accessUser === 'FULL');
 
-            // Pengaman ekstra: Sembunyikan header aksi JIKA HANYA AKSES LIHAT
             const thAksiUser = document.getElementById('th-aksi-user');
             if (thAksiUser) thAksiUser.style.display = canEdit ? '' : 'none';
 
@@ -8311,15 +8319,16 @@
                 return;
             }
 
-            // Urutkan: Admin (Full Access terbanyak) di atas
-            db_users.sort((a,b) => {
-                let cFullA = Object.values(a.access || {}).filter(v => v === 'FULL').length;
-                let cFullB = Object.values(b.access || {}).filter(v => v === 'FULL').length;
+            // Urutkan dengan aman
+            db_users.sort((a, b) => {
+                let cFullA = Object.values((a && a.access) || {}).filter(v => v === 'FULL').length;
+                let cFullB = Object.values((b && b.access) || {}).filter(v => v === 'FULL').length;
                 return cFullB - cFullA;
             });
 
             db_users.forEach(user => {
-                let passBintang = '*'.repeat(user.password.length);
+                if(!user) return;
+                let passBintang = '*'.repeat(String(user.password || '').length);
                 let countAccess = Object.values(user.access || {}).filter(v => v !== 'NONE').length;
                 let countFull = Object.values(user.access || {}).filter(v => v === 'FULL').length;
                 
@@ -8327,7 +8336,6 @@
                     ? `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-[9px] font-bold inline-block"><i class="fa-solid fa-user-shield mr-1"></i> ADMIN</span>`
                     : `<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-[9px] font-bold inline-block"><i class="fa-solid fa-user-tie mr-1"></i> AKSES: ${countAccess} MENU</span>`;
 
-                // --- 2. KONTROL TOMBOL AKSI BERDASARKAN HAK AKSES ---
                 let aksiHTML = '';
                 if (canEdit) {
                     aksiHTML = `
@@ -8342,43 +8350,27 @@
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
 
                 tr.innerHTML = `
-                    <!-- KOLOM 1: USERNAME & CARD MOBILE -->
                     <td class="!py-2 px-3 md:!py-1.5 md:px-4 align-top md:align-middle">
-                        
-                        <!-- ================= MOBILE ONLY: CARD LAYOUT ================= -->
                         <div class="md:hidden flex flex-col w-full min-w-0">
                             <div class="flex flex-col gap-1.5">
-                                
-                                <!-- Baris Atas: Username & Tombol Aksi (SEJAJAR DI ATAS) -->
                                 <div class="flex justify-between items-center pb-1.5">
                                     <div class="font-bold text-gray-900 text-xs leading-none">${user.username}</div>
                                     <div class="flex items-center shrink-0 gap-1.5 [&>button]:!p-1.5 [&>button]:!text-xs">
                                         ${canEdit ? aksiHTML.replace(/<\/?td[^>]*>/g, '') : ''}
                                     </div>
                                 </div>
-                                
-                                <!-- Baris Bawah: Badge Role & Password Key -->
                                 <div class="flex justify-between items-center pt-0.5">
                                     <div>${badge}</div>
                                     <div class="text-[10px] text-gray-400 font-mono tracking-wider">Key: <span class="text-gray-600">${passBintang}</span></div>
                                 </div>
-
                             </div>
                         </div>
-
-                        <!-- ================= PC ONLY: USERNAME ================= -->
                         <div class="hidden md:block font-bold text-gray-800 text-sm">
                             ${user.username}
                         </div>
                     </td>
-                    
-                    <!-- KOLOM 2: ROLE/AKSES (PC ONLY) -->
                     <td class="!py-1.5 px-4 text-center hidden md:table-cell align-middle">${badge}</td>
-                    
-                    <!-- KOLOM 3: PASSWORD (PC ONLY) -->
                     <td class="!py-1.5 px-4 text-center font-mono text-gray-400 tracking-widest text-xs hidden md:table-cell align-middle">${passBintang}</td>
-                    
-                    <!-- KOLOM 4: AKSI (PC ONLY) -->
                     ${canEdit ? aksiHTML.replace('class="', 'class="hidden md:table-cell ') : ''}
                 `;
                 tbody.appendChild(tr);
