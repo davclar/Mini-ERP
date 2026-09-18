@@ -3135,29 +3135,70 @@
             updateGlobalDropdowns();
         }
 
-        function handleLogin(e) {
+        // ==========================================
+        // FUNGSI LOGIN (SMART CHECK KE SERVER)
+        // ==========================================
+        async function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('username').value.trim().toUpperCase();
             const p = document.getElementById('password').value;
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
 
-            // CARI USER DI DATABASE
-            const foundUser = db_users.find(user => user.username === u && user.password === p);
+            // 1. Cari user di memori HP dulu
+            let foundUser = db_users.find(user => user.username === u && user.password === p);
 
+            // 2. JIKA DI HP KOSONG (Baru Install / Hapus Cache), NANYA KE SERVER!
+            if (!foundUser && window.firebaseDB) {
+                let originalText = btnSubmit.innerText;
+                btnSubmit.innerText = "Mengecek Server...";
+                btnSubmit.disabled = true;
+
+                try {
+                    // Sedot paksa data user dari Firebase
+                    const snap = await window.firebaseDB.ref('davclar_users').once('value');
+                    const data = snap.val();
+                    
+                    if (data) {
+                        let dataArray = Array.isArray(data) ? data : Object.values(data);
+                        dataArray = dataArray.filter(item => item && typeof item === 'object'); // Anti-crash
+                        
+                        db_users = dataArray; // Simpan ke variabel global
+                        localStorage.setItem('davclar_users', JSON.stringify(db_users)); // Simpan ke HP
+                        
+                        // Coba cari lagi setelah data ditarik
+                        foundUser = db_users.find(user => user.username === u && user.password === p);
+                    }
+                } catch (err) {
+                    console.error("Gagal sinkron data user dari server", err);
+                }
+
+                btnSubmit.innerText = originalText;
+                btnSubmit.disabled = false;
+            }
+
+            // 3. EKSEKUSI LOGIN JIKA KETEMU
             if (foundUser) {
                 localStorage.setItem('davclar_isLoggedIn', 'true');
                 localStorage.setItem('davclar_role', foundUser.role);
-                localStorage.setItem('davclar_user', foundUser.username); // Simpan nama
+                localStorage.setItem('davclar_user', foundUser.username); 
+                
+                // [PENTING] Setelan timer awal agar tidak langsung di-logout oleh Satpam Waktu
+                localStorage.setItem('davclar_last_activity', Date.now().toString()); 
 
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('appContainer').classList.remove('hidden');
+                
                 applyRoleAccess();
                 openTab('tab-dashboard');
             } else {
-                if(typeof showToast === "function") showToast('Username atau Password salah!', 'error');
-                else alert('Username atau Password salah!');
+                if(typeof showToast === "function") {
+                    showToast('Username atau Password salah!', 'error');
+                } else {
+                    alert('Username atau Password salah!');
+                }
             }
         }
-
+        
         // =================================================================
         // 🔥 FITUR AUTO-LOGOUT & PEMBERSIH CACHE (ANTI-NYANGKUT) 🔥
         // =================================================================
