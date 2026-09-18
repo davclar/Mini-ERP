@@ -5387,64 +5387,55 @@
         function saveSO() {
             if(tempSOItems.length === 0) return showToast('Order kosong!');
             
-            const soId = document.getElementById('soFormNo').value;
+            const soId = document.getElementById('soFormNo'].value;
             const newSO = {
                 id: soId,
-                tanggal: document.getElementById('soFormTgl').value,
-                toko: document.getElementById('soInpToko').value.toUpperCase(),
-                alamat: document.getElementById('soInpAlamat').value,
-                type: document.getElementById('soInpType').value,
-                disc: parseFloat(document.getElementById('soInpDisc').value) || 0,
-                disc2: parseFloat(document.getElementById('soInpDisc2').value) || 0,
+                tanggal: document.getElementById('soFormTgl'].value,
+                toko: document.getElementById('soInpToko'].value.toUpperCase(),
+                alamat: document.getElementById('soInpAlamat'].value,
+                type: document.getElementById('soInpType'].value,
+                disc: parseFloat(document.getElementById('soInpDisc'].value) || 0,
+                disc2: parseFloat(document.getElementById('soInpDisc2'].value) || 0,
                 status: "PENDING", 
                 items: [...tempSOItems]
             };
 
-            // Cek apakah ini SO baru atau mengedit SO lama
             const existingIndex = db_so.findIndex(s => s.id === soId);
             if (existingIndex >= 0) {
-                // Jika edit, pertahankan status aslinya (misal sudah 'DIKIRIM') dan timpa datanya
                 newSO.status = db_so[existingIndex].status;
                 db_so[existingIndex] = newSO; 
             } else {
-                // Jika baru, masukkan ke daftar paling atas
                 db_so.unshift(newSO); 
             }
             
-            // =========================================================================
-            // 🛡️ PENGAMAN UTAMA HP: DAFTARKAN KE ANTREAN AGAR TIDAK DITIMPA SERVER
-            // =========================================================================
-            const storageKey = 'davclar_so';
-            
-            // 1. Ambil daftar antrean kunci yang belum sinkron
-            let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-            if (!pendingKeys.includes(storageKey)) {
-                pendingKeys.push(storageKey);
+            // 1. Simpan ke LocalStorage HP
+            window.originalSetItem.call(localStorage, 'davclar_so', JSON.stringify(db_so));
+
+            // 2. [JALUR TOL KILAT]: Paksa langsung tembak ke Firebase dan KUNCI antreannya
+            let pendingKeys = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
+            if (!pendingKeys.includes('davclar_so')) {
+                pendingKeys.push('davclar_so');
                 window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pendingKeys));
             }
 
-            // 2. Simpan data baru ke LocalStorage (memicu mekanisme setItem custom kita)
-            localStorage.setItem(storageKey, JSON.stringify(db_so));
-
-            // 3. Tembak langsung ke Firebase untuk memastikan data HP mendarat duluan
             if (window.firebaseDB) {
-                window.firebaseDB.ref(storageKey).set(db_so).then(() => {
-                    // Jika sukses tembus, lepaskan kunci antreannya
-                    let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-                    currentPending = currentPending.filter(k => k !== storageKey);
-                    window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
-                    console.log("[SYNC SO] Data HP sukses dikunci dan dikirim ke server!");
+                window.firebaseDB.ref('davclar_so').set(db_so).then(() => {
+                    setTimeout(() => {
+                        let cur = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
+                        cur = cur.filter(k => k !== 'davclar_so');
+                        window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(cur));
+                        console.log("[SO TEMBUS] Data HP sukses mendarat permanen di server!");
+                    }, 1000); // Jeda 1 detik penuh khusus HP agar stabil
                 }).catch(err => {
-                    console.warn("[SYNC SO TERTUNDA] Gagal konek server, tapi data aman di HP:", err);
+                    console.warn("Gagal kirim ke server, data aman di HP:", err);
                 });
             }
-            // =========================================================================
 
             showToast('Sales Order Berhasil Disimpan!'); 
             closeSOForm(); 
             renderSOList();
         }
-
+        
         // ==========================================
         // RENDER ITEM INVOICE (ANTI CRASH & FIX UNDEFINED)
         // ==========================================
