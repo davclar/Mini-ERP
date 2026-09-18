@@ -8101,7 +8101,7 @@
             { id: 'menu-database', label: 'Backup Data (JSON)', group: 'DATABASE' }
         ];
 
-        // [PENGAMAN 1] Pastikan db_users wujudnya Array murni sebelum di-loop
+        // [KUNCI UTAMA]: Paksa ubah jadi Array dulu kalau bentuknya Object/Laci
         if (!Array.isArray(db_users)) {
             db_users = Object.values(db_users || {}).filter(item => item && typeof item === 'object');
         }
@@ -8110,6 +8110,7 @@
         if(db_users.length === 0) {
             let adminAcc = {}; appMenus.forEach(m => adminAcc[m.id] = 'FULL');
             db_users.push({ username: 'ADMIN', password: '1234', access: adminAcc });
+            localStorage.setItem('davclar_users', JSON.stringify(db_users));
         } else {
             let diubah = false;
             db_users.forEach(u => {
