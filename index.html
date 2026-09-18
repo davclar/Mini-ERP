@@ -3132,14 +3132,12 @@
         }
 
         // ==========================================
-        // FUNGSI LOGIN (SMART CHECK KE SERVER)
+        // FUNGSI LOGIN (BULLETPROOF & ANTI-CRASH V4.2)
         // ==========================================
         async function handleLogin(e) {
             e.preventDefault();
             
-            // ===================================================
-            // [PENGAMAN UTAMA] PAKSA db_users JADI ARRAY DETIK INI JUGA!
-            // ===================================================
+            // 1. [PENGAMAN UTAMA] Paksa db_users jadi Array murni detik ini juga!
             if (!Array.isArray(db_users)) {
                 db_users = Object.values(db_users || {}).filter(item => item && typeof item === 'object');
             }
@@ -3148,9 +3146,10 @@
             const p = document.getElementById('password').value;
             const btnSubmit = e.target.querySelector('button[type="submit"]');
 
+            // 2. Cari user di memori lokal (Aman dari error .find)
             let foundUser = db_users.find(user => user && user.username === u && user.password === p);
 
-            // Jika di HP kosong / belum ada, nanya langsung ke Server Firebase
+            // 3. Jika di memori lokal kosong, nanya langsung ke Server Firebase
             if (!foundUser && window.firebaseDB) {
                 let originalText = btnSubmit.innerText;
                 btnSubmit.innerText = "Mengecek Server...";
@@ -3175,21 +3174,24 @@
                 btnSubmit.disabled = false;
             }
 
-            // Eksekusi Login
+            // 4. Eksekusi Login & Masuk Dashboard
             if (foundUser) {
                 localStorage.setItem('davclar_isLoggedIn', 'true');
-                localStorage.setItem('davclar_role', foundUser.role);
+                localStorage.setItem('davclar_role', foundUser.role || 'USER');
                 localStorage.setItem('davclar_user', foundUser.username); 
                 localStorage.setItem('davclar_last_activity', Date.now().toString()); 
 
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('appContainer').classList.remove('hidden');
                 
-                applyRoleAccess();
-                openTab('tab-dashboard');
+                if(typeof applyRoleAccess === 'function') applyRoleAccess();
+                if(typeof openTab === 'function') openTab('tab-dashboard');
             } else {
-                if(typeof showToast === "function") showToast('Username atau Password salah!', 'error');
-                else alert('Username atau Password salah!');
+                if(typeof showToast === "function") {
+                    showToast('Username atau Password salah!', 'error');
+                } else {
+                    alert('Username atau Password salah!');
+                }
             }
         }
         
