@@ -794,7 +794,7 @@
                                     <!-- IMPORT -->
                                     <label class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-600 hover:text-white px-3 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-bold transition shadow-sm cursor-pointer mb-0">
                                         <i class="fa-solid fa-file-csv"></i> <span>Import</span>
-                                        <input type="file" accept=".csv" class="hidden" onchange="importPOCSV(event)">
+                                        <input type="file" accept=".csv" class="hidden" onchange="importCSVPO(event)">
                                     </label>
                                     
                                     <!-- BUAT PO -->
@@ -1225,7 +1225,7 @@
                                     <!-- IMPORT -->
                                     <label class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-600 hover:text-white px-3 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-bold transition shadow-sm cursor-pointer mb-0">
                                         <i class="fa-solid fa-file-csv"></i> <span>Import</span>
-                                        <input type="file" accept=".csv" class="hidden" onchange="importSOCSV(event)">
+                                        <input type="file" accept=".csv" class="hidden" onchange="importCSVSalesOrder(event)">
                                     </label>
                                     
                                     <!-- SINKRON -->
@@ -1496,7 +1496,7 @@
                                     <!-- IMPORT -->
                                     <label class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-600 hover:text-white px-3 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-bold transition shadow-sm cursor-pointer mb-0">
                                         <i class="fa-solid fa-file-csv"></i> <span>Import</span>
-                                        <input type="file" accept=".csv" class="hidden" onchange="importInvoiceCSV(event)">
+                                        <input type="file" accept=".csv" class="hidden" onchange="importCSVInvoice(event)">
                                     </label>
                                     
                                     <!-- EXPORT -->
@@ -2836,96 +2836,165 @@
         }
 
         // =================================================================
-        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (ANTI BOCOR V3) 🔥
+        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (SYSTEM LACI / V4) 🔥
         // =================================================================
 
-        // 1. Kita simpan fungsi asli LocalStorage ke dalam memori
         window.originalSetItem = localStorage.setItem;
 
-        // 2. Timpa fungsi aslinya dengan Sistem Antrean (Queue)
-        localStorage.setItem = function(key, value) {
-            // Tetap simpan ke browser HP/Laptop (Aman walau offline)
-            window.originalSetItem.apply(this, arguments);
-
-            const ignoredKeys = ['davclar_activeTab', 'davclar_user', 'davclar_role', 'davclar_isLoggedIn', 'davclar_unsynced_keys'];
+        // --- 0. MIGRASI OTOMATIS (Merubah format Karung jadi Laci di Server) ---
+        if (!localStorage.getItem('davclar_migrasi_v4')) {
+            const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
             
-            if (key.startsWith('davclar_') && window.firebaseDB && !ignoredKeys.includes(key)) {
-                
-                // A. Masukkan key tabel ini ke daftar "Antrean Belum Sinkron"
-                let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-                if (!pendingKeys.includes(key)) {
-                    pendingKeys.push(key);
-                    window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pendingKeys));
-                }
-
-                // B. Coba tembak datanya ke Firebase Server secara Real-Time!
-                window.firebaseDB.ref(key).set(JSON.parse(value))
-                    .then(() => {
-                        // C. Jika sukses tembus server, hapus dari daftar antrean
-                        let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-                        currentPending = currentPending.filter(k => k !== key);
-                        window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
-                        console.log(`[SYNC BERHASIL] ${key} aman di server!`);
-                    })
-                    .catch(err => {
-                        console.warn(`[SYNC TERTUNDA] ${key} tersimpan di HP, menunggu sinyal internet...`, err);
+            validKeys.forEach(k => {
+                let arr = JSON.parse(localStorage.getItem(k) || '[]');
+                if(arr.length > 0) {
+                    let payload = {};
+                    arr.forEach(item => {
+                        let id = item.id || item.prodId || item.username;
+                        if(id) {
+                            let safeId = String(id).replace(/[\.\#\$\/\[\]]/g, '_');
+                            payload[safeId] = item; // Masukkan ke dalam laci masing-masing ID
+                        }
                     });
+                    // Langsung paksa ubah struktur tabelnya di server secara massal!
+                    if(window.firebaseDB) window.firebaseDB.ref(k).set(payload);
+                }
+            });
+            localStorage.setItem('davclar_migrasi_v4', 'SUKSES');
+            console.log("MIGRASI V4 SELESAI: Database Server sudah pakai Sistem Laci!");
+        }
+
+        // --- 1. MESIN ANTREAN OFFLINE (ATOMIC OPERATIONS) ---
+        function pushToFirebaseQueue(action, path, data) {
+            let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
+            q.push({ action, path, data, timestamp: Date.now() });
+            window.originalSetItem.call(localStorage, 'davclar_offline_queue', JSON.stringify(q));
+            processFirebaseQueue();
+        }
+
+        let isProcessingQueue = false;
+        function processFirebaseQueue() {
+            if(!window.firebaseDB || isProcessingQueue) return;
+            let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
+            if(q.length === 0) return;
+
+            isProcessingQueue = true;
+            let task = q[0];
+
+            let dbRef = window.firebaseDB.ref(task.path);
+            let request = (task.action === 'set') ? dbRef.set(task.data) : dbRef.remove();
+
+            request.then(() => {
+                let currentQ = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
+                currentQ.shift(); // Buang antrean yang sudah sukses
+                window.originalSetItem.call(localStorage, 'davclar_offline_queue', JSON.stringify(currentQ));
+                isProcessingQueue = false;
+                console.log(`[SYNC BERHASIL] Laci ${task.path} diamankan ke Server!`);
+                processFirebaseQueue(); // Lanjut tugas berikutnya
+            }).catch(err => {
+                console.warn(`[SYNC TERTUNDA] Sinyal hilang, menunggu online...`, err);
+                isProcessingQueue = false;
+            });
+        }
+
+        // Jalankan pelan-pelan saat aplikasi baru dibuka (Pancingan Auto-Recovery)
+        setTimeout(processFirebaseQueue, 2000); 
+
+        // --- 2. CEGAT LOCALSTORAGE DENGAN MESIN PENCARI PERUBAHAN (DIFFING ENGINE) ---
+        localStorage.setItem = function(key, value) {
+            const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
+
+            if (validKeys.includes(key)) {
+                // Ambil data array lama SEBELUM ditimpa oleh aplikasi
+                let oldString = localStorage.getItem(key);
+                let oldArray = oldString ? JSON.parse(oldString) : [];
+                let newArray = JSON.parse(value);
+
+                // Simpan wujud aslinya ke Browser HP (Sistem UI butuh Array)
+                window.originalSetItem.apply(this, arguments);
+
+                if (!window.firebaseDB) return;
+
+                // Fungsi Pembuat Kunci Laci
+                function getUniqueId(obj) { return obj.id || obj.prodId || obj.username || null; }
+                function getSafeKey(id) { return String(id).replace(/[\.\#\$\/\[\]]/g, '_'); }
+
+                let oldMap = new Map();
+                oldArray.forEach(item => { let id = getUniqueId(item); if(id) oldMap.set(id, item); });
+
+                let newMap = new Map();
+                newArray.forEach(item => { let id = getUniqueId(item); if(id) newMap.set(id, item); });
+
+                // Deteksi Data Baru / Diupdate
+                newArray.forEach(item => {
+                    let id = getUniqueId(item);
+                    if(id) {
+                        let oldItem = oldMap.get(id);
+                        // Jika tidak ada di lama ATAU isinya berbeda, Tembak Laci Spesifik!
+                        if(JSON.stringify(oldItem) !== JSON.stringify(item)) {
+                            pushToFirebaseQueue('set', key + '/' + getSafeKey(id), item);
+                        }
+                    }
+                });
+
+                // Deteksi Data Dihapus
+                oldArray.forEach(item => {
+                    let id = getUniqueId(item);
+                    if(id && !newMap.has(id)) {
+                        pushToFirebaseQueue('remove', key + '/' + getSafeKey(id), null);
+                    }
+                });
+            } else {
+                // Biarkan localStorage berjalan normal untuk key setting/login/dll
+                window.originalSetItem.apply(this, arguments);
             }
         };
 
-        // 3. Mesin Penerima Data Real-Time & Auto-Recovery
+        // --- 3. MESIN PENERIMA DATA DARI SERVER (REAL-TIME LISTENER) ---
         const dbKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
 
         if (window.firebaseDB) {
-            
-            // --- [FITUR BARU] RECOVERY DATA NYANGKUT SAAT APLIKASI DIBUKA ---
-            let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-            if (pendingKeys.length > 0) {
-                console.log("Mendeteksi data offline yang belum terkirim:", pendingKeys);
-                pendingKeys.forEach(key => {
-                    let localData = localStorage.getItem(key);
-                    if (localData) {
-                        // Push paksa ke Firebase sebelum aplikasi mulai bekerja
-                        window.firebaseDB.ref(key).set(JSON.parse(localData)).then(() => {
-                            let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-                            currentPending = currentPending.filter(k => k !== key);
-                            window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
-                            console.log(`[RECOVERY BERHASIL] ${key} berhasil diselamatkan ke server!`);
-                        });
-                    }
-                });
-            }
-
-            // --- Pemanatauan Data Real-time (Dengan Proteksi Kunci Timpa) ---
             dbKeys.forEach(key => {
                 window.firebaseDB.ref(key).on('value', (snapshot) => {
                     
-                    // [KUNCI SAKTI]: Cek apakah HP Bosku sedang berusaha push data tabel ini?
-                    let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-                    if (currentPending.includes(key)) {
-                        // Jika YA, tolak data lama dari server! Jangan biarkan data baru di HP terhapus.
-                        console.log(`[SYNC-LOCK] Abaikan tarikan data server untuk ${key}. Data di HP lebih baru!`);
+                    // [KUNCI ANTI-TABRAKAN] Cek apakah HP ini sedang punya hutang upload spesifik di tabel ini?
+                    let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
+                    let isProcessingThisTable = q.some(task => task.path.startsWith(key + '/'));
+                    
+                    if (isProcessingThisTable) {
+                        console.log(`[SYNC-LOCK] Abaikan tarikan server untuk ${key}. Ada antrean laci lokal yang belum terkirim!`);
                         return; 
                     }
 
                     const data = snapshot.val();
                     if (data) {
-                        // Update variabel global
-                        if(key === 'davclar_barang') db_databarang = data;
-                        if(key === 'davclar_customer') db_customer = data;
-                        if(key === 'davclar_po') db_po = data;
-                        if(key === 'davclar_so') db_so = data;
-                        if(key === 'davclar_invoice') db_invoice = data;
-                        if(key === 'davclar_payment') db_payment = data;
-                        if(key === 'davclar_kontrabon') db_kontrabon = data;
-                        if(key === 'davclar_sales_cp') db_sales_cp = data;
-                        if(key === 'davclar_kasbon') db_kasbon = data;
-                        if(key === 'davclar_users') db_users = data;
+                        // Karena di server kita sudah pakai Laci Object, 
+                        // Kita sulap kembali jadi Array supaya UI tidak error
+                        let dataArray = Array.isArray(data) ? data : Object.values(data);
                         
-                        // Simpan diam-diam ke local tanpa memicu upload ulang ke Firebase
-                        window.originalSetItem.call(localStorage, key, JSON.stringify(data));
+                        // Urutkan dari yang terbaru (Descending) agar fungsinya sama persis dengan unshift()
+                        dataArray.sort((a, b) => {
+                            let idA = String(a.id || a.prodId || a.username || "");
+                            let idB = String(b.id || b.prodId || b.username || "");
+                            return idB.localeCompare(idA); 
+                        });
 
-                        // Auto-Refresh UI jika tab sedang dibuka
+                        // Update variabel global
+                        if(key === 'davclar_barang') db_databarang = dataArray;
+                        if(key === 'davclar_customer') db_customer = dataArray;
+                        if(key === 'davclar_po') db_po = dataArray;
+                        if(key === 'davclar_so') db_so = dataArray;
+                        if(key === 'davclar_invoice') db_invoice = dataArray;
+                        if(key === 'davclar_payment') db_payment = dataArray;
+                        if(key === 'davclar_kontrabon') db_kontrabon = dataArray;
+                        if(key === 'davclar_sales_cp') db_sales_cp = dataArray;
+                        if(key === 'davclar_kasbon') db_kasbon = dataArray;
+                        if(key === 'davclar_users') db_users = dataArray;
+                        
+                        // Simpan diam-diam ke local tanpa memicu interceptor di atas (Mencegah Loop)
+                        window.originalSetItem.call(localStorage, key, JSON.stringify(dataArray));
+
+                        // Auto-Refresh UI berdasarkan Tab Aktif
                         const activeTab = localStorage.getItem('davclar_activeTab');
                         if(activeTab === 'tab-dashboard' && typeof renderDashboard === 'function') renderDashboard();
                         if(key === 'davclar_barang' && activeTab === 'tab-databarang' && typeof renderItemTable === 'function') renderItemTable();
@@ -2942,7 +3011,7 @@
             });
         }
 
-        var soCurrentPage = 1, 
+        var soCurrentPage = 1,
         invCurrentPage = 1, 
         poCurrentPage = 1, 
         itemCurrentPage = 1, 
@@ -3096,25 +3165,93 @@
             }
         }
 
+        // =================================================================
+        // 🔥 FITUR AUTO-LOGOUT & PEMBERSIH CACHE (ANTI-NYANGKUT) 🔥
+        // =================================================================
+        const BATAS_WAKTU_JAM = 4; // Atur berapa jam diam sampai otomatis logout (Contoh: 4 Jam)
+
+        function bersihkanSemuaCacheData() {
+            // 1. Hapus identitas user
+            localStorage.removeItem('davclar_isLoggedIn');
+            localStorage.removeItem('davclar_role');
+            localStorage.removeItem('davclar_user');
+            localStorage.removeItem('davclar_last_activity');
+            
+            // 2. Hancurkan semua data cache lokal agar pas login sedot ulang dari nol
+            const keysAmanDihapus = [
+                'davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 
+                'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 
+                'davclar_sales_cp', 'davclar_kasbon', 'davclar_users', 
+                'davclar_unsynced_keys', 'davclar_offline_queue'
+            ];
+            
+            keysAmanDihapus.forEach(k => {
+                if (window.originalSetItem) {
+                    localStorage.removeItem(k);
+                }
+            });
+
+            // 3. Kosongkan variabel global di memori saat ini
+            db_databarang = []; db_customer = []; db_po = []; db_so = []; 
+            db_invoice = []; db_payment = []; db_kontrabon = []; db_sales_cp = []; 
+            db_kasbon = []; db_users = [];
+        }
+
+        // [MODIFIKASI] Tombol Logout Manual sekarang ikut membersihkan cache
         async function handleLogout() {
             const isConfirmed = await showConfirm(
                 "Keluar Aplikasi", 
-                "Apakah Anda yakin ingin keluar dari aplikasi?", 
+                "Apakah Anda yakin ingin keluar? Cache memori akan dibersihkan.", 
                 "warning"
             );
             
             if (isConfirmed) {
-                // --- [BARU] Hapus memori user & role ---
-                localStorage.removeItem('davclar_isLoggedIn');
-                localStorage.removeItem('davclar_role');
-                localStorage.removeItem('davclar_user');
-                
-                document.getElementById('loginPage').style.display = 'flex';
-                document.getElementById('appContainer').classList.add('hidden');
-                document.getElementById('password').value = ''; 
-                document.getElementById('username').value = ''; 
+                bersihkanSemuaCacheData(); // <--- Sapu bersih cache!
+                window.location.reload(); // Refresh paksa halaman
             }
         }
+
+        // --- SISTEM DETEKSI DIAM (IDLE TIMEOUT) ---
+        function periksaSesiKedaluwarsa() {
+            if (localStorage.getItem('davclar_isLoggedIn') === 'true') {
+                const aktivitasTerakhir = localStorage.getItem('davclar_last_activity');
+                const waktuSekarang = Date.now();
+                
+                if (aktivitasTerakhir) {
+                    const selisihJam = (waktuSekarang - parseInt(aktivitasTerakhir)) / (1000 * 60 * 60);
+                    if (selisihJam >= BATAS_WAKTU_JAM) {
+                        console.log("Sesi berakhir karena tidak ada aktivitas.");
+                        
+                        bersihkanSemuaCacheData(); // Hapus cache paksa
+                        
+                        alert(`Sesi Anda telah berakhir karena tidak aktif selama ${BATAS_WAKTU_JAM} jam. Silakan login kembali.`);
+                        window.location.reload(); // Tendang ke halaman login
+                        return;
+                    }
+                }
+                // Jika masih aman, update catatan waktu aktivitas terakhir
+                localStorage.setItem('davclar_last_activity', waktuSekarang.toString());
+            }
+        }
+
+        // --- DETEKTOR GERAKAN (MOUSE/SENTUHAN) ---
+        function resetTimerAktivitas() {
+            if (localStorage.getItem('davclar_isLoggedIn') === 'true') {
+                localStorage.setItem('davclar_last_activity', Date.now().toString());
+            }
+        }
+
+        // Pasang radar pendeteksi aktivitas (Klik, Sentuh Layar, Ngetik, Scroll)
+        document.addEventListener('click', resetTimerAktivitas);
+        document.addEventListener('keypress', resetTimerAktivitas);
+        document.addEventListener('touchstart', resetTimerAktivitas); // Khusus layar sentuh HP
+        document.addEventListener('scroll', resetTimerAktivitas);
+
+        // Cek kedaluwarsa saat aplikasi baru dibuka
+        window.addEventListener('load', periksaSesiKedaluwarsa);
+        
+        // Cek kedaluwarsa diam-diam setiap 5 menit di balik layar
+        setInterval(periksaSesiKedaluwarsa, 5 * 60 * 1000);
 
         // Fungsi Buka Tab
         function openTab(tabId) {
@@ -8416,51 +8553,73 @@
         }
 
         // ==========================================
-        // FITUR EXPORT SEMUA DATABASE KE EXCEL (FLAT, RAPI, & STERIL)
+        // FITUR EXPORT SEMUA DATABASE KE EXCEL (FINAL KONTRA BON)
         // ==========================================
         function exportAllToExcel() {
             let wb = XLSX.utils.book_new();
 
             // 1. Kumpulkan semua database
             const allDatabases = {
-                "Data_Barang": db_databarang,
-                "Customer": db_customer,
-                "PO_Produksi": db_po,
-                "Sales_Order": db_so,
-                "Invoice": db_invoice,
-                "Buku_Kas": db_payment,
-                "Kontra_Bon": db_kontrabon,
-                "Kasbon_Sales": db_kasbon,
-                "Riwayat_Komisi_CP": db_sales_cp,
-                "Akun_User": db_users
+                "Data_Barang": typeof db_databarang !== 'undefined' ? db_databarang : [],
+                "Customer": typeof db_customer !== 'undefined' ? db_customer : [],
+                "PO_Produksi": typeof db_po !== 'undefined' ? db_po : [],
+                "Sales_Order": typeof db_so !== 'undefined' ? db_so : [],
+                "Invoice": typeof db_invoice !== 'undefined' ? db_invoice : [],
+                "Buku_Kas": typeof db_payment !== 'undefined' ? db_payment : [],
+                "Kontra_Bon": typeof db_kontrabon !== 'undefined' ? db_kontrabon : [],
+                "Kasbon_Sales": typeof db_kasbon !== 'undefined' ? db_kasbon : [],
+                "Riwayat_Komisi_CP": typeof db_payment !== 'undefined' ? db_payment : [],
+                "Akun_User": typeof db_users !== 'undefined' ? db_users : []
             };
 
-            // 2. Blueprint Urutan Kolom Baku (Saringan Ketat)
+            // 2. Blueprint Urutan Kolom Baku (Sesuai struktur asli Kontra Bon)
             const tableHeaders = {
                 "Data_Barang": ["prodId", "urut", "merk", "kategori", "artikel", "warna", "artikelWarna", "hpp", "hargaJual"],
                 "Customer": ["id", "nama", "kota", "region", "alamat", "tlp", "bank", "sales", "type", "disc1", "disc2", "rate", "ket"],
                 "PO_Produksi": ["id", "tanggal", "makloon", "harga", "catatan", "spkPrintedAt", "statusBarcode", "sizeLabels", "item_prodId", "item_merk", "item_artikel", "item_warna", "item_s1", "item_s2", "item_s3", "item_s4", "item_s5", "item_s6", "item_total", "item_ket"],
                 "Sales_Order": ["id", "tanggal", "toko", "alamat", "type", "disc", "disc2", "status", "item_prodId", "item_merk", "item_artikel", "item_warna", "item_harga", "item_s1", "item_s2", "item_s3", "item_s4", "item_s5", "item_s6", "item_total", "item_subtotal"],
                 "Invoice": ["id", "tanggal", "soId", "toko", "type", "disc1", "disc2", "subtotal", "penyesuaian", "totalAkhir", "item_prodId", "item_merk", "item_artikel", "item_warna", "item_harga", "item_s1", "item_s2", "item_s3", "item_s4", "item_s5", "item_s6", "item_total", "item_subtotal"],
-                "Buku_Kas": ["id", "tanggal", "toko", "invId", "merk", "metode", "nominal", "retur", "fee", "qtyKonsi", "keterangan"],
-                "Kontra_Bon": ["id", "tanggal", "toko", "totalFaktur", "totalSisa", "inv_id", "inv_tanggal", "inv_totalAkhir", "inv_sisa"],
+                "Buku_Kas": ["id", "tanggal", "toko", "invId", "merk", "metode", "nominal", "retur", "fee", "qtyKonsi", "ket", "komisi", "noCP"],
+                // [FIX UTAMA] Struktur Kontra Bon disesuaikan persis dengan snapshot database
+                "Kontra_Bon": ["id", "tanggal", "toko", "total", "invId", "inv_tanggal", "nilai", "bayar", "potong", "sisa"],
                 "Kasbon_Sales": ["id", "tanggal", "sales", "tipe", "nominal"],
-                "Riwayat_Komisi_CP": ["id", "tanggal", "sales", "nominal", "note"],
+                "Riwayat_Komisi_CP": ["no_cp", "tanggal", "sales", "total_komisi", "keterangan"],
                 "Akun_User": ["username", "password", "role", "access"]
             };
 
-            // 3. Mesin Pemecah Array & Saringan Sterilisasi
+            // 3. Mesin Pemecah & Penyelaras Data
             for (let sheetName in allDatabases) {
                 let data = allDatabases[sheetName];
                 let flatData = [];
-                let allowedCols = tableHeaders[sheetName]; // Ambil blueprint kolom untuk sheet ini
+                let allowedCols = tableHeaders[sheetName]; 
                 
+                // Riwayat Komisi CP
+                if (sheetName === "Riwayat_Komisi_CP" && Array.isArray(data)) {
+                    let cpMap = {};
+                    data.forEach(p => {
+                        let cpNo = p.noCP || p.nocp;
+                        if (cpNo && cpNo !== "-" && cpNo !== "") {
+                            if (!cpMap[cpNo]) {
+                                cpMap[cpNo] = {
+                                    no_cp: cpNo,
+                                    tanggal: p.tanggal || "",
+                                    sales: p.sales || "-",
+                                    total_komisi: 0,
+                                    keterangan: p.ket || "Pencairan Komisi Sales"
+                                };
+                            }
+                            cpMap[cpNo].total_komisi += (parseFloat(p.komisi) || 0);
+                        }
+                    });
+                    data = Object.values(cpMap);
+                }
+
                 if (data && data.length > 0) {
                     data.forEach(row => {
-                        let tempRows = []; // Wadah sementara sebelum disaring
+                        let tempRows = []; 
 
-                        // JIKA TABEL PUNYA RINCIAN BARANG (PO, SO, INVOICE)
-                        if (row.items && Array.isArray(row.items) && row.items.length > 0) {
+                        // --- A. TABEL ITEM BARANG (PO, SO, INVOICE) ---
+                        if (sheetName !== 'Kontra_Bon' && row.items && Array.isArray(row.items) && row.items.length > 0) {
                             row.items.forEach(item => {
                                 let newRow = { ...row }; 
                                 delete newRow.items; 
@@ -8469,11 +8628,20 @@
                                 let art = item.artikel;
                                 let wrn = item.warna;
                                 let mrk = item.merk;
+                                let pId = item.prodId || item.code || ""; 
+
+                                if (!pId && art) {
+                                    const foundBrg = (typeof db_databarang !== 'undefined' ? db_databarang : []).find(b => 
+                                        b.artikel && b.artikel.toUpperCase() === art.toUpperCase() && 
+                                        (!wrn || wrn === '-' || !b.warna || b.warna.toUpperCase() === wrn.toUpperCase())
+                                    );
+                                    if (foundBrg) pId = foundBrg.prodId;
+                                }
 
                                 if (!art && item.namaBarang) {
-                                    const brg = db_databarang.find(b => b.prodId === item.prodId);
+                                    const brg = (typeof db_databarang !== 'undefined' ? db_databarang : []).find(b => b.prodId === item.prodId);
                                     if (brg) {
-                                        art = brg.artikel; wrn = brg.warna; if (!mrk) mrk = brg.merk;
+                                        art = brg.artikel; wrn = brg.warna; if (!mrk) mrk = brg.merk; if(!pId) pId = brg.prodId;
                                     } else {
                                         let parts = item.namaBarang.trim().split(' ');
                                         if (parts.length > 1) {
@@ -8490,19 +8658,57 @@
                                     }
                                 }
 
+                                newRow['item_prodId'] = pId || ''; 
                                 newRow['item_merk'] = mrk || '';
                                 newRow['item_artikel'] = art || item.namaBarang || '';
                                 newRow['item_warna'] = (wrn && wrn !== '-') ? wrn : '';
 
                                 for(let k in item) {
-                                    if (k !== 'artikel' && k !== 'warna' && k !== 'merk' && k !== 'namaBarang') {
+                                    if (k !== 'artikel' && k !== 'warna' && k !== 'merk' && k !== 'namaBarang' && k !== 'prodId') {
                                         newRow[`item_${k}`] = item[k];
                                     }
                                 }
                                 tempRows.push(newRow);
                             });
                         } 
-                        // JIKA TABEL KONTRA BON
+                        // --- B. TABEL KONTRA BON (PECAH ITEM SESUAI SNAPSHOT) ---
+                        else if (sheetName === 'Kontra_Bon') {
+                            let kbId = row.id || "";
+                            let kbTgl = row.tanggal || "";
+                            let kbToko = row.toko || "";
+                            let kbTotal = row.total || 0;
+                            let listItems = row.items || [];
+
+                            if (Array.isArray(listItems) && listItems.length > 0) {
+                                listItems.forEach(it => {
+                                    tempRows.push({
+                                        id: kbId,
+                                        tanggal: kbTgl,
+                                        toko: kbToko,
+                                        total: kbTotal,
+                                        invId: it.invId || "",
+                                        inv_tanggal: it.tanggal || "",
+                                        nilai: it.nilai || 0,
+                                        bayar: it.bayar || 0,
+                                        potong: it.potong || 0,
+                                        sisa: it.sisa || 0
+                                    });
+                                });
+                            } else {
+                                tempRows.push({
+                                    id: kbId,
+                                    tanggal: kbTgl,
+                                    toko: kbToko,
+                                    total: kbTotal,
+                                    invId: "-",
+                                    inv_tanggal: "-",
+                                    nilai: 0,
+                                    bayar: 0,
+                                    potong: 0,
+                                    sisa: 0
+                                });
+                            }
+                        }
                         else if (row.invoices && Array.isArray(row.invoices) && row.invoices.length > 0) {
                             row.invoices.forEach(inv => {
                                 let newRow = { ...row };
@@ -8513,7 +8719,7 @@
                                 tempRows.push(newRow);
                             });
                         } 
-                        // JIKA TABEL BIASA
+                        // --- C. TABEL BIASA ---
                         else {
                             let newRow = { ...row };
                             if (newRow.items) delete newRow.items;
@@ -8523,13 +8729,39 @@
                         }
 
                         // ==========================================
-                        // PROSES STERILISASI (BUANG ZOMBIE DATA)
+                        // STERILISASI & PENAMBALAN FINAL
                         // ==========================================
                         tempRows.forEach(rawRow => {
                             let cleanRow = {};
                             allowedCols.forEach(col => {
-                                // Kalau datanya ada, masukkan. Kalau nggak ada, kasih blank ("")
-                                cleanRow[col] = rawRow[col] !== undefined ? rawRow[col] : ""; 
+                                let val = rawRow[col] !== undefined ? rawRow[col] : ""; 
+                                
+                                if (sheetName === 'Buku_Kas' && col === 'ket') {
+                                    if (!val || val === "") {
+                                        val = rawRow['ket'] || rawRow['keterangan'] || "";
+                                    }
+                                }
+
+                                if (sheetName === 'Customer' && col === 'disc1') {
+                                    if ((val === "" || val === 0) && rawRow['disc']) val = rawRow['disc'];
+                                }
+
+                                if (sheetName === 'Akun_User' && col === 'access') {
+                                    if (Array.isArray(rawRow['access'])) val = rawRow['access'].join(', ');
+                                    else if (typeof rawRow['access'] === 'object' && rawRow['access'] !== null) {
+                                        val = Object.keys(rawRow['access']).filter(k => rawRow['access'][k]).join(', ');
+                                    }
+                                }
+
+                                if (col === 'type') {
+                                    if ((val === "" || val === null) && rawRow['tipe']) val = String(rawRow['tipe']).toUpperCase();
+                                    if (typeof val === 'string') val = val.toUpperCase();
+                                    if ((val === "" || val === null) && (sheetName === 'Invoice' || sheetName === 'Sales_Order' || sheetName === 'Customer')) {
+                                        val = "PUTUS";
+                                    }
+                                }
+
+                                cleanRow[col] = val !== undefined && val !== null ? val : ""; 
                             });
                             flatData.push(cleanRow);
                         });
@@ -8549,10 +8781,11 @@
             XLSX.writeFile(wb, namaFile);
             if (typeof showToast === "function") showToast('Export Excel Semua Data Berhasil!', 'success');
         }
+
         // ==========================================
-        // IMPORT CSV: SALES ORDER (SO) (FIXED UNDEFINED)
+        // IMPORT CSV SALES ORDER (MATA ELANG + AUTO-GROUPING)
         // ==========================================
-        function importSOCSV(event) {
+        function importCSVSalesOrder(event) {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -8560,6 +8793,7 @@
             reader.onload = function(e) {
                 const text = e.target.result;
                 const lines = text.split('\n');
+                
                 const separator = lines[0].indexOf(';') > -1 ? ';' : ',';
 
                 function parseLine(line, sep) {
@@ -8577,336 +8811,442 @@
                     result.push(curVal); return result;
                 }
 
-                let tempSOs = {}; 
+                // --- 1. MATA ELANG: BACA JUDUL KOLOM ---
+                let headers = parseLine(lines[0].replace(/[\r\n]/g, ''), separator).map(h => h.trim().toUpperCase());
+                
+                // Cari Index Header SO (Berdasarkan Blueprint Export)
+                let iId = headers.findIndex(h => h === 'ID');
+                let iTgl = headers.findIndex(h => h === 'TANGGAL');
+                let iToko = headers.findIndex(h => h === 'TOKO' || h === 'CUSTOMER');
+                let iAlamat = headers.findIndex(h => h === 'ALAMAT');
+                let iType = headers.findIndex(h => h === 'TYPE');
+                let iDisc = headers.findIndex(h => h === 'DISC' || h === 'DISC1');
+                let iDisc2 = headers.findIndex(h => h === 'DISC2');
+                let iStatus = headers.findIndex(h => h === 'STATUS');
+                
+                // Cari Index Header Item (Rincian Barang)
+                let iPId = headers.findIndex(h => h === 'ITEM_PRODID');
+                let iMerk = headers.findIndex(h => h === 'ITEM_MERK');
+                let iArt = headers.findIndex(h => h === 'ITEM_ARTIKEL');
+                let iWrn = headers.findIndex(h => h === 'ITEM_WARNA');
+                let iHrg = headers.findIndex(h => h === 'ITEM_HARGA');
+                let iS1 = headers.findIndex(h => h === 'ITEM_S1');
+                let iS2 = headers.findIndex(h => h === 'ITEM_S2');
+                let iS3 = headers.findIndex(h => h === 'ITEM_S3');
+                let iS4 = headers.findIndex(h => h === 'ITEM_S4');
+                let iS5 = headers.findIndex(h => h === 'ITEM_S5');
+                let iS6 = headers.findIndex(h => h === 'ITEM_S6');
+                let iTot = headers.findIndex(h => h === 'ITEM_TOTAL');
+                let iSub = headers.findIndex(h => h === 'ITEM_SUBTOTAL');
 
+                // Wadah sementara untuk mengumpulkan baris-baris Excel menjadi 1 Dokumen SO
+                let soMap = {}; 
+
+                // --- 2. PROSES BACA DATA BARIS PER BARIS ---
                 for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    
-                    const cols = parseLine(line, separator);
-                    if(cols.length < 10) continue; 
+                    const line = lines[i].replace(/[\r\n]/g, '');
+                    if (!line) continue; 
+                    const cols = parseLine(line, separator); 
 
-                    let soId = cols[0] ? cols[0].trim().toUpperCase() : "";
-                    if(soId === "") continue;
+                    let soId = cols[iId] ? cols[iId].trim().toUpperCase() : "";
+                    if (!soId) continue; // Wajib ada ID SO untuk grouping
 
-                    if (!tempSOs[soId]) {
-                        tempSOs[soId] = {
+                    // Jika SO ini belum ada di map, buatkan rumah (Header) baru
+                    if (!soMap[soId]) {
+                        soMap[soId] = {
                             id: soId,
-                            tanggal: cols[1] ? cols[1].trim() : "",
-                            toko: cols[2] ? cols[2].trim().toUpperCase() : "",
-                            alamat: cols[3] ? cols[3].trim().toUpperCase() : "",
-                            type: cols[4] ? cols[4].trim().toUpperCase() : "PUTUS",
-                            // [FIX 1] Ubah disc1 jadi disc agar terbaca di Detail
-                            disc: cols[5] ? parseFloat(cols[5].replace(/%/g, '').replace(/,/g, '.').trim()) || 0 : 0,
-                            disc2: cols[6] ? parseFloat(cols[6].replace(/%/g, '').replace(/,/g, '.').trim()) || 0 : 0,
-                            items: [],
-                            subtotal: 0,
-                            totalAkhir: 0,
-                            status: "BELUM" 
+                            tanggal: cols[iTgl] ? cols[iTgl].trim() : "",
+                            toko: cols[iToko] ? cols[iToko].trim().toUpperCase() : "",
+                            alamat: cols[iAlamat] ? cols[iAlamat].trim() : "",
+                            type: cols[iType] ? cols[iType].trim().toUpperCase() : "PUTUS",
+                            disc: parseFloat(cols[iDisc] ? String(cols[iDisc]).replace(/,/g, '.') : '0') || 0,
+                            disc2: parseFloat(cols[iDisc2] ? String(cols[iDisc2]).replace(/,/g, '.') : '0') || 0,
+                            status: cols[iStatus] ? cols[iStatus].trim().toUpperCase() : "PROSES",
+                            items: [] // Siapkan keranjang kosong untuk rincian barang
                         };
                     }
 
-                    let harga = cols[10] ? parseFloat(cols[10].replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '.').trim()) || 0 : 0;
-                    let s1 = cols[11] ? parseInt(cols[11].trim()) || 0 : 0;
-                    let s2 = cols[12] ? parseInt(cols[12].trim()) || 0 : 0;
-                    let s3 = cols[13] ? parseInt(cols[13].trim()) || 0 : 0;
-                    let s4 = cols[14] ? parseInt(cols[14].trim()) || 0 : 0;
-                    let s5 = cols[15] ? parseInt(cols[15].trim()) || 0 : 0;
-                    let s6 = cols[16] ? parseInt(cols[16].trim()) || 0 : 0;
+                    // Susun Rincian Barangnya
+                    let prodId = cols[iPId] ? cols[iPId].trim().toUpperCase() : "";
+                    let art = cols[iArt] ? cols[iArt].trim().toUpperCase() : "";
                     
-                    let qtyTotal = s1 + s2 + s3 + s4 + s5 + s6;
-                    let subtotalBarang = qtyTotal * harga;
-                    
-                    // [FIX 2] Gabungkan Artikel & Warna jadi namaBarang
-                    let art = cols[8] ? cols[8].trim().toUpperCase() : "";
-                    let wrn = cols[9] ? cols[9].trim().toUpperCase() : "-";
-                    let namaFull = wrn !== "-" ? (art + " " + wrn) : art;
-
-                    tempSOs[soId].items.push({
-                        merk: cols[7] ? cols[7].trim().toUpperCase() : "",
-                        artikel: art,
-                        warna: wrn,
-                        namaBarang: namaFull, // Ini yang dibaca oleh form Detail SO
-                        harga: harga,
-                        s1: s1, s2: s2, s3: s3, s4: s4, s5: s5, s6: s6,
-                        total: qtyTotal,
-                        subtotal: subtotalBarang
-                    });
-
-                    tempSOs[soId].subtotal += subtotalBarang;
-                }
-
-                let countUpdate = 0; let countBaru = 0;
-                for (let key in tempSOs) {
-                    let so = tempSOs[key];
-                    // [FIX 3] Gunakan so.disc saat hitung diskon
-                    let potong1 = so.subtotal * (so.disc / 100);
-                    let sisa = so.subtotal - potong1;
-                    let potong2 = sisa * (so.disc2 / 100);
-                    so.totalAkhir = so.subtotal - potong1 - potong2;
-
-                    let existingIndex = db_so.findIndex(s => s.id === so.id);
-                    if (existingIndex >= 0) {
-                        db_so[existingIndex] = so; countUpdate++;
-                    } else {
-                        db_so.push(so); countBaru++;
-                    }
-                }
-
-                localStorage.setItem('davclar_so', JSON.stringify(db_so));
-                if(typeof renderSOList === 'function') renderSOList();
-                showToast(`Import SO Selesai! \n${countBaru} Baru, ${countUpdate} Update.`, "success");
-            };
-            reader.readAsText(file);
-            event.target.value = ''; 
-        }
-
-        // ==========================================
-        // IMPORT CSV: PURCHASE ORDER (PO) PRODUKSI (FIXED NaN & BLANK)
-        // ==========================================
-        function importPOCSV(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n');
-                const separator = lines[0].indexOf(';') > -1 ? ';' : ',';
-
-                function parseLine(line, sep) {
-                    let result = []; let curVal = ''; let inQuotes = false;
-                    for (let i = 0; i < line.length; i++) {
-                        let char = line[i];
-                        if (inQuotes) {
-                            if (char === '"') {
-                                if (i < line.length - 1 && line[i + 1] === '"') { curVal += '"'; i++; } else { inQuotes = false; }
-                            } else { curVal += char; }
-                        } else {
-                            if (char === '"') { inQuotes = true; } else if (char === sep) { result.push(curVal); curVal = ''; } else { curVal += char; }
-                        }
-                    }
-                    result.push(curVal); return result;
-                }
-
-                let tempPOs = {}; 
-
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    
-                    const cols = parseLine(line, separator);
-                    if(cols.length < 8) continue; 
-
-                    let poId = cols[0] ? cols[0].trim().toUpperCase() : "";
-                    if(poId === "") continue;
-
-                    let hrgMakloon = cols[3] ? parseFloat(cols[3].replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '.').trim()) || 0 : 0;
-
-                    // --- BACA LABEL SIZE ---
-                    let lbl1 = cols[8] ? cols[8].trim() : "36";
-                    let lbl2 = cols[9] ? cols[9].trim() : "37";
-                    let lbl3 = cols[10] ? cols[10].trim() : "38";
-                    let lbl4 = cols[11] ? cols[11].trim() : "39";
-                    let lbl5 = cols[12] ? cols[12].trim() : "40";
-                    let lbl6 = cols[13] ? cols[13].trim() : "-";
-
-                    if (!tempPOs[poId]) {
-                        tempPOs[poId] = {
-                            id: poId,
-                            tanggal: cols[1] ? cols[1].trim() : "",
-                            makloon: cols[2] ? cols[2].trim().toUpperCase() : "",
-                            // [FIX KATA KUNCI 1] Ubah 'hargaMakloon' jadi 'harga'
-                            harga: hrgMakloon, 
-                            // [FIX KATA KUNCI 2] Ubah 'note' jadi 'catatan'
-                            catatan: cols[4] ? cols[4].trim() : "", 
-                            // [FIX KATA KUNCI 3] Ubah 'labels' jadi 'sizeLabels'
-                            sizeLabels: [lbl1, lbl2, lbl3, lbl4, lbl5, lbl6], 
-                            items: [],
-                            spkPrintedAt: null,
-                            barcodePrintedAt: null
+                    // Hanya masukkan ke array items jika baris ini punya artikel/prodId
+                    if (prodId || art) {
+                        let itemDetail = {
+                            prodId: prodId,
+                            merk: cols[iMerk] ? cols[iMerk].trim().toUpperCase() : "",
+                            artikel: art,
+                            warna: cols[iWrn] ? cols[iWrn].trim().toUpperCase() : "",
+                            harga: parseFloat(cols[iHrg] ? String(cols[iHrg]).replace(/[^0-9]/g, '') : '0') || 0,
+                            s1: parseInt(cols[iS1]) || 0,
+                            s2: parseInt(cols[iS2]) || 0,
+                            s3: parseInt(cols[iS3]) || 0,
+                            s4: parseInt(cols[iS4]) || 0,
+                            s5: parseInt(cols[iS5]) || 0,
+                            s6: parseInt(cols[iS6]) || 0,
+                            total: parseInt(cols[iTot]) || 0,
+                            subtotal: parseFloat(cols[iSub] ? String(cols[iSub]).replace(/[^0-9]/g, '') : '0') || 0
                         };
-                    }
+                        
+                        // Hitung ulang total QTY & Subtotal untuk jaga-jaga kalau Excelnya diubah manual tapi rumusnya gak jalan
+                        itemDetail.total = itemDetail.s1 + itemDetail.s2 + itemDetail.s3 + itemDetail.s4 + itemDetail.s5 + itemDetail.s6;
+                        itemDetail.subtotal = itemDetail.total * itemDetail.harga;
 
-                    let s1 = cols[14] ? parseInt(cols[14].trim()) || 0 : 0;
-                    let s2 = cols[15] ? parseInt(cols[15].trim()) || 0 : 0;
-                    let s3 = cols[16] ? parseInt(cols[16].trim()) || 0 : 0;
-                    let s4 = cols[17] ? parseInt(cols[17].trim()) || 0 : 0;
-                    let s5 = cols[18] ? parseInt(cols[18].trim()) || 0 : 0;
-                    let s6 = cols[19] ? parseInt(cols[19].trim()) || 0 : 0;
-                    
-                    let qtyTotal = s1 + s2 + s3 + s4 + s5 + s6;
-
-                    let art = cols[6] ? cols[6].trim().toUpperCase() : "";
-                    let wrn = cols[7] ? cols[7].trim().toUpperCase() : "-";
-                    let namaFull = (wrn !== "-" && wrn !== "") ? (art + " " + wrn) : art;
-
-                    tempPOs[poId].items.push({
-                        prodId: "MANUAL", 
-                        merk: cols[5] ? cols[5].trim().toUpperCase() : "",
-                        namaBarang: namaFull, 
-                        s1: s1, s2: s2, s3: s3, s4: s4, s5: s5, s6: s6,
-                        total: qtyTotal,
-                        ket: cols[20] ? cols[20].trim() : ""
-                    });
-                }
-
-                let countUpdate = 0; let countBaru = 0;
-                for (let key in tempPOs) {
-                    let po = tempPOs[key];
-                    let existingIndex = db_po.findIndex(p => p.id === po.id);
-                    if (existingIndex >= 0) {
-                        db_po[existingIndex] = po; countUpdate++;
-                    } else {
-                        db_po.push(po); countBaru++;
+                        soMap[soId].items.push(itemDetail);
                     }
                 }
 
-                localStorage.setItem('davclar_po', JSON.stringify(db_po));
-                if(typeof renderPOList === 'function') renderPOList();
-                showToast(`Import PO Selesai! \n${countBaru} Baru, ${countUpdate} Update.`, "success");
-            };
-            reader.readAsText(file);
-            event.target.value = ''; 
-        }
-
-        // ==========================================
-        // IMPORT CSV: INVOICE (AUTO-UPDATE STATUS SO & MULTI-SO DETECTOR)
-        // ==========================================
-        function importInvoiceCSV(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n');
-                const separator = lines[0].indexOf(';') > -1 ? ';' : ',';
-
-                function parseLine(line, sep) {
-                    let result = []; let curVal = ''; let inQuotes = false;
-                    for (let i = 0; i < line.length; i++) {
-                        let char = line[i];
-                        if (inQuotes) {
-                            if (char === '"') {
-                                if (i < line.length - 1 && line[i + 1] === '"') { curVal += '"'; i++; } 
-                                else { inQuotes = false; }
-                            } else { curVal += char; }
-                        } else {
-                            if (char === '"') { inQuotes = true; } 
-                            else if (char === sep) { result.push(curVal); curVal = ''; } 
-                            else { curVal += char; }
-                        }
-                    }
-                    result.push(curVal);
-                    return result;
-                }
-
-                let tempInvoices = {}; 
-
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-                    
-                    const cols = parseLine(line, separator);
-                    if(cols.length < 10) continue; 
-
-                    let invId = cols[0] ? cols[0].trim().toUpperCase() : "";
-                    if(invId === "") continue;
-
-                    if (!tempInvoices[invId]) {
-                        tempInvoices[invId] = {
-                            id: invId,
-                            tanggal: cols[1] ? cols[1].trim() : "",
-                            toko: cols[2] ? cols[2].trim().toUpperCase() : "",
-                            soIdsSet: new Set(), // [UPDATE] Wadah khusus penampung Multi-SO
-                            disc1: cols[4] ? parseFloat(cols[4].replace(/%/g, '').replace(/,/g, '.').trim()) || 0 : 0,
-                            disc2: cols[5] ? parseFloat(cols[5].replace(/%/g, '').replace(/,/g, '.').trim()) || 0 : 0,
-                            items: [], 
-                            subtotal: 0,
-                            totalAkhir: 0
-                        };
-                    }
-
-                    // [UPDATE] Tangkap No SO di setiap baris dan masukkan ke wadah Set
-                    let rowSoId = cols[3] ? cols[3].trim().toUpperCase() : "";
-                    if (rowSoId !== "" && rowSoId !== "MANUAL" && rowSoId !== "-") {
-                        tempInvoices[invId].soIdsSet.add(rowSoId);
-                    }
-
-                    let harga = cols[9] ? parseFloat(cols[9].replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '.').trim()) || 0 : 0;
-                    let s1 = cols[10] ? parseInt(cols[10].trim()) || 0 : 0;
-                    let s2 = cols[11] ? parseInt(cols[11].trim()) || 0 : 0;
-                    let s3 = cols[12] ? parseInt(cols[12].trim()) || 0 : 0;
-                    let s4 = cols[13] ? parseInt(cols[13].trim()) || 0 : 0;
-                    let s5 = cols[14] ? parseInt(cols[14].trim()) || 0 : 0;
-                    let s6 = cols[15] ? parseInt(cols[15].trim()) || 0 : 0;
-                    
-                    let qtyTotal = s1 + s2 + s3 + s4 + s5 + s6;
-                    let subtotalBarang = qtyTotal * harga;
-
-                    tempInvoices[invId].items.push({
-                        merk: cols[6] ? cols[6].trim().toUpperCase() : "",
-                        artikel: cols[7] ? cols[7].trim().toUpperCase() : "",
-                        warna: cols[8] ? cols[8].trim().toUpperCase() : "-",
-                        harga: harga,
-                        s1: s1, s2: s2, s3: s3, s4: s4, s5: s5, s6: s6,
-                        total: qtyTotal,
-                        subtotal: subtotalBarang
-                    });
-
-                    tempInvoices[invId].subtotal += subtotalBarang;
-                }
-
-                let countUpdate = 0;
+                // --- 3. EKSEKUSI PENYIMPANAN KE DATABASE ---
                 let countBaru = 0;
-                let affectedSOs = new Set(); 
+                let countUpdate = 0;
 
-                for (let key in tempInvoices) {
-                    let inv = tempInvoices[key];
+                // Loop semua SO yang sudah dirakit ulang dari soMap
+                for (let key in soMap) {
+                    let newSO = soMap[key];
                     
-                    // [UPDATE] Konversi wadah Set tadi jadi teks gabungan pakai koma
-                    inv.soId = inv.soIdsSet.size > 0 ? Array.from(inv.soIdsSet).join(', ') : "MANUAL";
-                    delete inv.soIdsSet; // Buang properti Set biar database tetap rapi
-
-                    let potong1 = inv.subtotal * (inv.disc1 / 100);
-                    let sisa = inv.subtotal - potong1;
-                    let potong2 = sisa * (inv.disc2 / 100);
-                    inv.totalAkhir = inv.subtotal - potong1 - potong2;
-
-                    let existingIndex = db_invoice.findIndex(i => i.id === inv.id);
+                    let existingIndex = db_so.findIndex(s => s.id === newSO.id);
                     if (existingIndex >= 0) {
-                        db_invoice[existingIndex] = inv; 
+                        db_so[existingIndex] = newSO;
                         countUpdate++;
                     } else {
-                        db_invoice.push(inv); 
+                        db_so.unshift(newSO);
                         countBaru++;
-                    }
-
-                    // Kumpulkan semua SO ID untuk diupdate massal
-                    if (inv.soId && inv.soId !== "MANUAL" && inv.soId !== "-") {
-                        let soArray = inv.soId.split(',').map(s => s.trim());
-                        soArray.forEach(s => affectedSOs.add(s));
                     }
                 }
 
-                localStorage.setItem('davclar_invoice', JSON.stringify(db_invoice));
-
-                // Eksekusi Poka-Yoke Status SO
-                affectedSOs.forEach(soId => {
-                    recalculateSOStatus(soId);
-                });
-
-                if(typeof renderInvoiceList === 'function') renderInvoiceList();
-                if(typeof renderSOList === 'function') renderSOList(); 
-                
-                showToast(`Import Selesai! \n${countBaru} Invoice Baru, ${countUpdate} Update.`);
+                if(countBaru > 0 || countUpdate > 0) {
+                    localStorage.setItem('davclar_so', JSON.stringify(db_so));
+                    
+                    // Render list SO (Sesuaikan dengan nama fungsi render SO Bosku)
+                    if(typeof renderSOList === 'function') renderSOList(); 
+                    
+                    if(typeof showToast === 'function') {
+                        showToast(`✅ Import Sales Order Berhasil! \n${countBaru} SO Baru, ${countUpdate} SO Diupdate.`, "success");
+                    } else {
+                        alert(`Import Sales Order Berhasil! \n${countBaru} SO Baru, ${countUpdate} SO Diupdate.`);
+                    }
+                }
+                event.target.value = ''; 
             };
             
             reader.readAsText(file);
-            event.target.value = ''; 
         }
 
+        // ==========================================
+        // IMPORT CSV PO PRODUKSI (MATA ELANG + AUTO-GROUPING)
+        // ==========================================
+        function importCSVPO(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                const separator = lines[0].indexOf(';') > -1 ? ';' : ',';
+
+                function parseLine(line, sep) {
+                    let result = []; let curVal = ''; let inQuotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        let char = line[i];
+                        if (inQuotes) {
+                            if (char === '"') {
+                                if (i < line.length - 1 && line[i + 1] === '"') { curVal += '"'; i++; } else { inQuotes = false; }
+                            } else { curVal += char; }
+                        } else {
+                            if (char === '"') { inQuotes = true; } else if (char === sep) { result.push(curVal); curVal = ''; } else { curVal += char; }
+                        }
+                    }
+                    result.push(curVal); return result;
+                }
+
+                // 1. MATA ELANG BACA HEADER
+                let headers = parseLine(lines[0].replace(/[\r\n]/g, ''), separator).map(h => h.trim().toUpperCase());
+                
+                let iId = headers.findIndex(h => h === 'ID');
+                let iTgl = headers.findIndex(h => h === 'TANGGAL');
+                let iMakloon = headers.findIndex(h => h === 'MAKLOON' || h === 'VENDOR');
+                let iHarga = headers.findIndex(h => h === 'HARGA' || h === 'HARGA MAKLOON');
+                let iCatatan = headers.findIndex(h => h === 'CATATAN' || h === 'NOTE');
+                let iSpk = headers.findIndex(h => h === 'SPKPRINTEDAT');
+                let iBarcode = headers.findIndex(h => h === 'STATUSBARCODE');
+                let iSizeLabels = headers.findIndex(h => h === 'SIZELABELS');
+                
+                let iPId = headers.findIndex(h => h === 'ITEM_PRODID');
+                let iMerk = headers.findIndex(h => h === 'ITEM_MERK');
+                let iArt = headers.findIndex(h => h === 'ITEM_ARTIKEL');
+                let iWrn = headers.findIndex(h => h === 'ITEM_WARNA');
+                for(let k=1; k<=6; k++) this[`iS${k}`] = headers.findIndex(h => h === `ITEM_S${k}`);
+                let iItemTot = headers.findIndex(h => h === 'ITEM_TOTAL');
+                let iItemKet = headers.findIndex(h => h === 'ITEM_KET'); // PO pakai Keterangan per item
+
+                let poMap = {}; 
+
+                // 2. KUMPULKAN DAN RAKIT DATA
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].replace(/[\r\n]/g, '');
+                    if (!line) continue; 
+                    const cols = parseLine(line, separator); 
+
+                    let poId = cols[iId] ? cols[iId].trim().toUpperCase() : "";
+                    if (!poId) continue; 
+
+                    if (!poMap[poId]) {
+                        // Merakit ulang array Size Labels (Misal "36, 37, -" kembali jadi ["36", "37", "-"])
+                        let rawLabels = cols[iSizeLabels] ? cols[iSizeLabels].trim() : "";
+                        let arrLabels = rawLabels ? rawLabels.split(',').map(s => s.trim()) : ["","","","","",""];
+
+                        poMap[poId] = {
+                            id: poId,
+                            tanggal: cols[iTgl] ? cols[iTgl].trim() : "",
+                            makloon: cols[iMakloon] ? cols[iMakloon].trim().toUpperCase() : "",
+                            harga: parseFloat(cols[iHarga] ? String(cols[iHarga]).replace(/[^0-9]/g, '') : '0') || 0,
+                            catatan: cols[iCatatan] ? cols[iCatatan].trim() : "",
+                            spkPrintedAt: cols[iSpk] ? cols[iSpk].trim() : null,
+                            statusBarcode: cols[iBarcode] ? cols[iBarcode].trim() : "Luar:- Dalam:-",
+                            sizeLabels: arrLabels,
+                            items: []
+                        };
+                    }
+
+                    let prodId = cols[iPId] ? cols[iPId].trim().toUpperCase() : "";
+                    let art = cols[iArt] ? cols[iArt].trim().toUpperCase() : "";
+                    
+                    if (prodId || art) {
+                        let sVals = [];
+                        for(let k=1; k<=6; k++) sVals.push(parseInt(cols[this[`iS${k}`]]) || 0);
+                        
+                        poMap[poId].items.push({
+                            prodId: prodId,
+                            merk: cols[iMerk] ? cols[iMerk].trim().toUpperCase() : "",
+                            artikel: art,
+                            warna: cols[iWrn] ? cols[iWrn].trim().toUpperCase() : "",
+                            s1: sVals[0], s2: sVals[1], s3: sVals[2], s4: sVals[3], s5: sVals[4], s6: sVals[5],
+                            total: sVals.reduce((a,b)=>a+b, 0),
+                            ket: cols[iItemKet] ? cols[iItemKet].trim() : ""
+                        });
+                    }
+                }
+
+                // 3. SIMPAN KE DATABASE PO
+                let countBaru = 0, countUpdate = 0;
+                for (let key in poMap) {
+                    let newPO = poMap[key];
+                    let existingIndex = db_po.findIndex(p => p.id === newPO.id);
+                    if (existingIndex >= 0) { db_po[existingIndex] = newPO; countUpdate++; } 
+                    else { db_po.unshift(newPO); countBaru++; }
+                }
+
+                if(countBaru > 0 || countUpdate > 0) {
+                    localStorage.setItem('davclar_po', JSON.stringify(db_po));
+                    if(typeof renderPOList === 'function') renderPOList(); 
+                    if(typeof showToast === 'function') showToast(`✅ Import PO Selesai! \n${countBaru} Baru, ${countUpdate} Diupdate.`, "success");
+                }
+                event.target.value = ''; 
+            };
+            reader.readAsText(file);
+        }
+
+        // ==========================================
+        // IMPORT CSV INVOICE (VERSI SULTAN - 100% NURUT EXCEL)
+        // ==========================================
+        function importCSVInvoice(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                const separator = lines[0].indexOf(';') > -1 ? ';' : ',';
+
+                function parseLine(line, sep) {
+                    let result = []; let curVal = ''; let inQuotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        let char = line[i];
+                        if (inQuotes) {
+                            if (char === '"') {
+                                if (i < line.length - 1 && line[i + 1] === '"') { curVal += '"'; i++; } else { inQuotes = false; }
+                            } else { curVal += char; }
+                        } else {
+                            if (char === '"') { inQuotes = true; } else if (char === sep) { result.push(curVal); curVal = ''; } else { curVal += char; }
+                        }
+                    }
+                    result.push(curVal); return result;
+                }
+
+                // ==========================================
+                // MESIN BACA UANG SIMPEL & BANDEL
+                // ==========================================
+                function parseUang(val) {
+                    if (!val) return 0;
+                    // 1. Hapus "Rp", spasi, dan TITIK (Ribuan/Jutaan)
+                    let clean = String(val).replace(/Rp/gi, '').replace(/\s/g, '').replace(/\./g, '');
+                    // 2. Sisakan cuma Angka, Koma, dan Minus
+                    clean = clean.replace(/[^0-9,-]/g, '');
+                    // 3. Ubah Koma jadi Titik (Biar bisa dihitung Javascript)
+                    clean = clean.replace(/,/g, '.');
+                    
+                    return parseFloat(clean) || 0;
+                }
+
+                // 1. MATA ELANG BACA HEADER
+                let headers = parseLine(lines[0].replace(/[\r\n]/g, ''), separator).map(h => h.trim().toUpperCase());
+                
+                let iId = headers.findIndex(h => h === 'ID');
+                let iTgl = headers.findIndex(h => h === 'TANGGAL');
+                let iSoId = headers.findIndex(h => h === 'SOID' || h === 'ID SO');
+                let iToko = headers.findIndex(h => h === 'TOKO' || h === 'CUSTOMER');
+                let iType = headers.findIndex(h => h === 'TYPE' || h === 'TIPE');
+                let iDisc1 = headers.findIndex(h => h === 'DISC1' || h === 'DISC');
+                let iDisc2 = headers.findIndex(h => h === 'DISC2');
+                let iSub = headers.findIndex(h => h === 'SUBTOTAL');
+                let iPenyesuaian = headers.findIndex(h => h === 'PENYESUAIAN');
+                let iTotalAkhir = headers.findIndex(h => h === 'TOTALAKHIR' || h === 'TOTAL AKHIR');
+                
+                let iPId = headers.findIndex(h => h === 'ITEM_PRODID');
+                let iMerk = headers.findIndex(h => h === 'ITEM_MERK');
+                let iArt = headers.findIndex(h => h === 'ITEM_ARTIKEL');
+                let iWrn = headers.findIndex(h => h === 'ITEM_WARNA');
+                let iHrg = headers.findIndex(h => h === 'ITEM_HARGA');
+                
+                let iS1 = headers.findIndex(h => h === 'ITEM_S1');
+                let iS2 = headers.findIndex(h => h === 'ITEM_S2');
+                let iS3 = headers.findIndex(h => h === 'ITEM_S3');
+                let iS4 = headers.findIndex(h => h === 'ITEM_S4');
+                let iS5 = headers.findIndex(h => h === 'ITEM_S5');
+                let iS6 = headers.findIndex(h => h === 'ITEM_S6');
+
+                let invMap = {}; 
+
+                // 2. KUMPULKAN DAN RAKIT DATA
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].replace(/[\r\n]/g, '');
+                    if (!line) continue; 
+                    const cols = parseLine(line, separator); 
+
+                    let invId = cols[iId] ? cols[iId].trim().toUpperCase() : "";
+                    if (!invId) continue; 
+
+                    if (!invMap[invId]) {
+                        invMap[invId] = {
+                            id: invId,
+                            tanggal: cols[iTgl] ? cols[iTgl].trim() : "",
+                            toko: cols[iToko] ? cols[iToko].trim().toUpperCase() : "",
+                            soIdsSet: new Set(), 
+                            type: cols[iType] ? cols[iType].trim().toUpperCase() : "PUTUS",
+                            
+                            disc1: parseUang(cols[iDisc1]),
+                            disc2: parseUang(cols[iDisc2]),
+                            penyesuaian: parseUang(cols[iPenyesuaian]),
+                            
+                            subtotal: 0, 
+                            totalAkhir: 0,
+                            
+                            // SEDOT ANGKA TOTAL ASLI DARI EXCEL (Sultan Numbers!)
+                            csvSubtotal: parseUang(cols[iSub]),
+                            csvTotalAkhir: parseUang(cols[iTotalAkhir]),
+                            items: []
+                        };
+                    }
+
+                    let rowSoId = cols[iSoId] ? cols[iSoId].trim().toUpperCase() : "";
+                    if (rowSoId !== "" && rowSoId !== "MANUAL" && rowSoId !== "-") {
+                        invMap[invId].soIdsSet.add(rowSoId);
+                    }
+
+                    let prodId = cols[iPId] ? cols[iPId].trim().toUpperCase() : "";
+                    let art = cols[iArt] ? cols[iArt].trim().toUpperCase() : "";
+                    
+                    let s1 = iS1 >= 0 && cols[iS1] ? parseInt(cols[iS1].trim()) || 0 : 0;
+                    let s2 = iS2 >= 0 && cols[iS2] ? parseInt(cols[iS2].trim()) || 0 : 0;
+                    let s3 = iS3 >= 0 && cols[iS3] ? parseInt(cols[iS3].trim()) || 0 : 0;
+                    let s4 = iS4 >= 0 && cols[iS4] ? parseInt(cols[iS4].trim()) || 0 : 0;
+                    let s5 = iS5 >= 0 && cols[iS5] ? parseInt(cols[iS5].trim()) || 0 : 0;
+                    let s6 = iS6 >= 0 && cols[iS6] ? parseInt(cols[iS6].trim()) || 0 : 0;
+                    
+                    let hrg = parseUang(cols[iHrg]);
+                    let itemTotalQty = s1 + s2 + s3 + s4 + s5 + s6;
+
+                    // Kalau ada rincian barang, masukkan ke array
+                    if (prodId || art || itemTotalQty > 0 || hrg > 0) {
+                        let subtotalBarang = itemTotalQty * hrg;
+
+                        invMap[invId].items.push({
+                            prodId: prodId,
+                            merk: cols[iMerk] ? cols[iMerk].trim().toUpperCase() : "",
+                            artikel: art,
+                            warna: cols[iWrn] ? cols[iWrn].trim().toUpperCase() : "-",
+                            harga: hrg,
+                            s1: s1, s2: s2, s3: s3, s4: s4, s5: s5, s6: s6,
+                            total: itemTotalQty,
+                            subtotal: subtotalBarang
+                        });
+                        
+                        invMap[invId].subtotal += subtotalBarang;
+                    }
+                }
+
+                // 3. KALKULASI FINAL & SIMPAN
+                let countBaru = 0, countUpdate = 0;
+                let affectedSOs = new Set(); 
+
+                for (let key in invMap) {
+                    let inv = invMap[key];
+                    
+                    inv.soId = inv.soIdsSet.size > 0 ? Array.from(inv.soIdsSet).join(', ') : "MANUAL";
+                    delete inv.soIdsSet; 
+
+                    if (inv.soId !== "MANUAL" && inv.soId !== "-") {
+                        let soArray = inv.soId.split(',').map(s => s.trim());
+                        soArray.forEach(s => affectedSOs.add(s));
+                    }
+
+                    // ==========================================
+                    // PERHITUNGAN SESUAI PERINTAH BOSKU
+                    // ==========================================
+                    if (inv.items.length > 0) {
+                        // 1. Kalau ada barang -> Kaliin terus potong diskon
+                        let potong1 = inv.subtotal * (inv.disc1 / 100);
+                        let sisa = inv.subtotal - potong1;
+                        let potong2 = sisa * (inv.disc2 / 100);
+                        inv.totalAkhir = inv.subtotal - potong1 - potong2 + inv.penyesuaian;
+                    } else {
+                        // 2. Kalau barang kosong (Tagihan Konsinyasi) -> Nurut 100% angka dari Excel!
+                        inv.subtotal = inv.csvSubtotal;
+                        inv.totalAkhir = inv.csvTotalAkhir;
+                    }
+                    
+                    delete inv.csvSubtotal;
+                    delete inv.csvTotalAkhir;
+                    // ==========================================
+
+                    let existingIndex = db_invoice.findIndex(i => i.id === inv.id);
+                    if (existingIndex >= 0) { db_invoice[existingIndex] = inv; countUpdate++; } 
+                    else { db_invoice.unshift(inv); countBaru++; }
+                }
+
+                if(countBaru > 0 || countUpdate > 0) {
+                    localStorage.setItem('davclar_invoice', JSON.stringify(db_invoice));
+                    
+                    affectedSOs.forEach(soId => {
+                        if(typeof recalculateSOStatus === 'function') recalculateSOStatus(soId);
+                    });
+
+                    if(typeof renderInvoiceList === 'function') renderInvoiceList(); 
+                    if(typeof renderSOList === 'function') renderSOList(); 
+                    
+                    if(typeof showToast === 'function') {
+                        showToast(`✅ Import Sukses! Data & Tagihan Ratusan Juta aman terkendali!`, "success");
+                    } else {
+                        alert(`Import Sukses! Data aman.`);
+                    }
+                }
+                event.target.value = ''; 
+            };
+            reader.readAsText(file);
+        }
+        
         // ==========================================
         // IMPORT CSV BUKU KAS (AUTO-DETECT KOLOM MATA ELANG)
         // ==========================================
