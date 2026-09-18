@@ -5373,42 +5373,8 @@
                 db_so.unshift(newSO); 
             }
             
-            // =========================================================================
-            // EKSEKUSI INSTAN KHUSUS iOS: Simpan dulu secara mutlak ke LocalStorage browser
-            // =========================================================================
-            try {
-                window.originalSetItem.call(localStorage, 'davclar_so', JSON.stringify(db_so));
-            } catch(err) {
-                console.error("Gagal simpan lokal di iOS:", err);
-                return showToast('Gagal menyimpan ke memori iPhone!', 'error');
-            }
-
-            // Tandai kunci ini sedang aktif di antrean agar tidak ditarik server dulu
-            try {
-                let pending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', localStorage.getItem('davclar_unsynced_keys') || '[]') || '[]');
-                if (!Array.isArray(pending)) pending = [];
-                if (!pending.includes('davclar_so')) {
-                    pending.push('davclar_so');
-                    window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pending));
-                }
-            } catch(e) {}
-
-            // Tembak ke Firebase di latar belakang dengan aman
-            if (window.firebaseDB) {
-                window.firebaseDB.ref('davclar_so').set(db_so).then(() => {
-                    setTimeout(() => {
-                        try {
-                            let pending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', localStorage.getItem('davclar_unsynced_keys') || '[]') || '[]');
-                            if (Array.isArray(pending)) {
-                                pending = pending.filter(k => k !== 'davclar_so');
-                                window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pending));
-                            }
-                        } catch(e) {}
-                    }, 500);
-                }).catch(err => {
-                    console.warn("Sync latar belakang iPhone tertunda:", err);
-                });
-            }
+            // Simpan standar, biarkan mesin global yang nembak ke server secara otomatis
+            localStorage.setItem('davclar_so', JSON.stringify(db_so));
 
             showToast('Sales Order Berhasil Disimpan!'); 
             closeSOForm(); 
