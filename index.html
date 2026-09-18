@@ -2802,20 +2802,12 @@
         // =================================================================
         // 1. DEKLARASI SEMUA VARIABEL GLOBAL (ANTI-OBJECT CRASH)
         // =================================================================
-        
-        // Mesin Pemaksa Array: Mencegah crash jika data di memori nyangkut jadi Object
         function getSafeArray(key) {
             try {
                 let parsed = JSON.parse(localStorage.getItem(key) || '[]');
-                // Jika bentuknya Object (Laci), paksa jejerkan jadi Array
-                if (!Array.isArray(parsed)) {
-                    parsed = Object.values(parsed);
-                }
-                // Saring agar tidak ada data null atau kosong yang ikut masuk
+                if (!Array.isArray(parsed)) parsed = Object.values(parsed);
                 return parsed.filter(item => item && typeof item === 'object');
-            } catch (e) {
-                return [];
-            }
+            } catch (e) { return []; }
         }
 
         let db_databarang = getSafeArray('davclar_barang');
@@ -2835,28 +2827,21 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            
             if (sidebar.classList.contains('-translate-x-full')) {
-                // Buka Sidebar
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
+                sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden');
             } else {
-                // Tutup Sidebar
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
+                sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden');
             }
         }
 
         // =================================================================
         // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (V4.1 BULLETPROOF) 🔥
         // =================================================================
-
         window.originalSetItem = localStorage.setItem;
 
         // --- 0. MIGRASI OTOMATIS (Merubah format Karung jadi Laci di Server) ---
         if (!localStorage.getItem('davclar_migrasi_v4_1')) {
             const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
-            
             validKeys.forEach(k => {
                 let arr = JSON.parse(localStorage.getItem(k) || '[]');
                 if(arr.length > 0) {
@@ -2971,8 +2956,8 @@
 
                     const data = snapshot.val();
                     if (data) {
+                        // [KUNCI ANTI CRASH]: Filter semua null dan TRANSLATE Object Server jadi Array Lokal
                         let rawArray = Array.isArray(data) ? data : Object.values(data);
-                        // [KUNCI ANTI CRASH]: Filter semua null / elemen kosong hasil hapusan Firebase
                         let dataArray = rawArray.filter(item => item && typeof item === 'object');
                         
                         dataArray.sort((a, b) => {
