@@ -5811,10 +5811,30 @@
 
         function searchToko() {
             const query = document.getElementById('soInpToko').value.toLowerCase();
-            const dropdown = document.getElementById('tokoDropdown'); dropdown.innerHTML = '';
+            const dropdown = document.getElementById('tokoDropdown'); 
+            dropdown.innerHTML = '';
+            
             if(query.length < 2) return dropdown.classList.add('hidden');
 
-            const matches = db_customer.filter(c => c.nama.toLowerCase().includes(query));
+            // --- AMBIL IDENTITAS USER YANG SEDANG LOGIN ---
+            const role = (localStorage.getItem('davclar_role') || 'SALES').toUpperCase().trim();
+            const loggedInUser = (localStorage.getItem('davclar_user') || "").toUpperCase().trim();
+            const isSales = (role === 'SALES');
+
+            // --- FILTER TOKO BERDASARKAN KACAMATA KUDA SALES ---
+            const matches = db_customer.filter(c => {
+                let namaToko = (c.nama || "").toLowerCase();
+                let salesToko = (c.sales || "").toUpperCase().trim();
+
+                // 1. Jika SALES, saring hanya toko miliknya saja
+                if (isSales && salesToko !== loggedInUser) {
+                    return false;
+                }
+
+                // 2. Cocokkan dengan kata kunci ketikan
+                return namaToko.includes(query);
+            });
+
             if(matches.length === 0) return dropdown.classList.add('hidden');
 
             dropdown.classList.remove('hidden');
