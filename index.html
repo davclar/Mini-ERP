@@ -2836,13 +2836,13 @@
         }
 
         // =================================================================
-        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (SYSTEM LACI / V4) 🔥
+        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (V4.1 BULLETPROOF) 🔥
         // =================================================================
 
         window.originalSetItem = localStorage.setItem;
 
         // --- 0. MIGRASI OTOMATIS (Merubah format Karung jadi Laci di Server) ---
-        if (!localStorage.getItem('davclar_migrasi_v4')) {
+        if (!localStorage.getItem('davclar_migrasi_v4_1')) {
             const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
             
             validKeys.forEach(k => {
@@ -2850,21 +2850,22 @@
                 if(arr.length > 0) {
                     let payload = {};
                     arr.forEach(item => {
-                        let id = item.id || item.prodId || item.username;
-                        if(id) {
-                            let safeId = String(id).replace(/[\.\#\$\/\[\]]/g, '_');
-                            payload[safeId] = item; // Masukkan ke dalam laci masing-masing ID
+                        if(item && typeof item === 'object') {
+                            let id = item.id || item.prodId || item.username;
+                            if(id) {
+                                let safeId = String(id).replace(/[\.\#\$\/\[\]]/g, '_');
+                                payload[safeId] = item;
+                            }
                         }
                     });
-                    // Langsung paksa ubah struktur tabelnya di server secara massal!
                     if(window.firebaseDB) window.firebaseDB.ref(k).set(payload);
                 }
             });
-            localStorage.setItem('davclar_migrasi_v4', 'SUKSES');
-            console.log("MIGRASI V4 SELESAI: Database Server sudah pakai Sistem Laci!");
+            localStorage.setItem('davclar_migrasi_v4_1', 'SUKSES');
+            console.log("MIGRASI V4.1 SELESAI: Database pakai Sistem Laci!");
         }
 
-        // --- 1. MESIN ANTREAN OFFLINE (ATOMIC OPERATIONS) ---
+        // --- 1. MESIN ANTREAN OFFLINE ---
         function pushToFirebaseQueue(action, path, data) {
             let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
             q.push({ action, path, data, timestamp: Date.now() });
@@ -2886,100 +2887,88 @@
 
             request.then(() => {
                 let currentQ = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
-                currentQ.shift(); // Buang antrean yang sudah sukses
+                currentQ.shift(); 
                 window.originalSetItem.call(localStorage, 'davclar_offline_queue', JSON.stringify(currentQ));
                 isProcessingQueue = false;
-                console.log(`[SYNC BERHASIL] Laci ${task.path} diamankan ke Server!`);
-                processFirebaseQueue(); // Lanjut tugas berikutnya
+                processFirebaseQueue(); 
             }).catch(err => {
-                console.warn(`[SYNC TERTUNDA] Sinyal hilang, menunggu online...`, err);
+                console.warn(`[SYNC TERTUNDA] Menunggu sinyal online...`);
                 isProcessingQueue = false;
             });
         }
-
-        // Jalankan pelan-pelan saat aplikasi baru dibuka (Pancingan Auto-Recovery)
         setTimeout(processFirebaseQueue, 2000); 
 
-        // --- 2. CEGAT LOCALSTORAGE DENGAN MESIN PENCARI PERUBAHAN (DIFFING ENGINE) ---
+        // --- 2. DIFFING ENGINE (CEGAT LOCALSTORAGE) ---
         localStorage.setItem = function(key, value) {
             const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
 
             if (validKeys.includes(key)) {
-                // Ambil data array lama SEBELUM ditimpa oleh aplikasi
                 let oldString = localStorage.getItem(key);
                 let oldArray = oldString ? JSON.parse(oldString) : [];
                 let newArray = JSON.parse(value);
 
-                // Simpan wujud aslinya ke Browser HP (Sistem UI butuh Array)
                 window.originalSetItem.apply(this, arguments);
-
                 if (!window.firebaseDB) return;
 
-                // Fungsi Pembuat Kunci Laci
                 function getUniqueId(obj) { return obj.id || obj.prodId || obj.username || null; }
                 function getSafeKey(id) { return String(id).replace(/[\.\#\$\/\[\]]/g, '_'); }
 
                 let oldMap = new Map();
-                oldArray.forEach(item => { let id = getUniqueId(item); if(id) oldMap.set(id, item); });
+                if(Array.isArray(oldArray)) oldArray.forEach(item => { if(item) { let id = getUniqueId(item); if(id) oldMap.set(id, item); } });
 
                 let newMap = new Map();
-                newArray.forEach(item => { let id = getUniqueId(item); if(id) newMap.set(id, item); });
+                if(Array.isArray(newArray)) newArray.forEach(item => { if(item) { let id = getUniqueId(item); if(id) newMap.set(id, item); } });
 
-                // Deteksi Data Baru / Diupdate
-                newArray.forEach(item => {
-                    let id = getUniqueId(item);
-                    if(id) {
-                        let oldItem = oldMap.get(id);
-                        // Jika tidak ada di lama ATAU isinya berbeda, Tembak Laci Spesifik!
-                        if(JSON.stringify(oldItem) !== JSON.stringify(item)) {
-                            pushToFirebaseQueue('set', key + '/' + getSafeKey(id), item);
+                if(Array.isArray(newArray)) {
+                    newArray.forEach(item => {
+                        if(!item) return;
+                        let id = getUniqueId(item);
+                        if(id) {
+                            let oldItem = oldMap.get(id);
+                            if(JSON.stringify(oldItem) !== JSON.stringify(item)) {
+                                pushToFirebaseQueue('set', key + '/' + getSafeKey(id), item);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
-                // Deteksi Data Dihapus
-                oldArray.forEach(item => {
-                    let id = getUniqueId(item);
-                    if(id && !newMap.has(id)) {
-                        pushToFirebaseQueue('remove', key + '/' + getSafeKey(id), null);
-                    }
-                });
+                if(Array.isArray(oldArray)) {
+                    oldArray.forEach(item => {
+                        if(!item) return;
+                        let id = getUniqueId(item);
+                        if(id && !newMap.has(id)) {
+                            pushToFirebaseQueue('remove', key + '/' + getSafeKey(id), null);
+                        }
+                    });
+                }
             } else {
-                // Biarkan localStorage berjalan normal untuk key setting/login/dll
                 window.originalSetItem.apply(this, arguments);
             }
         };
 
-        // --- 3. MESIN PENERIMA DATA DARI SERVER (REAL-TIME LISTENER) ---
+        // --- 3. MESIN PENERIMA DATA DARI SERVER (ANTI CRASH) ---
         const dbKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
 
         if (window.firebaseDB) {
             dbKeys.forEach(key => {
                 window.firebaseDB.ref(key).on('value', (snapshot) => {
-                    
-                    // [KUNCI ANTI-TABRAKAN] Cek apakah HP ini sedang punya hutang upload spesifik di tabel ini?
                     let q = JSON.parse(localStorage.getItem('davclar_offline_queue') || '[]');
                     let isProcessingThisTable = q.some(task => task.path.startsWith(key + '/'));
                     
-                    if (isProcessingThisTable) {
-                        console.log(`[SYNC-LOCK] Abaikan tarikan server untuk ${key}. Ada antrean laci lokal yang belum terkirim!`);
-                        return; 
-                    }
+                    if (isProcessingThisTable) return; 
 
                     const data = snapshot.val();
                     if (data) {
-                        // Karena di server kita sudah pakai Laci Object, 
-                        // Kita sulap kembali jadi Array supaya UI tidak error
-                        let dataArray = Array.isArray(data) ? data : Object.values(data);
+                        let rawArray = Array.isArray(data) ? data : Object.values(data);
+                        // [KUNCI ANTI CRASH]: Filter semua null / elemen kosong hasil hapusan Firebase
+                        let dataArray = rawArray.filter(item => item && typeof item === 'object');
                         
-                        // Urutkan dari yang terbaru (Descending) agar fungsinya sama persis dengan unshift()
                         dataArray.sort((a, b) => {
                             let idA = String(a.id || a.prodId || a.username || "");
                             let idB = String(b.id || b.prodId || b.username || "");
                             return idB.localeCompare(idA); 
                         });
 
-                        // Update variabel global
                         if(key === 'davclar_barang') db_databarang = dataArray;
                         if(key === 'davclar_customer') db_customer = dataArray;
                         if(key === 'davclar_po') db_po = dataArray;
@@ -2991,10 +2980,8 @@
                         if(key === 'davclar_kasbon') db_kasbon = dataArray;
                         if(key === 'davclar_users') db_users = dataArray;
                         
-                        // Simpan diam-diam ke local tanpa memicu interceptor di atas (Mencegah Loop)
                         window.originalSetItem.call(localStorage, key, JSON.stringify(dataArray));
 
-                        // Auto-Refresh UI berdasarkan Tab Aktif
                         const activeTab = localStorage.getItem('davclar_activeTab');
                         if(activeTab === 'tab-dashboard' && typeof renderDashboard === 'function') renderDashboard();
                         if(key === 'davclar_barang' && activeTab === 'tab-databarang' && typeof renderItemTable === 'function') renderItemTable();
@@ -3006,6 +2993,12 @@
                         if(key === 'davclar_komisi' && activeTab === 'tab-komisi' && typeof renderKomisi === 'function') renderKomisi();
                         if(key === 'davclar_users' && activeTab === 'tab-usersetting' && typeof renderUserTable === 'function') renderUserTable();
                         if(key === 'davclar_users' && activeTab === 'tab-salesledger' && typeof renderSalesLedger === 'function') renderSalesLedger();
+                    } else {
+                        // Jika server benar-benar kosong
+                        window.originalSetItem.call(localStorage, key, "[]");
+                        if(key === 'davclar_payment') { db_payment = []; if(localStorage.getItem('davclar_activeTab') === 'tab-payment') renderPaymentList(); }
+                        if(key === 'davclar_so') { db_so = []; if(localStorage.getItem('davclar_activeTab') === 'tab-order') renderSOList(); }
+                        // dst...
                     }
                 });
             });
@@ -3197,7 +3190,6 @@
             db_kasbon = []; db_users = [];
         }
 
-        // [MODIFIKASI] Tombol Logout Manual sekarang ikut membersihkan cache
         async function handleLogout() {
             const isConfirmed = await showConfirm(
                 "Keluar Aplikasi", 
