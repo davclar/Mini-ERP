@@ -5387,15 +5387,15 @@
         function saveSO() {
             if(tempSOItems.length === 0) return showToast('Order kosong!');
             
-            const soId = document.getElementById('soFormNo'].value;
+            const soId = document.getElementById('soFormNo').value;
             const newSO = {
                 id: soId,
-                tanggal: document.getElementById('soFormTgl'].value,
-                toko: document.getElementById('soInpToko'].value.toUpperCase(),
-                alamat: document.getElementById('soInpAlamat'].value,
-                type: document.getElementById('soInpType'].value,
-                disc: parseFloat(document.getElementById('soInpDisc'].value) || 0,
-                disc2: parseFloat(document.getElementById('soInpDisc2'].value) || 0,
+                tanggal: document.getElementById('soFormTgl').value,
+                toko: document.getElementById('soInpToko').value.toUpperCase(),
+                alamat: document.getElementById('soInpAlamat').value,
+                type: document.getElementById('soInpType').value,
+                disc: parseFloat(document.getElementById('soInpDisc').value) || 0,
+                disc2: parseFloat(document.getElementById('soInpDisc2').value) || 0,
                 status: "PENDING", 
                 items: [...tempSOItems]
             };
@@ -5425,7 +5425,7 @@
                         cur = cur.filter(k => k !== 'davclar_so');
                         window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(cur));
                         console.log("[SO TEMBUS] Data HP sukses mendarat permanen di server!");
-                    }, 1000); // Jeda 1 detik penuh khusus HP agar stabil
+                    }, 1000);
                 }).catch(err => {
                     console.warn("Gagal kirim ke server, data aman di HP:", err);
                 });
