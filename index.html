@@ -2835,11 +2835,10 @@
         }
 
         // =================================================================
-        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (V4.1 BULLETPROOF) 🔥
+        // 🔥 JURUS BAJAK LOCALSTORAGE & AUTO-SYNC FIREBASE (V4.2 BULLETPROOF) 🔥
         // =================================================================
         window.originalSetItem = localStorage.setItem;
 
-        // --- 0. MIGRASI OTOMATIS (Merubah format Karung jadi Laci di Server) ---
         if (!localStorage.getItem('davclar_migrasi_v4_1')) {
             const validKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
             validKeys.forEach(k => {
@@ -2943,7 +2942,7 @@
             }
         };
 
-        // --- 3. MESIN PENERIMA DATA DARI SERVER (ANTI CRASH) ---
+        // --- 3. MESIN PENERIMA DATA DARI SERVER (ANTI CRASH V4.2) ---
         const dbKeys = ['davclar_barang', 'davclar_customer', 'davclar_po', 'davclar_so', 'davclar_invoice', 'davclar_payment', 'davclar_kontrabon', 'davclar_sales_cp', 'davclar_kasbon', 'davclar_users'];
 
         if (window.firebaseDB) {
@@ -2955,48 +2954,47 @@
                     if (isProcessingThisTable) return; 
 
                     const data = snapshot.val();
+                    let dataArray = [];
+
                     if (data) {
-                        // [KUNCI ANTI CRASH]: Filter semua null dan TRANSLATE Object Server jadi Array Lokal
+                        // KUNCI AMAN: Server merespon Laci, kita sulap jadi Array secara paksa!
                         let rawArray = Array.isArray(data) ? data : Object.values(data);
-                        let dataArray = rawArray.filter(item => item && typeof item === 'object');
+                        dataArray = rawArray.filter(item => item && typeof item === 'object');
                         
                         dataArray.sort((a, b) => {
                             let idA = String(a.id || a.prodId || a.username || "");
                             let idB = String(b.id || b.prodId || b.username || "");
                             return idB.localeCompare(idA); 
                         });
-
-                        if(key === 'davclar_barang') db_databarang = dataArray;
-                        if(key === 'davclar_customer') db_customer = dataArray;
-                        if(key === 'davclar_po') db_po = dataArray;
-                        if(key === 'davclar_so') db_so = dataArray;
-                        if(key === 'davclar_invoice') db_invoice = dataArray;
-                        if(key === 'davclar_payment') db_payment = dataArray;
-                        if(key === 'davclar_kontrabon') db_kontrabon = dataArray;
-                        if(key === 'davclar_sales_cp') db_sales_cp = dataArray;
-                        if(key === 'davclar_kasbon') db_kasbon = dataArray;
-                        if(key === 'davclar_users') db_users = dataArray;
-                        
-                        window.originalSetItem.call(localStorage, key, JSON.stringify(dataArray));
-
-                        const activeTab = localStorage.getItem('davclar_activeTab');
-                        if(activeTab === 'tab-dashboard' && typeof renderDashboard === 'function') renderDashboard();
-                        if(key === 'davclar_barang' && activeTab === 'tab-databarang' && typeof renderItemTable === 'function') renderItemTable();
-                        if(key === 'davclar_customer' && activeTab === 'tab-customer' && typeof renderCustomerList === 'function') renderCustomerList();
-                        if(key === 'davclar_po' && activeTab === 'tab-production' && typeof renderPOList === 'function') renderPOList();
-                        if(key === 'davclar_so' && activeTab === 'tab-order' && typeof renderSOList === 'function') renderSOList();
-                        if(key === 'davclar_invoice' && activeTab === 'tab-invoice' && typeof renderInvoiceList === 'function') renderInvoiceList();
-                        if(key === 'davclar_payment' && activeTab === 'tab-payment' && typeof renderPaymentList === 'function') renderPaymentList();
-                        if(key === 'davclar_komisi' && activeTab === 'tab-komisi' && typeof renderKomisi === 'function') renderKomisi();
-                        if(key === 'davclar_users' && activeTab === 'tab-usersetting' && typeof renderUserTable === 'function') renderUserTable();
-                        if(key === 'davclar_users' && activeTab === 'tab-salesledger' && typeof renderSalesLedger === 'function') renderSalesLedger();
-                    } else {
-                        // Jika server benar-benar kosong
-                        window.originalSetItem.call(localStorage, key, "[]");
-                        if(key === 'davclar_payment') { db_payment = []; if(localStorage.getItem('davclar_activeTab') === 'tab-payment') renderPaymentList(); }
-                        if(key === 'davclar_so') { db_so = []; if(localStorage.getItem('davclar_activeTab') === 'tab-order') renderSOList(); }
-                        // dst...
                     }
+
+                    // MASUKKAN KE VARIABEL GLOBAL DENGAN AMAN
+                    if(key === 'davclar_barang') db_databarang = dataArray;
+                    else if(key === 'davclar_customer') db_customer = dataArray;
+                    else if(key === 'davclar_po') db_po = dataArray;
+                    else if(key === 'davclar_so') db_so = dataArray;
+                    else if(key === 'davclar_invoice') db_invoice = dataArray;
+                    else if(key === 'davclar_payment') db_payment = dataArray;
+                    else if(key === 'davclar_kontrabon') db_kontrabon = dataArray;
+                    else if(key === 'davclar_sales_cp') db_sales_cp = dataArray;
+                    else if(key === 'davclar_kasbon') db_kasbon = dataArray;
+                    else if(key === 'davclar_users') db_users = dataArray;
+                    
+                    // SIMPAN KE LOKAL (PASTIKAN WUJUDNYA ARRAY!)
+                    window.originalSetItem.call(localStorage, key, JSON.stringify(dataArray));
+
+                    // REFRESH UI SESUAI TAB AKTIF
+                    const activeTab = localStorage.getItem('davclar_activeTab');
+                    if(activeTab === 'tab-dashboard' && typeof renderDashboard === 'function') renderDashboard();
+                    else if(key === 'davclar_barang' && activeTab === 'tab-databarang' && typeof renderItemTable === 'function') renderItemTable();
+                    else if(key === 'davclar_customer' && activeTab === 'tab-customer' && typeof renderCustomerList === 'function') renderCustomerList();
+                    else if(key === 'davclar_po' && activeTab === 'tab-production' && typeof renderPOList === 'function') renderPOList();
+                    else if(key === 'davclar_so' && activeTab === 'tab-order' && typeof renderSOList === 'function') renderSOList();
+                    else if(key === 'davclar_invoice' && activeTab === 'tab-invoice' && typeof renderInvoiceList === 'function') renderInvoiceList();
+                    else if(key === 'davclar_payment' && activeTab === 'tab-payment' && typeof renderPaymentList === 'function') renderPaymentList();
+                    else if(key === 'davclar_komisi' && activeTab === 'tab-komisi' && typeof renderKomisi === 'function') renderKomisi();
+                    else if(key === 'davclar_users' && activeTab === 'tab-usersetting' && typeof renderUserTable === 'function') renderUserTable();
+                    else if(key === 'davclar_users' && activeTab === 'tab-salesledger' && typeof renderSalesLedger === 'function') renderSalesLedger();
                 });
             });
         }
