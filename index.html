@@ -2846,30 +2846,34 @@
         // 1. Kita simpan fungsi asli LocalStorage ke dalam memori
         window.originalSetItem = localStorage.setItem;
 
-        // 2. Timpa fungsi aslinya dengan Sistem Antrean (Queue)
+        // 2. Timpa fungsi aslinya dengan Sistem Antrean (Queue) & Pengaman Anti-Mental HP
         localStorage.setItem = function(key, value) {
-            // Tetap simpan ke browser HP/Laptop (Aman walau offline)
-            window.originalSetItem.apply(this, arguments);
-
             const ignoredKeys = ['davclar_activeTab', 'davclar_user', 'davclar_role', 'davclar_isLoggedIn', 'davclar_unsynced_keys'];
             
+            // A. PASANG KUNCI ANTRIAN DI AWAL SEBELUM DISIMPAN (Agar listener server langsung ngeh)
             if (key.startsWith('davclar_') && window.firebaseDB && !ignoredKeys.includes(key)) {
-                
-                // A. Masukkan key tabel ini ke daftar "Antrean Belum Sinkron"
-                let pendingKeys = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
+                let pendingKeys = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
                 if (!pendingKeys.includes(key)) {
                     pendingKeys.push(key);
                     window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(pendingKeys));
                 }
+            }
 
+            // Tetap simpan ke browser HP/Laptop (Aman walau offline)
+            window.originalSetItem.apply(this, arguments);
+
+            if (key.startsWith('davclar_') && window.firebaseDB && !ignoredKeys.includes(key)) {
+                
                 // B. Coba tembak datanya ke Firebase Server secara Real-Time!
                 window.firebaseDB.ref(key).set(JSON.parse(value))
                     .then(() => {
-                        // C. Jika sukses tembus server, hapus dari daftar antrean
-                        let currentPending = JSON.parse(localStorage.getItem('davclar_unsynced_keys') || '[]');
-                        currentPending = currentPending.filter(k => k !== key);
-                        window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
-                        console.log(`[SYNC BERHASIL] ${key} aman di server!`);
+                        // C. Beri jeda 500ms sebelum melepas antrean agar HP tidak kaget ditarik data lama
+                        setTimeout(() => {
+                            let currentPending = JSON.parse(window.originalSetItem.call(localStorage, 'davclar_unsynced_keys') || '[]');
+                            currentPending = currentPending.filter(k => k !== key);
+                            window.originalSetItem.call(localStorage, 'davclar_unsynced_keys', JSON.stringify(currentPending));
+                            console.log(`[SYNC BERHASIL] ${key} aman di server!`);
+                        }, 500);
                     })
                     .catch(err => {
                         console.warn(`[SYNC TERTUNDA] ${key} tersimpan di HP, menunggu sinyal internet...`, err);
